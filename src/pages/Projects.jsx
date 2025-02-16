@@ -39,7 +39,7 @@ export default function Projects() {
   return (
     <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
       <h1 className="text-3xl font-bold mb-4 heading-glow">Projects</h1>
-      {/* Work Projects */}
+      {/* Work Projects Section */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Work Projects</h2>
         {workProjects.length > 0 ? (
@@ -55,7 +55,7 @@ export default function Projects() {
           <p className="text-gray-400">No work projects available at the moment.</p>
         )}
       </section>
-      {/* Personal Projects */}
+      {/* Personal Projects Section */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Personal Projects</h2>
         {personalProjects.length > 0 ? (
