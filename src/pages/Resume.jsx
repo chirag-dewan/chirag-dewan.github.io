@@ -1,4 +1,5 @@
 import React from 'react';
+import resumePDF from '../../Resume_Chirag_Dewan.pdf'; 
 
 export default function Resume() {
   return (
@@ -9,7 +10,7 @@ export default function Resume() {
       </p>
       <div className="w-full h-screen border border-white/10 rounded">
         <iframe
-          src="/resume.pdf"
+          src={resumePDF}
           title="Resume"
           className="w-full h-full"
           frameBorder="0"
