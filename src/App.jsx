@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import AnimatedBackground from './AnimatedBackground.jsx';
 import Home from './pages/Home.jsx';
 import Projects from './pages/Projects.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
@@ -8,7 +9,10 @@ import Resume from './pages/Resume.jsx';
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen w-full bg-gradient-to-b from-[#0A0A0A] to-[#1F1F1F] text-white font-mono">
+      <div className="relative min-h-screen w-full bg-gradient-to-b from-[#0A0A0A] to-[#1F1F1F] text-white font-mono">
+        {/* Animated Background */}
+        <AnimatedBackground />
+
         {/* Navbar */}
         <header className="flex items-center justify-between px-6 py-4 glass sticky top-0 z-50">
           <div className="text-xl font-bold heading-glow">CD.</div>
