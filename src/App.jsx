@@ -10,10 +10,7 @@ export default function App() {
   return (
     <Router>
       <div className="relative min-h-screen w-full bg-gradient-to-b from-[#0A0A0A] to-[#1F1F1F] text-white font-mono">
-        {/* Animated Background */}
         <AnimatedBackground />
-
-        {/* Navbar */}
         <header className="flex items-center justify-between px-6 py-4 glass sticky top-0 z-50">
           <div className="text-xl font-bold heading-glow">CD.</div>
           <nav className="space-x-4 text-sm">
