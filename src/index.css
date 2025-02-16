@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom animations & effects */
+/* Custom Animations & Effects */
 
 /* Fade In Up Animation */
 @keyframes fadeInUp {
@@ -17,6 +17,16 @@
 }
 .fade-in-up {
   animation: fadeInUp 0.8s ease-in-out forwards;
+}
+
+/* Binary Fall Animation for Background */
+@keyframes binaryFall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
 }
 
 /* Smooth progress bar fill */
