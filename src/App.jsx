@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function App() {
-  // Example data structures for your portfolio
+  // Data structures for the sections
   const skillsData = [
     {
       category: 'Programming Languages',
@@ -28,25 +28,25 @@ export default function App() {
       title: 'CompTIA Security+',
       year: 2023,
       status: 'Completed',
-      description: 'Foundation in cybersecurity concepts and best practices',
+      description: 'Foundation in cybersecurity concepts and best practices.',
     },
     {
       title: 'CompTIA Network+',
       year: 2023,
       status: 'Completed',
-      description: 'Network security and infrastructure expertise',
+      description: 'Expertise in network security and infrastructure.',
     },
     {
       title: 'AWS Certified Cloud Practitioner',
       year: 2023,
       status: 'Completed',
-      description: 'Demonstrated knowledge of AWS cloud fundamentals',
+      description: 'Solid understanding of AWS cloud fundamentals.',
     },
     {
       title: 'OSCP',
       year: 2024,
       status: 'In Progress',
-      description: 'Advanced penetration testing techniques',
+      description: 'Advanced penetration testing techniques in progress.',
     },
   ];
 
@@ -54,13 +54,13 @@ export default function App() {
     {
       name: 'Custom C2 Server',
       description:
-        'Developed a secure Command-and-Control server using Python and Flask, incorporating secure protocols like TLS for encrypted communications.',
+        'Developed a secure Command-and-Control server using Python and Flask, incorporating TLS for encrypted communications.',
       link: 'https://github.com/yourusername/c2-server',
     },
     {
       name: 'Firmware Analysis Toolkit',
       description:
-        'Created a toolkit to automate firmware unpacking, scanning for vulnerabilities, and generating reports for reverse-engineering.',
+        'Created a toolkit to automate firmware unpacking, scan for vulnerabilities, and generate reports for reverse-engineering.',
       link: 'https://github.com/yourusername/firmware-analysis',
     },
   ];
@@ -69,39 +69,32 @@ export default function App() {
     {
       title: 'Ransomware Behavioral Analysis',
       summary:
-        'Analyzed a new ransomware strain’s file-encryption routine, discovered unique evasion techniques, and proposed mitigation strategies.',
+        'Analyzed a new ransomware strain’s file-encryption routine, discovered unique evasion techniques, and proposed effective mitigation strategies.',
     },
     {
       title: 'Stealth Keylogger PoC',
       summary:
-        'Developed a PoC keylogger in C that bypassed basic AV heuristics, demonstrating the importance of advanced detection measures.',
+        'Developed a proof-of-concept keylogger in C that bypassed basic AV heuristics, highlighting the need for advanced detection measures.',
     },
   ];
 
   return (
-    <div
-      className="
-        min-h-screen w-full 
-        bg-gradient-to-b from-[#0F172A] via-[#131B2C] to-[#0F172A]
-        text-white font-mono
-      "
-    >
+    <div className="min-h-screen w-full bg-gradient-to-b from-[#0F172A] via-[#131B2C] to-[#0F172A] text-white font-mono">
       {/* ==================== NAVBAR ==================== */}
-      <header
-        className="
-          flex items-center justify-between 
-          px-6 py-4 
-          glass 
-          sticky top-0 z-50
-        "
-      >
+      <header className="flex items-center justify-between px-6 py-4 glass sticky top-0 z-50">
         <div className="text-xl font-bold heading-glow">CD.</div>
         <div className="space-x-4 text-sm">
           <a
-            href="#resume"
+            href="#about"
             className="bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition hover-pulse"
           >
-            Resume
+            About Me
+          </a>
+          <a
+            href="#portfolio"
+            className="bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition hover-pulse"
+          >
+            Portfolio
           </a>
           <a
             href="https://github.com/yourusername"
@@ -114,21 +107,33 @@ export default function App() {
         </div>
       </header>
 
-      {/* ==================== HERO / SUMMARY ==================== */}
-      <section
-        id="resume"
-        className="max-w-5xl mx-auto px-6 mt-8 fade-in-up"
-      >
-        <h1 className="text-3xl font-bold mb-2 heading-glow">
-          Technical Arsenal
-        </h1>
+      {/* ==================== ABOUT ME / HERO ==================== */}
+      <section id="about" className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
+        <h1 className="text-3xl font-bold mb-2 heading-glow">About Me</h1>
+        <p className="text-gray-300 mb-4">
+          Hello! I’m Chirag Dewan, a Cyber Research Scientist based in Boston, MA.
+          With a passion for vulnerability research, reverse engineering, and advanced
+          cybersecurity, I thrive on uncovering hidden threats and building robust defenses.
+        </p>
+        <p className="text-gray-300 mb-4">
+          <strong>What I Do:</strong> I specialize in penetration testing, secure system design,
+          and innovative research into malware analysis. I bring a deep technical skill set
+          to solve complex security challenges and protect critical infrastructure.
+        </p>
+        <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400 mb-8">
+          "In a world where digital threats lurk in every corner, passion and persistence are your
+          strongest defenses."
+        </blockquote>
+      </section>
+
+      {/* ==================== TECHNICAL SUMMARY ==================== */}
+      <section id="portfolio" className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
+        <h2 className="text-3xl font-bold mb-2 heading-glow">Technical Arsenal</h2>
         <p className="text-gray-300">
-          Cyber Research Scientist with expertise in vulnerability research,
-          penetration testing, and reverse engineering. Skilled in C2
-          development, firmware analysis, and proof-of-concept exploits. Proficient
-          with tools like Ghidra, Wireshark, and Metasploit, with a background
-          in secure protocols (TLS, TCP, HTTPS). Active Top Secret Clearance for
-          government and defense work.
+          I leverage a combination of deep technical expertise and innovative research to
+          secure systems, build custom defensive solutions, and validate security strategies.
+          From developing custom packet parsers to reverse-engineering firmware vulnerabilities,
+          my work is driven by a commitment to excellence and a passion for cybersecurity.
         </p>
       </section>
 
@@ -136,9 +141,9 @@ export default function App() {
       <section className="max-w-5xl mx-auto px-6 mt-10 fade-in-up">
         {skillsData.map((group, index) => (
           <div key={index} className="mb-8">
-            <h2 className="text-lg font-semibold mb-4 text-blue-200 heading-glow">
+            <h3 className="text-lg font-semibold mb-4 text-blue-200 heading-glow">
               {group.category}
-            </h2>
+            </h3>
             {group.items.map((skill) => (
               <div key={skill.name} className="mb-3">
                 <div className="flex justify-between text-sm mb-1">
@@ -159,32 +164,17 @@ export default function App() {
 
       {/* ==================== CERTIFICATIONS ==================== */}
       <section className="max-w-5xl mx-auto px-6 mt-12 fade-in-up">
-        <h2 className="text-2xl font-bold mb-4 heading-glow">
-          Certifications
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 heading-glow">Certifications</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {certificationsData.map((cert) => (
-            <div
-              key={cert.title}
-              className="card bg-white/5 p-4 rounded-lg border border-white/10"
-            >
+            <div key={cert.title} className="card bg-white/5 p-4 rounded-lg border border-white/10">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-lg font-semibold">{cert.title}</h3>
-                <span
-                  className="
-                    text-xs px-2 py-1 rounded-full 
-                    bg-green-600/20 text-green-400 border border-green-400/20
-                  "
-                >
+                <span className="text-xs px-2 py-1 rounded-full bg-green-600/20 text-green-400 border border-green-400/20">
                   {cert.status}
                 </span>
               </div>
-              <span
-                className="
-                  inline-block text-xs text-gray-400 mb-2 
-                  bg-white/5 px-2 py-1 rounded
-                "
-              >
+              <span className="inline-block text-xs text-gray-400 mb-2 bg-white/5 px-2 py-1 rounded">
                 {cert.year}
               </span>
               <p className="text-sm text-gray-300">{cert.description}</p>
@@ -198,10 +188,7 @@ export default function App() {
         <h2 className="text-2xl font-bold mb-4 heading-glow">Projects</h2>
         <div className="space-y-4">
           {projectsData.map((proj) => (
-            <div
-              key={proj.name}
-              className="card bg-white/5 p-4 rounded-lg border border-white/10"
-            >
+            <div key={proj.name} className="card bg-white/5 p-4 rounded-lg border border-white/10">
               <h3 className="text-lg font-semibold mb-1">{proj.name}</h3>
               <p className="text-sm text-gray-300 mb-2">{proj.description}</p>
               {proj.link && (
@@ -221,15 +208,10 @@ export default function App() {
 
       {/* ==================== MALWARE ANALYSIS / RESEARCH ==================== */}
       <section className="max-w-5xl mx-auto px-6 mt-12 fade-in-up">
-        <h2 className="text-2xl font-bold mb-4 heading-glow">
-          Malware Analysis & Research
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 heading-glow">Malware Analysis &amp; Research</h2>
         <div className="space-y-4">
           {malwareResearch.map((item) => (
-            <div
-              key={item.title}
-              className="card bg-white/5 p-4 rounded-lg border border-white/10"
-            >
+            <div key={item.title} className="card bg-white/5 p-4 rounded-lg border border-white/10">
               <h3 className="text-lg font-semibold mb-1">{item.title}</h3>
               <p className="text-sm text-gray-300">{item.summary}</p>
             </div>
@@ -238,14 +220,7 @@ export default function App() {
       </section>
 
       {/* ==================== FOOTER ==================== */}
-      <footer
-        className="
-          max-w-5xl mx-auto px-6 mt-16 py-6 
-          text-center text-sm text-gray-400 
-          border-t border-white/10
-          fade-in-up
-        "
-      >
+      <footer className="max-w-5xl mx-auto px-6 mt-16 py-6 text-center text-sm text-gray-400 border-t border-white/10 fade-in-up">
         &copy; {new Date().getFullYear()} Chirag Dewan. All Rights Reserved.
       </footer>
     </div>
