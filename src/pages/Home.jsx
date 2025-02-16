@@ -26,75 +26,72 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-2 heading-glow">Technical Arsenal</h2>
         <p className="text-gray-300">
           I leverage a combination of deep technical expertise and innovative research to secure systems,
-          build custom defensive solutions, and validate security strategies.
+          build custom defensive solutions, and validate security strategies. My approach blends
+          theoretical knowledge with practical application, ensuring that every solution is both
+          effective and efficient.
         </p>
       </section>
 
-      {/* Skills Section */}
+      {/* Detailed Skills Section */}
       <section id="skills" className="mt-8">
         <h2 className="text-3xl font-bold mb-4 heading-glow">Skills</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h3 className="text-xl font-semibold mb-2">Programming Languages</h3>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>Python</span>
-                <span>95%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '95%' }}></div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>C</span>
-                <span>85%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '85%' }}></div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>JavaScript</span>
-                <span>80%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '80%' }}></div>
-              </div>
-            </div>
+            <ul className="text-gray-300 list-disc list-inside mb-4">
+              <li>Python (95%)</li>
+              <li>C (85%)</li>
+              <li>JavaScript (80%)</li>
+              <li>Rust (75%)</li>
+              <li>Bash & Shell Scripting</li>
+            </ul>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">Security Tools</h3>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>Ghidra</span>
-                <span>90%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '90%' }}></div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>IDA Pro</span>
-                <span>85%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '85%' }}></div>
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm">
-                <span>Metasploit</span>
-                <span>80%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-blue-500 h-2 rounded-full skill-progress" style={{ width: '80%' }}></div>
-              </div>
-            </div>
+            <h3 className="text-xl font-semibold mb-2">Security & Analysis Tools</h3>
+            <ul className="text-gray-300 list-disc list-inside mb-4">
+              <li>Ghidra (90%)</li>
+              <li>IDA Pro (85%)</li>
+              <li>Metasploit (80%)</li>
+              <li>Burp Suite (75%)</li>
+              <li>Nessus, Nmap, OpenVAS</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-2">Networking & Protocols</h3>
+            <ul className="text-gray-300 list-disc list-inside mb-4">
+              <li>TCP/IP, DNS, TLS</li>
+              <li>Packet Analysis</li>
+              <li>Firewall Configuration</li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold mb-2">Cloud & DevOps</h3>
+            <ul className="text-gray-300 list-disc list-inside mb-4">
+              <li>AWS (EC2, S3, IAM, CloudFormation)</li>
+              <li>Docker, Kubernetes</li>
+              <li>Terraform, Jenkins</li>
+            </ul>
           </div>
         </div>
+      </section>
+
+      {/* Passions Section */}
+      <section id="passions" className="mt-8">
+        <h2 className="text-3xl font-bold mb-4 heading-glow">Passions</h2>
+        <p className="text-gray-300">
+          I am passionate about exploring new vulnerabilities, crafting innovative security solutions, and continuously learning about emerging cyber threats. When I'm not immersed in research, I enjoy sharing my insights through blogs, workshops, and community engagements.
+        </p>
+      </section>
+
+      {/* Certifications Section */}
+      <section id="certifications" className="mt-8">
+        <h2 className="text-3xl font-bold mb-4 heading-glow">Certifications</h2>
+        <ul className="text-gray-300 list-disc list-inside">
+          <li>CompTIA Security+</li>
+          <li>CompTIA Network+</li>
+          <li>AWS Certified Cloud Practitioner</li>
+          <li>OSCP (In Progress)</li>
+        </ul>
       </section>
     </div>
   );
