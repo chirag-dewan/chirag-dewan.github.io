@@ -1,15 +1,10 @@
-/* ========== Tailwind Base, Components, and Utilities ========== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 
-  CUSTOM ANIMATIONS & CLASSES
-  Feel free to tweak durations, easing, or color values for your desired look.
-*/
+/* Custom animations & effects */
 
-/* 1) Fade In Up Animation 
-   - Subtle fade/slide for elements (like sections or cards) */
+/* Fade In Up Animation */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -24,14 +19,12 @@
   animation: fadeInUp 0.8s ease-in-out forwards;
 }
 
-/* 2) Progress Bar Fill Animation 
-   - Smooth fill for skill bars */
+/* Smooth progress bar fill */
 .skill-progress {
   transition: width 1s ease-in-out;
 }
 
-/* 3) Glowing Heading Effect 
-   - Slight “breathing” glow behind text for that futuristic vibe */
+/* Glowing Heading Effect */
 .heading-glow {
   position: relative;
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
@@ -40,23 +33,17 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 4px; /* or use 'inherit' if you have round corners */
+  border-radius: 4px;
   box-shadow: 0 0 20px 3px rgba(255, 255, 255, 0.07);
   opacity: 0;
   animation: glowPulse 3s infinite ease-in-out;
 }
-
 @keyframes glowPulse {
-  0%, 100% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.7; }
 }
 
-/* 4) Card Hover Effect 
-   - Lightens the background on hover for any card-like element */
+/* Card Hover Effect */
 .card {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
@@ -65,22 +52,14 @@
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 5) Glassy / Frosted Effect 
-   - Use for special backgrounds (e.g., navbars, modals) */
+/* Glass/Frosted Effect */
 .glass {
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* 6) Section Divider 
-   - Optional class for subtle lines between sections */
-.section-divider {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 7) Pulse on Hover 
-   - Example effect for buttons or icons */
+/* Hover Pulse Effect */
 .hover-pulse {
   transition: transform 0.2s ease;
 }
@@ -88,15 +67,10 @@
   transform: scale(1.05);
 }
 
-/* 8) Additional Subtle Animations 
-   - For text or icons that “float” slightly */
+/* Float Animation */
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
 }
 .float-animation {
   animation: float 3s ease-in-out infinite;
