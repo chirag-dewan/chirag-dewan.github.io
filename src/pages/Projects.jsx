@@ -2,17 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Projects() {
-  // Work Projects: “Custom C2 Server” (work project – no GitHub link)
+  // Work Projects (no GitHub link)
   const workProjects = [
     {
       name: 'Custom C2 Server',
       description:
         'A custom command-and-control server developed for firmware analysis and penetration testing. (Work Project – Private)',
-      // No external link provided.
     },
   ];
 
-  // Personal Projects: With IDs (slugs) for dynamic routing.
+  // Personal Projects (with IDs for dynamic routing)
   const personalProjects = [
     {
       id: 'packet-prowler',
@@ -33,15 +32,14 @@ export default function Projects() {
       name: 'Malware Research Tool',
       summary:
         'An interactive research tool that breaks down malware behavior and analysis techniques. Click to explore details.',
-      link: '/projects/malware-research-tool', // This will be handled by our dynamic route.
+      link: '/projects/malware-research-tool',
     },
   ];
 
   return (
     <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
       <h1 className="text-3xl font-bold mb-4 heading-glow">Projects</h1>
-
-      {/* Work Projects Section */}
+      {/* Work Projects */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Work Projects</h2>
         {workProjects.length > 0 ? (
@@ -50,7 +48,6 @@ export default function Projects() {
               <div key={index} className="card bg-white/5 p-4 rounded-lg border border-white/10">
                 <h3 className="text-xl font-semibold mb-1">{proj.name}</h3>
                 <p className="text-gray-300 mb-2 text-sm">{proj.description}</p>
-                {/* No link for work projects */}
               </div>
             ))}
           </div>
@@ -58,8 +55,7 @@ export default function Projects() {
           <p className="text-gray-400">No work projects available at the moment.</p>
         )}
       </section>
-
-      {/* Personal Projects Section */}
+      {/* Personal Projects */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Personal Projects</h2>
         {personalProjects.length > 0 ? (
@@ -68,11 +64,7 @@ export default function Projects() {
               <div key={proj.id} className="card bg-white/5 p-4 rounded-lg border border-white/10">
                 <h3 className="text-xl font-semibold mb-1">{proj.name}</h3>
                 <p className="text-gray-300 mb-2 text-sm">{proj.summary}</p>
-                {/* Link to the interactive detail page */}
-                <Link
-                  to={`/projects/${proj.id}`}
-                  className="text-blue-400 hover:underline text-sm"
-                >
+                <Link to={`/projects/${proj.id}`} className="text-blue-400 hover:underline text-sm">
                   View Details
                 </Link>
               </div>
