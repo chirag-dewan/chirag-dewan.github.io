@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ========== Custom Animations & Effects ========== */
+/* ==================== Custom Animations & Effects ==================== */
 
 /* Fade In Up Animation */
 @keyframes fadeInUp {
@@ -64,20 +64,12 @@
 
 /* Animated Skill Bar */
 @keyframes fillBar {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: var(--skill-level);
-  }
+  0% { width: 0%; }
+  100% { width: var(--skill-level); }
 }
 @keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: 200px 0;
-  }
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
 }
 .skill-progress {
   height: 100%;
@@ -88,4 +80,14 @@
     shimmer 2s linear infinite;
   position: relative;
   border-radius: 9999px;
+}
+
+/* Collapsible Certifications - optional smooth expand/collapse */
+@keyframes expandCert {
+  from { max-height: 0; }
+  to { max-height: 500px; }
+}
+@keyframes collapseCert {
+  from { max-height: 500px; }
+  to { max-height: 0; }
 }
