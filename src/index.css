@@ -1,20 +1,50 @@
+/* ==================== Tailwind Base & Utilities ==================== */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global Base Styles */
+/* ==================== Font Families & Global Styles ==================== */
+/* 
+   For Apple devices: SF Pro is used automatically via '-apple-system'.
+   On other devices, it falls back to Inter, Roboto, etc. 
+*/
 body {
-  @apply font-sans;
+  @apply font-sans bg-black text-white;
 }
 
-/* Code Elements */
+/* Use JetBrains Mono for code blocks or inline code */
 code, pre {
   @apply font-mono;
 }
 
-/* ==================== Custom Animations & Effects ==================== */
+/* ==================== Binary Rain Animation ==================== */
+@keyframes binaryFall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+.binary-rain-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: -10; /* behind main content */
+  opacity: 0.2; /* subtle effect */
+}
+.binary-rain-drop {
+  position: absolute;
+  top: -20%;
+  color: #00ff00;
+  font-size: 0.75rem;
+  animation-name: binaryFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+/* You can define a .binary-rain class in your HTML/JS to create multiple .binary-rain-drop elements with random left positions, etc. */
 
-/* Fade In Up Animation */
+/* ==================== Fade In Up Animation ==================== */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -29,7 +59,7 @@ code, pre {
   animation: fadeInUp 0.8s ease-in-out forwards;
 }
 
-/* Glowing Heading Effect */
+/* ==================== Heading Glow ==================== */
 .heading-glow {
   position: relative;
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
@@ -44,18 +74,22 @@ code, pre {
   animation: glowPulse 3s infinite ease-in-out;
 }
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.7; }
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
-/* Glass/Frosted Effect for Navbar and Cards */
+/* ==================== Glass/Frosted Effect ==================== */
 .glass {
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Hover Pulse Effect */
+/* ==================== Hover Pulse Effect ==================== */
 .hover-pulse {
   transition: transform 0.2s ease;
 }
@@ -63,7 +97,7 @@ code, pre {
   transform: scale(1.05);
 }
 
-/* Card Hover Effect */
+/* ==================== Card Hover Effect ==================== */
 .card {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
@@ -72,7 +106,7 @@ code, pre {
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Animated Skill Bar */
+/* ==================== Skill Bar Animations ==================== */
 @keyframes fillBar {
   0% { width: 0%; }
   100% { width: var(--skill-level); }
@@ -88,11 +122,11 @@ code, pre {
   animation:
     fillBar 2s forwards ease-in-out,
     shimmer 2s linear infinite;
-  border-radius: 9999px;
   position: relative;
+  border-radius: 9999px;
 }
 
-/* Optional: Collapsible Certification Animations */
+/* ==================== Example Collapsible Animations (Optional) ==================== */
 @keyframes expandCert {
   from { max-height: 0; }
   to { max-height: 500px; }
