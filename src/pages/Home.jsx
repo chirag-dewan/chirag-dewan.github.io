@@ -140,4 +140,82 @@ export default function Home() {
                 <span>Metasploit</span>
                 <span>80%</span>
               </div>
-              <di
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ "--skill-level": "80%" }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Passions Section */}
+      <section id="passions" className="mb-12">
+        <h2 className="text-3xl font-bold mb-4 heading-glow">Passions</h2>
+        <p className="text-gray-300">
+          Collaboration, creative problem-solving, and relentless curiosity. I'm excited by emerging
+          threats, new exploit techniques, and the evolving landscape of cybersecurity. I want to
+          work on projects that challenge me to push the boundaries of what’s possible.
+        </p>
+      </section>
+
+      {/* Interactive Certifications Section */}
+      <section id="certifications" className="mb-12">
+        <h2 className="text-3xl font-bold mb-4 heading-glow">Certifications</h2>
+        <div className="space-y-2">
+          {certificationsData.map((cert, index) => (
+            <CertificationCard
+              key={index}
+              cert={cert}
+              index={index}
+              expandedIndex={expandedIndex}
+              toggleExpand={toggleExpand}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* GitHub Contributions */}
+      <section id="github-contributions" className="mb-12">
+        <h2 className="text-3xl font-bold mb-4 heading-glow">My GitHub Contributions</h2>
+        <div className="overflow-x-auto">
+          <GitHubCalendar
+            username="chirag-dewan"
+            blockSize={16}
+            blockMargin={4}
+            colorScheme="dark"
+            theme={{
+              background: "transparent",
+              text: "#ffffff",
+            }}
+          />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/* Sub-component for Interactive Certifications */
+function CertificationCard({ cert, index, expandedIndex, toggleExpand }) {
+  const isExpanded = expandedIndex === index;
+  return (
+    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+      <button
+        onClick={() => toggleExpand(index)}
+        className="w-full text-left flex items-center justify-between"
+      >
+        <span className="font-semibold text-white">{cert.title}</span>
+        <span className="text-gray-400">
+          {isExpanded ? "—" : "+"}
+        </span>
+      </button>
+      {isExpanded && (
+        <p className="mt-2 text-sm text-gray-300">
+          {cert.description}
+        </p>
+      )}
+    </div>
+  );
+}
