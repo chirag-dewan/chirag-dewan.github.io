@@ -1,3 +1,4 @@
+// src/AnimatedBackground.jsx
 import React from 'react';
 
 export default function AnimatedBackground() {
@@ -13,6 +14,7 @@ export default function AnimatedBackground() {
             style={{
               left: `${left}%`,
               animationDelay: `${delay}s`,
+              animationDuration: "5s",
             }}
           >
             01
