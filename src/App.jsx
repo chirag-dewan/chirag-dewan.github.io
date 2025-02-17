@@ -8,7 +8,6 @@ import Resume from './pages/Resume.jsx';
 export default function App() {
   return (
     <Router>
-      {/* True black background for a sleek, Apple-like vibe */}
       <div className="min-h-screen w-full bg-black text-white font-mono">
         {/* Glassy Nav */}
         <header className="flex items-center justify-between px-6 py-4 glass sticky top-0 z-50">
@@ -43,7 +42,6 @@ export default function App() {
           </nav>
         </header>
 
-        {/* Pages */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
