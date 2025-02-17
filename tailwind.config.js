@@ -1,4 +1,3 @@
-// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -9,8 +8,9 @@ export default {
     extend: {
       fontFamily: {
         sans: [
-          "-apple-system",
-          "SF Pro Text",
+          "Inter",              // Primary on non-Apple devices
+          "-apple-system",      // SF Pro on Apple devices
+          "BlinkMacSystemFont",
           "Helvetica Neue",
           "Segoe UI",
           "Roboto",
@@ -23,14 +23,14 @@ export default {
           "Arial",
           "sans-serif"
         ],
+        serif: ['"EB Garamond"', "Georgia", "Cambria", "Times New Roman", "serif"],
         mono: ['"JetBrains Mono"', "monospace"],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite',
-        'circuit-flow': 'circuit-flow 20s linear infinite',
-        'binary-rain': 'binary-rain 2s linear infinite',
+        'binary-rain': 'binaryFall 5s linear infinite',
         'skill-shine': 'skill-shine 3s linear infinite',
         'text-glitch': 'text-glitch 0.5s infinite',
       },
@@ -48,6 +48,10 @@ export default {
             boxShadow: '0 0 40px rgba(59, 130, 246, 0.8)',
             textShadow: '0 0 20px rgba(59, 130, 246, 0.8)'
           },
+        },
+        binaryFall: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100vh)' },
         },
       },
       backdropFilter: {
