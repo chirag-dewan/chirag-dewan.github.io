@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Base Styles */
+body {
+  @apply font-sans;
+}
+
+/* Code Elements */
+code, pre {
+  @apply font-mono;
+}
+
 /* ==================== Custom Animations & Effects ==================== */
 
 /* Fade In Up Animation */
@@ -38,7 +48,7 @@
   50% { opacity: 0.7; }
 }
 
-/* Glass/Frosted Effect */
+/* Glass/Frosted Effect for Navbar and Cards */
 .glass {
   backdrop-filter: blur(8px);
   background-color: rgba(255, 255, 255, 0.1);
@@ -78,11 +88,11 @@
   animation:
     fillBar 2s forwards ease-in-out,
     shimmer 2s linear infinite;
-  position: relative;
   border-radius: 9999px;
+  position: relative;
 }
 
-/* Collapsible Certifications - optional smooth expand/collapse */
+/* Optional: Collapsible Certification Animations */
 @keyframes expandCert {
   from { max-height: 0; }
   to { max-height: 500px; }
