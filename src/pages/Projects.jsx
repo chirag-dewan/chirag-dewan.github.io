@@ -39,7 +39,8 @@ export default function Projects() {
   return (
     <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
       <h1 className="text-3xl font-bold mb-4 heading-glow">Projects</h1>
-      {/* Work Projects Section */}
+
+      {/* Work Projects */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Work Projects</h2>
         {workProjects.length > 0 ? (
@@ -55,7 +56,8 @@ export default function Projects() {
           <p className="text-gray-400">No work projects available at the moment.</p>
         )}
       </section>
-      {/* Personal Projects Section */}
+
+      {/* Personal Projects */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 heading-glow">Personal Projects</h2>
         {personalProjects.length > 0 ? (
@@ -64,7 +66,10 @@ export default function Projects() {
               <div key={proj.id} className="card bg-white/5 p-4 rounded-lg border border-white/10">
                 <h3 className="text-xl font-semibold mb-1">{proj.name}</h3>
                 <p className="text-gray-300 mb-2 text-sm">{proj.summary}</p>
-                <Link to={`/projects/${proj.id}`} className="text-blue-400 hover:underline text-sm">
+                <Link
+                  to={`/projects/${proj.id}`}
+                  className="text-blue-400 hover:underline text-sm"
+                >
                   View Details
                 </Link>
               </div>
