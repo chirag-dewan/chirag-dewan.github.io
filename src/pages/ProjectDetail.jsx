@@ -5,19 +5,19 @@ const projectDetails = {
   "packet-prowler": {
     name: "Packet Prowler",
     description:
-      "Packet Prowler is designed to capture and analyze network packets in real time. The code typically leverages packet-sniffing libraries to intercept network traffic, parse protocol headers, and extract key metrics. Researchers use this tool to identify anomalies and potential security threats in network data. Reinforcement could include real-time visualizations and anomaly detection algorithms.",
+      "Packet Prowler intercepts and analyzes network packets in real time, helping identify anomalies and potential threats. By parsing protocol headers and extracting key metrics, it provides valuable insights into traffic flow. This fosters a deeper understanding of network security and can be extended with real-time visualizations or intrusion detection algorithms.",
     link: "https://github.com/chirag-dewan/Packet-Prowler",
   },
   "algorithmic-trading-test-highlow": {
     name: "Algorithmic Trading Test HighLow",
     description:
-      "This project simulates an algorithmic trading strategy based on high/low price triggers. It ingests historical market data and calculates indicators such as the highest high and lowest low over a specified period. Researchers evaluate performance by analyzing signals in a backtested environment, reinforcing risk management parameters and performance analytics.",
+      "This project simulates an algorithmic trading strategy based on historical highs and lows. By ingesting market data, it identifies potential buy/sell signals whenever price crosses these thresholds. Researchers can expand it with risk management modules, performance analytics, or advanced indicators to reinforce the trading system's reliability.",
     link: "https://github.com/chirag-dewan/Algorithmic-Trading-Test-HighLow",
   },
   "malware-research-tool": {
     name: "Malware Research Tool",
     description:
-      "The Malware Research Tool provides an interactive environment to break down malware behavior. It guides researchers through step-by-step analyses, visualizes execution flows, and documents reverse engineering techniques. The code is modular—parsing binary data, identifying malicious patterns, and simulating behavior. It reinforces the need for hands-on malware analysis in modern cybersecurity research.",
+      "The Malware Research Tool is an interactive environment that dissects malicious binaries, tracing execution paths and highlighting dangerous code segments. It guides researchers through reverse engineering steps, demonstrating how to isolate, neutralize, or replicate malware behaviors for deeper study. This tool underscores the importance of hands-on analysis in modern cybersecurity.",
     link: null,
   },
 };
