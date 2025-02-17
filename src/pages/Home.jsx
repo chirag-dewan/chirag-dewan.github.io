@@ -4,87 +4,160 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
       {/* About Me Section */}
-      <section id="about">
+      <section id="about" className="mb-12">
         <h1 className="text-3xl font-bold mb-2 heading-glow">About Me</h1>
         <p className="text-gray-300 mb-4">
-          Hello! I’m Chirag Dewan, a Cyber Research Scientist based in Boston, MA.
-          I have a passion for vulnerability research, reverse engineering, and cybersecurity.
-          I thrive on uncovering hidden threats and building robust defenses.
+          I’m Chirag Dewan, a Cyber Research Scientist based in Boston, MA. My work revolves around
+          vulnerability research, reverse engineering, and penetration testing. With an active Top
+          Secret Clearance and years of hands-on experience, I focus on uncovering hidden threats and
+          designing robust security solutions.
         </p>
         <p className="text-gray-300 mb-4">
-          <strong>What I Do:</strong> I specialize in penetration testing, secure system design,
-          and innovative malware analysis. I leverage my deep technical skill set to solve complex
-          security challenges and protect critical infrastructure.
+          My expertise spans from building custom command-and-control servers to conducting in-depth
+          firmware analyses. I’m driven by curiosity, a commitment to innovation, and the pursuit of
+          cutting-edge security research.
         </p>
-        <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400 mb-8">
-          "In a world where digital threats lurk in every corner, passion and persistence are your strongest defenses."
+        <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400">
+          "In a world where digital threats lurk in every corner, passion and persistence are your
+          strongest defenses."
         </blockquote>
       </section>
 
       {/* Technical Arsenal Section */}
-      <section id="technical-arsenal" className="mt-8">
+      <section id="technical-arsenal" className="mb-12">
         <h2 className="text-3xl font-bold mb-2 heading-glow">Technical Arsenal</h2>
         <p className="text-gray-300">
-          I leverage a combination of deep technical expertise and innovative research to secure systems,
-          build custom defensive solutions, and validate security strategies. My approach blends
-          theoretical knowledge with practical application, ensuring that every solution is both
-          effective and efficient.
+          I leverage a blend of theoretical knowledge and practical experience to secure systems and
+          validate security strategies. My toolkit includes advanced malware analysis, custom
+          defensive solution design, and deep dives into network vulnerabilities.
         </p>
       </section>
 
-      {/* Detailed Skills Section */}
-      <section id="skills" className="mt-8">
+      {/* Skills Section with Animated Progress Bars */}
+      <section id="skills" className="mb-12">
         <h2 className="text-3xl font-bold mb-4 heading-glow">Skills</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Programming Languages */}
           <div>
-            <h3 className="text-xl font-semibold mb-2">Programming Languages</h3>
-            <ul className="text-gray-300 list-disc list-inside mb-4">
-              <li>Python (95%)</li>
-              <li>C (85%)</li>
-              <li>JavaScript (80%)</li>
-              <li>Rust (75%)</li>
-              <li>Bash & Shell Scripting</li>
-            </ul>
+            <h3 className="text-xl font-semibold mb-4">Programming Languages</h3>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Python</span>
+                <span>95%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '95%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>C</span>
+                <span>85%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '85%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>JavaScript</span>
+                <span>80%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '80%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Rust</span>
+                <span>75%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '75%' }}
+                />
+              </div>
+            </div>
           </div>
+
+          {/* Security & Analysis Tools */}
           <div>
-            <h3 className="text-xl font-semibold mb-2">Security & Analysis Tools</h3>
-            <ul className="text-gray-300 list-disc list-inside mb-4">
-              <li>Ghidra (90%)</li>
-              <li>IDA Pro (85%)</li>
-              <li>Metasploit (80%)</li>
-              <li>Burp Suite (75%)</li>
-              <li>Nessus, Nmap, OpenVAS</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Networking & Protocols</h3>
-            <ul className="text-gray-300 list-disc list-inside mb-4">
-              <li>TCP/IP, DNS, TLS</li>
-              <li>Packet Analysis</li>
-              <li>Firewall Configuration</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Cloud & DevOps</h3>
-            <ul className="text-gray-300 list-disc list-inside mb-4">
-              <li>AWS (EC2, S3, IAM, CloudFormation)</li>
-              <li>Docker, Kubernetes</li>
-              <li>Terraform, Jenkins</li>
-            </ul>
+            <h3 className="text-xl font-semibold mb-4">Security &amp; Analysis Tools</h3>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Ghidra</span>
+                <span>90%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '90%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>IDA Pro</span>
+                <span>85%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '85%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Metasploit</span>
+                <span>80%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '80%' }}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm mb-1">
+                <span>Burp Suite</span>
+                <span>75%</span>
+              </div>
+              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                <div
+                  className="skill-progress"
+                  style={{ '--skill-level': '75%' }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Passions Section */}
-      <section id="passions" className="mt-8">
+      <section id="passions" className="mb-12">
         <h2 className="text-3xl font-bold mb-4 heading-glow">Passions</h2>
         <p className="text-gray-300">
-          I am passionate about exploring new vulnerabilities, crafting innovative security solutions, and continuously learning about emerging cyber threats. When I'm not immersed in research, I enjoy sharing my insights through blogs, workshops, and community engagements.
+          Beyond my technical pursuits, I am deeply passionate about continuous learning, community
+          engagement, and sharing knowledge. Whether it’s through blogging, speaking at conferences,
+          or mentoring the next generation of security researchers, I strive to make a meaningful
+          impact in the world of cybersecurity.
         </p>
       </section>
 
       {/* Certifications Section */}
-      <section id="certifications" className="mt-8">
+      <section id="certifications" className="mb-12">
         <h2 className="text-3xl font-bold mb-4 heading-glow">Certifications</h2>
         <ul className="text-gray-300 list-disc list-inside">
           <li>CompTIA Security+</li>
