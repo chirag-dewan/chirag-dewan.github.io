@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AnimatedBackground from './AnimatedBackground.jsx';
