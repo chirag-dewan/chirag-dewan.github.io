@@ -1,35 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
+import GitHubCalendar from 'react-github-calendar';
 
 export default function Home() {
+  // Interactive Certifications data
+  const certificationsData = [
+    {
+      title: "CompTIA Security+",
+      description: "Foundational cybersecurity knowledge, including threats, vulnerabilities, and risk management.",
+    },
+    {
+      title: "CompTIA Network+",
+      description: "Focuses on networking concepts, infrastructure, operations, and security best practices.",
+    },
+    {
+      title: "AWS Certified Cloud Practitioner",
+      description: "Broad understanding of AWS cloud fundamentals, security, and compliance.",
+    },
+    {
+      title: "OSCP (In Progress)",
+      description: "Advanced offensive security techniques with a hands-on penetration testing exam.",
+    },
+  ];
+
+  // State to track which certification is expanded
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const toggleExpand = (index) => {
+    setExpandedIndex((prev) => (prev === index ? null : index));
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
+      {/* Inspirational Quote on Top */}
+      <section className="mb-12">
+        <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400 text-xl">
+          "In a world of digital threats at every corner, curiosity and creativity are the keys to staying secure."
+        </blockquote>
+      </section>
+
       {/* About Me Section */}
       <section id="about" className="mb-12">
         <h1 className="text-3xl font-bold mb-2 heading-glow">About Me</h1>
         <p className="text-gray-300 mb-4">
-          I’m Chirag Dewan, a Cyber Research Scientist based in Boston, MA. My work revolves around
-          vulnerability research, reverse engineering, and penetration testing. With an active Top
-          Secret Clearance and years of hands-on experience, I focus on uncovering hidden threats and
-          designing robust security solutions.
+          I’m Chirag Dewan, a Cyber Research Scientist driven by curiosity and a relentless desire to innovate.
+          I thrive on uncovering hidden vulnerabilities, crafting ingenious defenses, and pushing the boundaries
+          of what's possible in cybersecurity.
         </p>
         <p className="text-gray-300 mb-4">
-          My expertise spans from building custom command-and-control servers to conducting in-depth
-          firmware analyses. I’m driven by curiosity, a commitment to innovation, and the pursuit of
-          cutting-edge security research.
+          My mindset is simple: stay curious, stay bold, and never settle. I'm always exploring new angles,
+          testing new theories, and collaborating with others who share my passion for building a safer
+          digital world.
         </p>
-        <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-400">
-          "In a world where digital threats lurk in every corner, passion and persistence are your
-          strongest defenses."
-        </blockquote>
       </section>
 
       {/* Technical Arsenal Section */}
       <section id="technical-arsenal" className="mb-12">
         <h2 className="text-3xl font-bold mb-2 heading-glow">Technical Arsenal</h2>
         <p className="text-gray-300">
-          I leverage a blend of theoretical knowledge and practical experience to secure systems and
-          validate security strategies. My toolkit includes advanced malware analysis, custom
-          defensive solution design, and deep dives into network vulnerabilities.
+          From firmware reverse engineering to custom C2 development, my toolkit spans the full range of
+          offensive and defensive capabilities. I believe in hands-on experimentation, rigorous testing,
+          and constant learning.
         </p>
       </section>
 
@@ -48,7 +78,7 @@ export default function Home() {
               <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <div
                   className="skill-progress"
-                  style={{ '--skill-level': '95%' }}
+                  style={{ "--skill-level": "95%" }}
                 />
               </div>
             </div>
@@ -60,7 +90,7 @@ export default function Home() {
               <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <div
                   className="skill-progress"
-                  style={{ '--skill-level': '85%' }}
+                  style={{ "--skill-level": "85%" }}
                 />
               </div>
             </div>
@@ -72,19 +102,7 @@ export default function Home() {
               <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <div
                   className="skill-progress"
-                  style={{ '--skill-level': '80%' }}
-                />
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="flex justify-between text-sm mb-1">
-                <span>Rust</span>
-                <span>75%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div
-                  className="skill-progress"
-                  style={{ '--skill-level': '75%' }}
+                  style={{ "--skill-level": "80%" }}
                 />
               </div>
             </div>
@@ -101,7 +119,7 @@ export default function Home() {
               <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <div
                   className="skill-progress"
-                  style={{ '--skill-level': '90%' }}
+                  style={{ "--skill-level": "90%" }}
                 />
               </div>
             </div>
@@ -113,7 +131,7 @@ export default function Home() {
               <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                 <div
                   className="skill-progress"
-                  style={{ '--skill-level': '85%' }}
+                  style={{ "--skill-level": "85%" }}
                 />
               </div>
             </div>
@@ -122,50 +140,4 @@ export default function Home() {
                 <span>Metasploit</span>
                 <span>80%</span>
               </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div
-                  className="skill-progress"
-                  style={{ '--skill-level': '80%' }}
-                />
-              </div>
-            </div>
-            <div className="mb-3">
-              <div className="flex justify-between text-sm mb-1">
-                <span>Burp Suite</span>
-                <span>75%</span>
-              </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div
-                  className="skill-progress"
-                  style={{ '--skill-level': '75%' }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Passions Section */}
-      <section id="passions" className="mb-12">
-        <h2 className="text-3xl font-bold mb-4 heading-glow">Passions</h2>
-        <p className="text-gray-300">
-          Beyond my technical pursuits, I am deeply passionate about continuous learning, community
-          engagement, and sharing knowledge. Whether it’s through blogging, speaking at conferences,
-          or mentoring the next generation of security researchers, I strive to make a meaningful
-          impact in the world of cybersecurity.
-        </p>
-      </section>
-
-      {/* Certifications Section */}
-      <section id="certifications" className="mb-12">
-        <h2 className="text-3xl font-bold mb-4 heading-glow">Certifications</h2>
-        <ul className="text-gray-300 list-disc list-inside">
-          <li>CompTIA Security+</li>
-          <li>CompTIA Network+</li>
-          <li>AWS Certified Cloud Practitioner</li>
-          <li>OSCP (In Progress)</li>
-        </ul>
-      </section>
-    </div>
-  );
-}
+              <di
