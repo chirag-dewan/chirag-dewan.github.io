@@ -10,27 +10,31 @@ code, pre {
   @apply font-mono;
 }
 
-/* Binary Rain Animation */
+/* ---------------- Binary Rain ---------------- */
 @keyframes binaryFall {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
 }
 .binary-rain-container {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  z-index: -10; /* behind main content */
-  opacity: 0.2;
+  z-index: -10; /* Ensures background */
+  opacity: 0.2; /* Subtle effect */
 }
 .binary-rain-drop {
   position: absolute;
   top: -20%;
-  color: #00ff00;
+  color: #00ff00; /* Bright green */
   font-size: 0.75rem;
-  animation: binaryFall 5s linear infinite;
+  animation: binaryFall linear infinite;
 }
 
-/* Fade In Up Animation */
+/* ---------------- Fade In Up ---------------- */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -45,7 +49,7 @@ code, pre {
   animation: fadeInUp 0.8s ease-in-out forwards;
 }
 
-/* Heading Glow */
+/* ---------------- Heading Glow ---------------- */
 .heading-glow {
   position: relative;
   text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
@@ -64,14 +68,14 @@ code, pre {
   50% { opacity: 0.7; }
 }
 
-/* Glass/Frosted Effect */
+/* ---------------- Glass Effect ---------------- */
 .glass {
   backdrop-filter: blur(8px);
-  background-color: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Hover Pulse Effect */
+/* ---------------- Hover Pulse ---------------- */
 .hover-pulse {
   transition: transform 0.2s ease;
 }
@@ -79,16 +83,16 @@ code, pre {
   transform: scale(1.05);
 }
 
-/* Card Hover Effect */
+/* ---------------- Card Hover ---------------- */
 .card {
   transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 .card:hover {
-  background-color: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.15);
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Animated Skill Bar */
+/* ---------------- Animated Skill Bar ---------------- */
 @keyframes fillBar {
   0% { width: 0%; }
   100% { width: var(--skill-level); }
