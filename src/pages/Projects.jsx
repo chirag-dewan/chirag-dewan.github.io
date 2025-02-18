@@ -2,15 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Projects() {
-  // Work Projects
-  const workProjects = [
-    {
-      name: 'Custom C2 Server',
-      description:
-        'A custom command-and-control server for firmware analysis and penetration testing. (Work Project – Private)',
-    },
-  ];
-
   // Personal Projects
   const personalProjects = [
     {
