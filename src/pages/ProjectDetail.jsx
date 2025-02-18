@@ -5,72 +5,94 @@ const projectDetails = {
   "packet-prowler": {
     name: "Packet Prowler",
     description: `
-Packet Prowler - A Lightweight Network Packet Sniffer
+PacketProwler - A Lightweight Network Packet Sniffer
 
 Overview:
-Packet Prowler is a lightweight, customizable network packet sniffer written in C using the libpcap library. It captures real-time network packets and extracts key details such as source and destination IP addresses, protocol types, and packet sizes. Designed for hands-on network analysis, it helps researchers identify anomalies and potential threats.
+Packet Prowler is a C-based network packet sniffer leveraging libpcap for real-time packet capture. Its design focuses on low-level access to raw traffic, making it ideal for in-depth network analysis, threat detection, and protocol research.
 
-Features:
-- Real-Time Packet Sniffing: Captures live traffic on specified interfaces.
-- Protocol Filtering: Allows filters for protocols like TCP or UDP.
-- Packet Analysis: Dissects packets to display essential details.
-- Output Logging: Records packet information for offline review.
-- Extensible Design: Easily supports new protocols or additional analysis features.
+Key Features:
+• Real-Time Capture: Sniffs traffic on specified interfaces (e.g., eth0).
+• Protocol Filtering: Narrow down to TCP/UDP or custom filters.
+• Extensible Design: main.c, packet_sniffer.c, and utils.c modular structure for easy addition of new protocols/analyses.
+• Output Logging: Logs data to a specified file for offline review.
 
 Usage:
-Clone the repository, build using the provided Makefile, and run with options to specify an output file and number of packets to capture.
+Build with the provided Makefile (make), then run:
+  sudo ./PacketProwler -o output.txt -n 100
+to capture up to 100 packets and store them in output.txt.
 
 Future Enhancements:
-- IPv6 support, multi-threaded processing, real-time dashboards, and expanded logging formats.
+• Support for IPv6 and advanced BPF filters.
+• Real-time dash or multi-threading for high-throughput environments.
+• JSON or CSV output for SIEM integration.
 
-Overall, Packet Prowler offers low-level insight into network traffic, suitable for both research and practical network security applications.
+Overall, Packet Prowler provides a hands-on, deep look at raw network traffic for both security and troubleshooting.
     `,
     link: "https://github.com/chirag-dewan/Packet-Prowler",
   },
+
   "algorithmic-trading-test-highlow": {
     name: "Algorithmic Trading Test HighLow",
     description: `
-Stock Price Prediction Using Candlestick Patterns
+Stock Price Prediction with Candlestick Patterns
 
 Overview:
-This Python-based project predicts the High and Low stock prices for the next trading day using historical OHLC data, candlestick pattern recognition, and directionality indicators. It dynamically fetches market data and processes it to generate precise predictions, laying the groundwork for integrating advanced AI models.
+A Python-based tool that predicts tomorrow’s stock High and Low values using candlestick patterns, rolling averages, and historical OHLC data. It dynamically fetches market data, preprocesses it, and outputs forecasts—serving as a foundation for AI-driven enhancements.
 
-Features:
-- Dynamic Data Fetching: Automatically retrieves historical stock data via yfinance.
-- Candlestick Pattern Recognition: Identifies patterns (e.g., Doji, Hammer, Engulfing) to understand market sentiment.
-- Directionality Indicator: Uses rolling averages or similar signals to gauge market trends.
-- Model Retraining: Detects feature mismatches and retrains the model to adapt to new data.
-- Seamless Predictions: Outputs the predicted High and Low prices for the next trading day.
+Key Features:
+• Candlestick Recognition: Identifies patterns (Doji, Hammer, Engulfing).
+• Dynamic Fetching: Pulls recent OHLC data via yfinance.
+• Directionality Indicators: Leverages rolling averages or signals to infer trend momentum.
+• Retraining: Automatically adapts to new data if features shift or mismatch.
 
-Technologies Used:
-- Python as the core language.
-- scikit-learn for training a RandomForestRegressor.
-- yfinance for fetching historical OHLC data.
-- joblib for model persistence.
+AI Integration & Future Plans:
+• Add neural networks (LSTM/GRU) for time-series forecasting.
+• Reinforcement learning for optimized trade entries/exits.
+• Expand indicators (RSI, MACD, Bollinger Bands) and sentiment analysis.
+• Deploy on a cloud pipeline for large-scale, real-time data.
 
-How It Works:
-1. Fetch Data – Downloads the latest 365 days of stock data.
-2. Preprocessing – Cleans data and extracts candlestick patterns and other indicators.
-3. Model Training – Uses a RandomForestRegressor to learn from historical trends.
-4. Predictions – Compares current prices to historical highs/lows to predict tomorrow’s trading range.
-
-AI Integration & Future Enhancements:
-- Incorporate neural networks or LSTM models for more robust predictions.
-- Use reinforcement learning to dynamically optimize trading signals.
-- Add additional technical indicators (e.g., RSI, MACD, Bollinger Bands) and sentiment analysis.
-- Implement advanced risk management strategies, including stop-loss and take-profit mechanisms.
-- Deploy a cloud-based parallel processing system for real-time analysis.
-
-Overall, Algorithmic Trading Test HighLow serves as a testbed for developing AI-driven trading strategies. Its modular design makes it an ideal candidate for future expansion, enabling more sophisticated market predictions and automated trading decisions.
+This project is a testbed for algorithmic trading strategies, flexible enough to evolve into an advanced ML-based predictive system.
     `,
     link: "https://github.com/chirag-dewan/Algorithmic-Trading-Test-HighLow",
   },
+
   "malware-research-tool": {
-    name: "Malware Research Tool",
+    name: "Malware Analysis Tool",
     description: `
-The Malware Research Tool is an interactive environment that dissects and analyzes malware behavior. It parses malicious binaries, visualizes execution flows, and documents reverse engineering techniques to help researchers understand and neutralize modern threats. This hands-on approach is essential for developing effective countermeasures in today's cybersecurity landscape.
+Malware Analysis Tool - Modular Security Research Framework
+
+Overview:
+A Python-driven framework that merges static, behavioral, memory, and network analysis with machine learning classification. Containerized (Docker) for safe execution, it offers a full-stack approach to modern malware forensics.
+
+Highlights of Technical Prowess:
+• **Static Analysis**:
+  - Integrates YARA for signature detection and PE parsing to identify malicious file structures.
+  - Extracts AST-level code features (for Python-based samples) to detect suspicious imports and function calls.
+
+• **Behavioral Analysis**:
+  - Executes samples within isolated Docker containers, tracking system calls (strace/psutil) for real-time process, file, and registry events.
+  - Multi-threaded monitoring ensures minimal overhead and detailed logs of runtime behavior.
+
+• **Memory & Network Forensics**:
+  - Utilizes Volatility3 to inspect memory dumps, detect code injection, and pinpoint hidden processes.
+  - Captures network traffic with scapy/dpkt, flags suspicious IPs or domains, and correlates them with known threat intel.
+
+• **Machine Learning Classification**:
+  - Extracts code features, function calls, string patterns, and more.
+  - Employs Random Forest, neural networks, or ensemble methods to classify unknown malware families.
+
+• **Reporting & Visualization**:
+  - Generates consolidated HTML/PDF/JSON reports with charts, process trees, and memory analysis visuals.
+  - Offers a Flask-based web dashboard for sample uploads, historical browsing, and Elasticsearch indexing/search.
+
+Infrastructure & Design:
+• Docker Compose orchestrates multi-container setup (sandbox, web dashboard, Elasticsearch).
+• Code is split into modules: static_analyzer.py, behavior_analyzer.py, memory_analyzer.py, etc., fostering easy extension.
+• CI/CD pipelines can be integrated for automated scans, improving DevSecOps synergy.
+
+This framework showcases advanced security research capabilities—combining static checks, runtime forensics, memory inspection, network analysis, and ML classification to form a comprehensive malware lab environment.
     `,
-    link: null,
+    link: "https://github.com/chirag-dewan/malware-analysis-tool", 
   },
 };
 
@@ -82,7 +104,9 @@ export default function ProjectDetail() {
     return (
       <div className="max-w-5xl mx-auto px-6 mt-8 fade-in-up">
         <h1 className="text-3xl font-bold">Project Not Found</h1>
-        <p className="text-gray-300 mt-4">The project you are looking for does not exist.</p>
+        <p className="text-gray-300 mt-4">
+          The project you are looking for does not exist.
+        </p>
         <Link to="/projects" className="text-blue-400 hover:underline mt-4 inline-block">
           &larr; Back to Projects
         </Link>
