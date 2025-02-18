@@ -65,23 +65,23 @@ Overview:
 A Python-driven framework that merges static, behavioral, memory, and network analysis with machine learning classification. Containerized (Docker) for safe execution, it offers a full-stack approach to modern malware forensics.
 
 Highlights of Technical Prowess:
-• **Static Analysis**:
+• Static Analysis:
   - Integrates YARA for signature detection and PE parsing to identify malicious file structures.
   - Extracts AST-level code features (for Python-based samples) to detect suspicious imports and function calls.
 
-• **Behavioral Analysis**:
+• Behavioral Analysis:
   - Executes samples within isolated Docker containers, tracking system calls (strace/psutil) for real-time process, file, and registry events.
   - Multi-threaded monitoring ensures minimal overhead and detailed logs of runtime behavior.
 
-• **Memory & Network Forensics**:
+• Memory & Network Forensics:
   - Utilizes Volatility3 to inspect memory dumps, detect code injection, and pinpoint hidden processes.
   - Captures network traffic with scapy/dpkt, flags suspicious IPs or domains, and correlates them with known threat intel.
 
-• **Machine Learning Classification**:
+• Machine Learning Classification:
   - Extracts code features, function calls, string patterns, and more.
   - Employs Random Forest, neural networks, or ensemble methods to classify unknown malware families.
 
-• **Reporting & Visualization**:
+• Reporting & Visualization:
   - Generates consolidated HTML/PDF/JSON reports with charts, process trees, and memory analysis visuals.
   - Offers a Flask-based web dashboard for sample uploads, historical browsing, and Elasticsearch indexing/search.
 
