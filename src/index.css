@@ -2,110 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global Styles */
+/* Modern Color System */
+:root {
+  --primary-gradient: linear-gradient(135deg, #FF0080, #7928CA);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --hover-glow: 0 0 20px rgba(255, 80, 128, 0.4);
+}
+
+/* Base Styles */
 body {
   @apply font-sans bg-black text-white;
-}
-code, pre {
-  @apply font-mono;
+  background: radial-gradient(circle at top right, #1a1a1a, #000);
 }
 
-/* ---------------- Binary Rain ---------------- */
-@keyframes binaryFall {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
-}
-.binary-rain-container {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: -10; /* Ensures background */
-  opacity: 0.2; /* Subtle effect */
-}
-.binary-rain-drop {
-  position: absolute;
-  top: -20%;
-  color: #00ff00; /* Bright green */
-  font-size: 0.75rem;
-  animation: binaryFall linear infinite;
+/* Modern Typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold tracking-tight;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ---------------- Fade In Up ---------------- */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.fade-in-up {
-  animation: fadeInUp 0.8s ease-in-out forwards;
-}
-
-/* ---------------- Heading Glow ---------------- */
-.heading-glow {
-  position: relative;
-  text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
-}
-.heading-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 4px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.07);
-  opacity: 0;
-  animation: glowPulse 3s infinite ease-in-out;
-}
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.7; }
-}
-
-/* ---------------- Glass Effect ---------------- */
+/* Enhanced Glass Effect */
 .glass {
-  backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* ---------------- Hover Pulse ---------------- */
-.hover-pulse {
-  transition: transform 0.2s ease;
-}
-.hover-pulse:hover {
-  transform: scale(1.05);
+/* Netflix-style Card */
+.content-card {
+  @apply relative overflow-hidden rounded-lg transition-all duration-500;
+  background: var(--glass-bg);
 }
 
-/* ---------------- Card Hover ---------------- */
-.card {
-  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
-}
-.card:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+.content-card:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: var(--hover-glow);
 }
 
-/* ---------------- Animated Skill Bar ---------------- */
-@keyframes fillBar {
-  0% { width: 0%; }
-  100% { width: var(--skill-level); }
+/* Spotify-style Gradient Animation */
+.gradient-animate {
+  background: linear-gradient(
+    45deg,
+    #FF0080,
+    #7928CA,
+    #FF0080
+  );
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease infinite;
 }
-@keyframes shimmer {
-  0% { background-position: -200px 0; }
-  100% { background-position: 200px 0; }
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
 }
+
+/* Apple-style Button */
+.button-primary {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+  background: var(--primary-gradient);
+  box-shadow: 0 2px 8px rgba(255, 80, 128, 0.3);
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
+}
+
+/* Anthropic-style Text Input */
+.input-modern {
+  @apply w-full px-4 py-3 rounded-lg bg-transparent;
+  border: 1px solid var(--card-border);
+  transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(255, 80, 128, 0.2);
+}
+
+/* Enhanced Skill Bar */
+.skill-bar {
+  @apply relative h-2 rounded-full overflow-hidden bg-gray-800;
+}
+
 .skill-progress {
   height: 100%;
-  background: linear-gradient(to right, #3b82f6, #2563eb);
+  background: var(--primary-gradient);
   background-size: 200% auto;
-  animation: fillBar 2s forwards ease-in-out, shimmer 2s linear infinite;
-  border-radius: 9999px;
-  position: relative;
+  animation: fillBar 2s forwards ease-out, shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
+}
+
+/* Loading State */
+.loading-pulse {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 75%
+  );
+  background-size: 200% 100%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
+}
+
+/* Navigation Menu */
+.nav-link {
+  @apply relative py-2 transition-colors duration-300;
+}
+
+.nav-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
+  background: var(--primary-gradient);
+}
+
+.nav-link:hover::after {
+  @apply w-full;
 }
