@@ -17,14 +17,7 @@ export default function App() {
             <Link to="/" className="nav-link hover:text-pink-500 transition-colors">About</Link>
             <Link to="/projects" className="nav-link hover:text-pink-500 transition-colors">Projects</Link>
             <Link to="/resume" className="nav-link hover:text-pink-500 transition-colors">Resume</Link>
-            <a 
-              href="https://github.com/chirag-dewan" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="nav-link hover:text-pink-500 transition-colors"
-            >
-              GitHub
-            </a>
+            <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="nav-link hover:text-pink-500 transition-colors">GitHub</a>
           </nav>
         </header>
         <main className="container mx-auto px-6 py-8">
