@@ -21,6 +21,14 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
+.binary-rain-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .binary-stream {
   position: absolute;
   top: -20px;
@@ -31,7 +39,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: monospace;
   font-size: 14px;
   opacity: 0.15;
-  pointer-events: none;
 }
 
 .binary-char {
@@ -45,12 +52,8 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-20px);
     opacity: 0;
   }
-  20% {
-    opacity: 0.8;
-  }
-  90% {
-    opacity: 0.8;
-  }
+  20% { opacity: 0.8; }
+  90% { opacity: 0.8; }
   100% {
     transform: translateY(100vh);
     opacity: 0;
@@ -72,29 +75,6 @@ h1, h2, h3, h4, h5, h6 {
 .content-card:hover {
   transform: scale(1.02) translateY(-4px);
   box-shadow: var(--hover-glow);
-}
-
-.gradient-animate {
-  background: linear-gradient(45deg, #FF0080, #7928CA, #FF0080);
-  background-size: 200% 200%;
-  animation: gradientMove 8s ease infinite;
-}
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50% }
-  50% { background-position: 100% 50% }
-  100% { background-position: 0% 50% }
-}
-
-.button-primary {
-  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
-  background: var(--primary-gradient);
-  box-shadow: 0 2px 8px rgba(255, 80, 128, 0.3);
-}
-
-.button-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
 }
 
 .nav-link {
@@ -119,32 +99,10 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   background: var(--primary-gradient);
   background-size: 200% auto;
-  animation: fillBar 2s forwards ease-out, shimmer 3s linear infinite;
+  animation: fillBar 2s forwards ease-out;
 }
 
 @keyframes fillBar {
   0% { width: 0%; }
   100% { width: var(--skill-level); }
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0 }
-  100% { background-position: -200% 0 }
-}
-
-.loading-pulse {
-  @apply relative overflow-hidden;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.02) 25%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0.02) 75%
-  );
-  background-size: 200% 100%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0% { background-position: 200% 0 }
-  100% { background-position: -200% 0 }
 }
