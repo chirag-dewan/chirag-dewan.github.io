@@ -1,42 +1,30 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 const AnimatedBackground = () => {
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const columns = 50;
-    const fontSize = 14;
-    const columnWidth = window.innerWidth / columns;
-
-    // Clear existing content
-    container.innerHTML = '';
-
-    // Create columns
-    for (let i = 0; i < columns; i++) {
-      const column = document.createElement('div');
-      column.className = 'binary-column';
-      column.style.left = `${columnWidth * i}px`;
-      column.style.fontSize = `${fontSize}px`;
-      column.style.animationDuration = `${Math.random() * 2 + 2}s`;
-      
-      // Generate random binary string
-      const binaryString = Array(30)
-        .fill()
-        .map(() => Math.random() > 0.5 ? '1' : '0')
-        .join('');
-      
-      column.textContent = binaryString;
-      container.appendChild(column);
-    }
-
-    // Cleanup
-    return () => {
-      container.innerHTML = '';
-    };
-  }, []);
-
-  return <div ref={containerRef} className="binary-rain-container" />;
+  return (
+    <div className="fixed inset-0 z-0">
+      {Array.from({ length: 25 }).map((_, i) => (
+        <div 
+          key={i} 
+          className="binary-stream"
+          style={{
+            left: `${i * 4}%`,
+            animationDelay: `${Math.random() * 2}s`
+          }}
+        >
+          {Array.from({ length: 30 }).map((_, j) => (
+            <span 
+              key={j}
+              className="binary-char"
+              style={{ animationDelay: `${j * 0.1}s` }}
+            >
+              {Math.random() > 0.5 ? '1' : '0'}
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default AnimatedBackground;
