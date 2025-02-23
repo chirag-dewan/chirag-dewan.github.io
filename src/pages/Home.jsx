@@ -1,6 +1,29 @@
+// src/pages/Home.jsx
 import React from 'react';
 
 export default function Home() {
+  const skills = {
+    languages: [
+      { name: 'Python', level: 95 },
+      { name: 'C', level: 85 },
+      { name: 'JavaScript', level: 80 },
+      { name: 'Rust', level: 75 },
+    ],
+    security: [
+      { name: 'Ghidra', level: 90 },
+      { name: 'IDA Pro', level: 85 },
+      { name: 'Metasploit', level: 80 },
+      { name: 'Burp Suite', level: 75 },
+    ],
+    certifications: [
+      { name: 'CompTIA Security+', status: 'Completed' },
+      { name: 'CompTIA Network+', status: 'Completed' },
+      { name: 'AWS Certified Cloud Practitioner', status: 'Completed' },
+      { name: 'OSCP', status: 'In Progress' },
+      { name: 'CISSP', status: 'Not Started' },
+    ]
+  };
+
   return (
     <div className="min-h-screen container mx-auto px-4 py-12">
       <section className="mb-16 text-center">
@@ -28,12 +51,7 @@ export default function Home() {
         <div className="glass p-8 rounded-lg">
           <h3 className="text-2xl font-bold mb-6">Programming Languages</h3>
           <div className="space-y-4">
-            {[
-              { name: 'Python', level: 95 },
-              { name: 'C', level: 85 },
-              { name: 'JavaScript', level: 80 },
-              { name: 'Rust', level: 75 },
-            ].map((skill) => (
+            {skills.languages.map((skill) => (
               <div key={skill.name}>
                 <div className="flex justify-between mb-2">
                   <span>{skill.name}</span>
@@ -53,12 +71,7 @@ export default function Home() {
         <div className="glass p-8 rounded-lg">
           <h3 className="text-2xl font-bold mb-6">Security & Analysis Tools</h3>
           <div className="space-y-4">
-            {[
-              { name: 'Ghidra', level: 90 },
-              { name: 'IDA Pro', level: 85 },
-              { name: 'Metasploit', level: 80 },
-              { name: 'Burp Suite', level: 75 },
-            ].map((skill) => (
+            {skills.security.map((skill) => (
               <div key={skill.name}>
                 <div className="flex justify-between mb-2">
                   <span>{skill.name}</span>
@@ -79,13 +92,7 @@ export default function Home() {
       <section className="glass p-8 rounded-lg mb-16">
         <h2 className="text-3xl font-bold mb-6">Certifications</h2>
         <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { name: 'CompTIA Security+', status: 'Completed' },
-            { name: 'CompTIA Network+', status: 'Completed' },
-            { name: 'AWS Certified Cloud Practitioner', status: 'Completed' },
-            { name: 'OSCP', status: 'In Progress' },
-            { name: 'CISSP', status: 'Not Started' },
-          ].map((cert) => (
+          {skills.certifications.map((cert) => (
             <div key={cert.name} className="content-card p-4">
               <h3 className="font-bold mb-2">{cert.name}</h3>
               <span className={`text-sm ${
