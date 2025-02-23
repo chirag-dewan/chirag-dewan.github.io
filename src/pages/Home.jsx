@@ -1,5 +1,5 @@
-// src/pages/Home.jsx
 import React from 'react';
+import GitHubCalendar from 'react-github-calendar';
 
 export default function Home() {
   const skills = {
@@ -28,21 +28,24 @@ export default function Home() {
     <div className="min-h-screen container mx-auto px-4 py-12">
       <section className="mb-16 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Cyber Research Scientist
+          Chirag Dewan
         </h1>
         <p className="text-xl text-gray-400 italic">
-          "In a world of digital threats at every corner, curiosity and creativity are the keys to staying secure."
+          "In the realm of cybersecurity, continuous learning isn't just a choice – it's the foundation of excellence."
         </p>
       </section>
 
       <section className="mb-16 glass p-8 rounded-lg">
         <h2 className="text-3xl font-bold mb-6">About Me</h2>
         <div className="prose prose-invert">
+          <p className="text-lg mb-4">
+            As a Cyber Researcher at RTX BBN, I'm dedicated to uncovering and solving complex security challenges. 
+            My journey is driven by an unwavering commitment to learning and growth, pushing the boundaries of what's 
+            possible in cybersecurity.
+          </p>
           <p className="text-lg">
-            I'm Chirag Dewan, a Cyber Research Scientist with a passion for vulnerability research, 
-            reverse engineering, and cybersecurity. I thrive on uncovering hidden threats and building 
-            robust defenses. My mindset revolves around curiosity, creativity, and an unwavering drive 
-            to explore the unknown.
+            Through persistence and hard work, I've developed expertise in vulnerability research, reverse engineering, 
+            and threat analysis. Each challenge is an opportunity to learn, innovate, and strengthen our digital defenses.
           </p>
         </div>
       </section>
@@ -104,6 +107,18 @@ export default function Home() {
               </span>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="glass p-8 rounded-lg mb-16">
+        <h2 className="text-3xl font-bold mb-6">GitHub Activity</h2>
+        <div className="flex justify-center">
+          <GitHubCalendar 
+            username="chirag-dewan"
+            colorScheme="dark"
+            blockSize={12}
+            blockMargin={4}
+          />
         </div>
       </section>
     </div>
