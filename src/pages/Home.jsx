@@ -1,10 +1,8 @@
 import React from 'react';
-import { Shield, Code, Terminal, Lock } from 'lucide-react';
 
 export default function Home() {
   return (
     <div className="min-h-screen container mx-auto px-4 py-12">
-      {/* Hero Section */}
       <section className="mb-16 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
           Cyber Research Scientist
@@ -14,7 +12,6 @@ export default function Home() {
         </p>
       </section>
 
-      {/* About Section */}
       <section className="mb-16 glass p-8 rounded-lg">
         <h2 className="text-3xl font-bold mb-6">About Me</h2>
         <div className="prose prose-invert">
@@ -27,7 +24,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills Section */}
       <section className="mb-16 grid md:grid-cols-2 gap-8">
         <div className="glass p-8 rounded-lg">
           <h3 className="text-2xl font-bold mb-6">Programming Languages</h3>
@@ -80,7 +76,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Certifications */}
       <section className="glass p-8 rounded-lg mb-16">
         <h2 className="text-3xl font-bold mb-6">Certifications</h2>
         <div className="grid md:grid-cols-3 gap-6">
