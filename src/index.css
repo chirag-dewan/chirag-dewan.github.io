@@ -16,7 +16,7 @@ body {
   background: radial-gradient(circle at top right, #1a1a1a, #000);
 }
 
-/* Modern Typography */
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   @apply font-bold tracking-tight;
   background: var(--primary-gradient);
@@ -24,7 +24,36 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-text-fill-color: transparent;
 }
 
-/* Enhanced Glass Effect */
+/* Binary Rain Effect */
+.binary-rain-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0.15;
+}
+
+.binary-column {
+  position: absolute;
+  top: -100%;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  animation: rain linear infinite;
+}
+
+@keyframes rain {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100vh); }
+}
+
+/* Glass Effect */
 .glass {
   backdrop-filter: blur(12px);
   background: var(--glass-bg);
@@ -32,7 +61,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-/* Netflix-style Card */
+/* Content Card */
 .content-card {
   @apply relative overflow-hidden rounded-lg transition-all duration-500;
   background: var(--glass-bg);
@@ -43,14 +72,9 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--hover-glow);
 }
 
-/* Spotify-style Gradient Animation */
+/* Gradient Animation */
 .gradient-animate {
-  background: linear-gradient(
-    45deg,
-    #FF0080,
-    #7928CA,
-    #FF0080
-  );
+  background: linear-gradient(45deg, #FF0080, #7928CA, #FF0080);
   background-size: 200% 200%;
   animation: gradientMove 8s ease infinite;
 }
@@ -61,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   100% { background-position: 0% 50% }
 }
 
-/* Apple-style Button */
+/* Button Styles */
 .button-primary {
   @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
   background: var(--primary-gradient);
@@ -73,7 +97,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
 }
 
-/* Anthropic-style Text Input */
+/* Modern Input */
 .input-modern {
   @apply w-full px-4 py-3 rounded-lg bg-transparent;
   border: 1px solid var(--card-border);
@@ -85,7 +109,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 2px rgba(255, 80, 128, 0.2);
 }
 
-/* Enhanced Skill Bar */
+/* Skill Bar */
 .skill-bar {
   @apply relative h-2 rounded-full overflow-hidden bg-gray-800;
 }
@@ -97,12 +121,17 @@ h1, h2, h3, h4, h5, h6 {
   animation: fillBar 2s forwards ease-out, shimmer 3s linear infinite;
 }
 
+@keyframes fillBar {
+  0% { width: 0%; }
+  100% { width: var(--skill-level); }
+}
+
 @keyframes shimmer {
   0% { background-position: 200% 0 }
   100% { background-position: -200% 0 }
 }
 
-/* Loading State */
+/* Loading Animation */
 .loading-pulse {
   @apply relative overflow-hidden;
   background: linear-gradient(
@@ -120,7 +149,7 @@ h1, h2, h3, h4, h5, h6 {
   100% { background-position: -200% 0 }
 }
 
-/* Navigation Menu */
+/* Navigation */
 .nav-link {
   @apply relative py-2 transition-colors duration-300;
 }
@@ -134,3 +163,4 @@ h1, h2, h3, h4, h5, h6 {
 .nav-link:hover::after {
   @apply w-full;
 }
+
