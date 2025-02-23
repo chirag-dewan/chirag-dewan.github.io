@@ -24,25 +24,23 @@ h1, h2, h3, h4, h5, h6 {
 .binary-stream {
   position: absolute;
   top: -20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   color: #00ff00;
   font-family: monospace;
   font-size: 14px;
-  line-height: 1;
   opacity: 0.15;
-  animation: fadeIn 2s linear;
+  pointer-events: none;
 }
 
 .binary-char {
+  display: block;
   opacity: 0;
-  animation: fallDown 2s linear infinite;
+  animation: dropDown 2s linear infinite;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 0.15; }
-}
-
-@keyframes fallDown {
+@keyframes dropDown {
   0% {
     transform: translateY(-20px);
     opacity: 0;
@@ -50,7 +48,7 @@ h1, h2, h3, h4, h5, h6 {
   20% {
     opacity: 0.8;
   }
-  80% {
+  90% {
     opacity: 0.8;
   }
   100% {
@@ -76,6 +74,29 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--hover-glow);
 }
 
+.gradient-animate {
+  background: linear-gradient(45deg, #FF0080, #7928CA, #FF0080);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+.button-primary {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+  background: var(--primary-gradient);
+  box-shadow: 0 2px 8px rgba(255, 80, 128, 0.3);
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
+}
+
 .nav-link {
   @apply relative py-2 transition-colors duration-300;
 }
@@ -90,17 +111,6 @@ h1, h2, h3, h4, h5, h6 {
   @apply w-full;
 }
 
-.button-primary {
-  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
-  background: var(--primary-gradient);
-  box-shadow: 0 2px 8px rgba(255, 80, 128, 0.3);
-}
-
-.button-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
-}
-
 .skill-bar {
   @apply relative h-2 rounded-full overflow-hidden bg-gray-800;
 }
@@ -112,7 +122,29 @@ h1, h2, h3, h4, h5, h6 {
   animation: fillBar 2s forwards ease-out, shimmer 3s linear infinite;
 }
 
+@keyframes fillBar {
+  0% { width: 0%; }
+  100% { width: var(--skill-level); }
+}
+
 @keyframes shimmer {
+  0% { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
+}
+
+.loading-pulse {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.02) 75%
+  );
+  background-size: 200% 100%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
   0% { background-position: 200% 0 }
   100% { background-position: -200% 0 }
 }
