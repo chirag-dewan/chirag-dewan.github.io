@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #FF0080, #7928CA);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --hover-glow: 0 0 20px rgba(255, 80, 128, 0.4);
+}
+
+body {
+  @apply font-sans bg-black text-white;
+  background: radial-gradient(circle at top right, #1a1a1a, #000);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold tracking-tight;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.binary-stream {
+  position: absolute;
+  top: -20px;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.15;
+  animation: fadeIn 2s linear;
+}
+
+.binary-char {
+  opacity: 0;
+  animation: fallDown 2s linear infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.15; }
+}
+
+@keyframes fallDown {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.glass {
+  backdrop-filter: blur(12px);
+  background: var(--glass-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.content-card {
+  @apply relative overflow-hidden rounded-lg transition-all duration-500;
+  background: var(--glass-bg);
+}
+
+.content-card:hover {
+  transform: scale(1.02) translateY(-4px);
+  box-shadow: var(--hover-glow);
+}
+
+.nav-link {
+  @apply relative py-2 transition-colors duration-300;
+}
+
+.nav-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
+  background: var(--primary-gradient);
+}
+
+.nav-link:hover::after {
+  @apply w-full;
+}
+
+.button-primary {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+  background: var(--primary-gradient);
+  box-shadow: 0 2px 8px rgba(255, 80, 128, 0.3);
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 80, 128, 0.5);
+}
+
+.skill-bar {
+  @apply relative h-2 rounded-full overflow-hidden bg-gray-800;
+}
+
+.skill-progress {
+  height: 100%;
+  background: var(--primary-gradient);
+  background-size: 200% auto;
+  animation: fillBar 2s forwards ease-out, shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0 }
+  100% { background-position: -200% 0 }
+}
