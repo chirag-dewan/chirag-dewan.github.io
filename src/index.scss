@@ -14,13 +14,6 @@ body {
   background: radial-gradient(circle at top right, #1a1a1a, #000);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  @apply font-bold tracking-tight;
-  background: var(--primary-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .binary-rain-container {
   position: fixed;
   inset: 0;
@@ -77,20 +70,6 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--hover-glow);
 }
 
-.nav-link {
-  @apply relative py-2 transition-colors duration-300;
-}
-
-.nav-link::after {
-  content: '';
-  @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
-  background: var(--primary-gradient);
-}
-
-.nav-link:hover::after {
-  @apply w-full;
-}
-
 .skill-bar {
   @apply relative h-2 rounded-full overflow-hidden bg-gray-800;
 }
@@ -100,9 +79,17 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--primary-gradient);
   background-size: 200% auto;
   animation: fillBar 2s forwards ease-out;
+  width: var(--skill-level);
 }
 
-@keyframes fillBar {
-  0% { width: 0%; }
-  100% { width: var(--skill-level); }
+.nav-link {
+  @apply relative py-2 transition-colors duration-300;
+  &::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
+    background: var(--primary-gradient);
+  }
+  &:hover::after {
+    @apply w-full;
+  }
 }
