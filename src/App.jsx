@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx';
 import Projects from './pages/Projects.jsx';
 import ProjectDetail from './pages/ProjectDetail.jsx';
 import Resume from './pages/Resume.jsx';
+import Experience from './pages/Experience.jsx';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           <Link to="/" className="text-xl font-bold gradient-animate bg-clip-text text-transparent">CD.</Link>
           <nav className="flex gap-6">
             <Link to="/" className="nav-link hover:text-pink-500 transition-colors">About</Link>
+            <Link to="/experience" className="nav-link hover:text-pink-500 transition-colors">Experience</Link>
             <Link to="/projects" className="nav-link hover:text-pink-500 transition-colors">Projects</Link>
             <Link to="/resume" className="nav-link hover:text-pink-500 transition-colors">Resume</Link>
             <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="nav-link hover:text-pink-500 transition-colors">GitHub</a>
@@ -23,6 +25,7 @@ export default function App() {
         <main className="container mx-auto px-6 py-8">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/experience" element={<Experience />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:projectId" element={<ProjectDetail />} />
             <Route path="/resume" element={<Resume />} />
