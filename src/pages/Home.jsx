@@ -9,7 +9,7 @@ export default function Home() {
 
   // Typewriter effect for title
   const [titleText, setTitleText] = useState('');
-  const fullTitleText = "Cyber Research Scientist"; // Fixed typo from "Cber Ressarch"
+  const fullTitleText = "Cyber Research Scientist"; // Fixed typo from "Cber RRsearch"
   
   useEffect(() => {
     // Typewriter effect
@@ -52,6 +52,31 @@ export default function Home() {
       sectionsRef.current[id] = ref;
     }
   };
+
+  // Featured projects with proper links
+  const featuredProjects = [
+    {
+      id: "packet-prowler",
+      title: "Packet Analysis Framework",
+      description: "A next-generation packet sniffer for real-time traffic capture and threat detection",
+      icon: "🔍",
+      link: "/projects/packet-prowler"
+    },
+    {
+      id: "malware-research-tool",
+      title: "Malware Analysis Tool",
+      description: "Comprehensive framework for static, behavioral, and memory forensics with ML classification",
+      icon: "🔧",
+      link: "/projects/malware-research-tool"
+    },
+    {
+      id: "ids-project",
+      title: "ML-Driven Security Research",
+      description: "Machine learning techniques to detect pattern anomalies in security data",
+      icon: "🧠",
+      link: "/projects/ids-project"
+    }
+  ];
 
   const skills = {
     languages: [
@@ -113,23 +138,6 @@ export default function Home() {
         year: '2026-2027',
         certs: ['CISSP', 'OSWE']
       }
-    ],
-    featuredAchievements: [
-      {
-        title: "Packet Analysis Framework",
-        description: "Developed a next-generation packet analysis system for real-time threat detection",
-        icon: "🔍"
-      },
-      {
-        title: "Firmware Vulnerability Discovery",
-        description: "Uncovered critical memory corruption vulnerabilities in embedded firmware",
-        icon: "🔧"
-      },
-      {
-        title: "ML-Driven Security Research",
-        description: "Applied machine learning techniques to detect pattern anomalies in security data",
-        icon: "🧠"
-      }
     ]
   };
 
@@ -180,7 +188,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Achievements - New Section */}
+      {/* Featured Projects - With links to project details */}
       <section 
         id="achievements-section" 
         ref={el => registerSection('achievements-section', el)} 
@@ -189,24 +197,29 @@ export default function Home() {
         <div className="container mx-auto">
           <div className={`transition-all duration-700 ${isVisible['achievements-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
             <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
-              Key Achievements
+              Key Projects
             </h2>
             
             <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {skills.featuredAchievements.map((achievement, idx) => (
-                <div 
-                  key={idx} 
-                  className="glass p-8 rounded-xl border border-white/10 backdrop-blur-lg transition-all duration-300 hover:translate-y-[-8px] hover:shadow-xl hover:border-white/20 group"
-                  style={{ 
-                    transitionDelay: `${idx * 0.1}s`
-                  }}
+              {featuredProjects.map((project, idx) => (
+                <Link
+                  key={project.id}
+                  to={project.link}
+                  className="glass p-8 rounded-xl border border-white/10 backdrop-blur-lg transition-all duration-300 hover:translate-y-[-8px] hover:shadow-xl hover:border-pink-500/20 group"
+                  style={{ transitionDelay: `${idx * 0.1}s` }}
                 >
                   <div className="text-4xl mb-6 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl w-16 h-16 flex items-center justify-center">
-                    {achievement.icon}
+                    {project.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-pink-400 transition-colors">{achievement.title}</h3>
-                  <p className="text-gray-400">{achievement.description}</p>
-                </div>
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-pink-400 transition-colors">{project.title}</h3>
+                  <p className="text-gray-400 mb-4">{project.description}</p>
+                  <span className="text-pink-500 flex items-center gap-2 text-sm font-medium">
+                    View Project
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
@@ -259,7 +272,7 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">Professional Skills</h2>
             
             <div className="flex justify-center mb-12 gap-3 flex-wrap max-w-4xl mx-auto">
-              {Object.keys(skills).filter(key => key !== 'certifications' && key !== 'certRoadmap' && key !== 'featuredAchievements').map((category) => (
+              {Object.keys(skills).filter(key => key !== 'certifications' && key !== 'certRoadmap').map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveSkillCategory(category)}
