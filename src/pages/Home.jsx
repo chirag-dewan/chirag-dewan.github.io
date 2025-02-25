@@ -11,7 +11,7 @@ export default function Home() {
   const [titleText, setTitleText] = useState('');
   // Use this exact text for your typewriter effect, with correct spelling:
   // C-y-b-e-r R-e-s-e-a-r-c-h S-c-i-e-n-t-i-s-t
-  const fullTitleText = "Cyber Research Scientist"; // Fixed typo from "Cber esearch"
+  const fullTitleText = "Cyber Researcher"; // Fixed typo from "Cber esearch"
 
   useEffect(() => {
     // Typewriter effect
