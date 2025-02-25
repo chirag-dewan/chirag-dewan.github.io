@@ -7,23 +7,28 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState({});
   const sectionsRef = useRef({});
 
-  // Typewriter effect for title
-  const [titleText, setTitleText] = useState('');
-  // Use this exact text for your typewriter effect, with correct spelling:
-  // C-y-b-e-r R-e-s-e-a-r-c-h S-c-i-e-n-t-i-s-t
-  const fullTitleText = "Cyber Researcher"; // Fixed typo from "Cber esearch"
+// Typewriter effect for title
+const [titleText, setTitleText] = useState('');
+// Use this exact text for your typewriter effect, with correct spelling:
+// C-y-b-e-r R-e-s-e-a-r-c-h S-c-i-e-n-t-i-s-t
+const fullTitleText = "Cyber Researcher"; // Fixed typo from "Cber esearch"
 
-  useEffect(() => {
-    // Typewriter effect
-    let index = 0;
-    const typingInterval = setInterval(() => {
-      if (index < fullTitleText.length) {
-        setTitleText(prev => prev + fullTitleText.charAt(index));
-        index++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 100);
+useEffect(() => {
+  let index = 0;
+  let timeoutId;
+
+  const typeNextChar = () => {
+    if (index < fullTitleText.length) {
+      setTitleText(prev => prev + fullTitleText.charAt(index));
+      index++;
+      timeoutId = setTimeout(typeNextChar, 100);
+    }
+  };
+
+  typeNextChar();
+
+  return () => clearTimeout(timeoutId);
+}, []);
 
     // Intersection Observer for scroll animations
     const observer = new IntersectionObserver(
