@@ -12,6 +12,8 @@ export default function App() {
     <Router>
       <div className="relative min-h-screen w-full bg-black text-white font-mono">
         <AnimatedBackground />
+        
+        {/* Header (outside of main content flow) */}
         <header className="flex items-center justify-between px-6 py-4 glass sticky top-0 z-50">
           <Link to="/" className="text-xl font-bold gradient-animate bg-clip-text text-transparent">CD.</Link>
           <nav className="flex gap-6">
@@ -22,7 +24,9 @@ export default function App() {
             <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="nav-link hover:text-pink-500 transition-colors">GitHub</a>
           </nav>
         </header>
-        <main className="container mx-auto px-6 py-8">
+        
+        {/* Main content */}
+        <main className="w-full mx-auto transition-all duration-300">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/experience" element={<Experience />} />
