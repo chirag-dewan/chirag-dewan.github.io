@@ -11,42 +11,18 @@ export default function Home() {
   const [titleText, setTitleText] = useState('');
   const fullTitleText = "Cyber Research Scientist"; // Fixed typo from "Cber RRsearch"
   
- useEffect(() => {
-  let index = 0;
-  const typingInterval = setInterval(() => {
-    if (index < fullTitleText.length) {
-      setTitleText(prev => prev + fullTitleText.charAt(index));
-      index++;
-    } else {
-      clearInterval(typingInterval);
-    }
-  }, 100);
+  useEffect(() => {
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index < fullTitleText.length) {
+        setTitleText(prev => prev + fullTitleText.charAt(index));
+        index++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 100);
 
-  // Cleanup function
-  return () => clearInterval(typingInterval);
-}, []);
-
-    // Intersection Observer for scroll animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    // Observe all sections
-    Object.values(sectionsRef.current).forEach(ref => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
-      clearInterval(typingInterval);
-      observer.disconnect();
-    };
+    return () => clearInterval(typingInterval);
   }, []);
 
   // Register a section ref
@@ -148,9 +124,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Netflix/Apple Style with Animated Background */}
+      {/* Hero Section */}
       <section className="min-h-screen flex flex-col justify-center items-center relative py-16 px-4 overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-0"></div>
           <div className="absolute top-1/4 -right-20 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -183,7 +158,6 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <svg className="w-6 h-6 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
             <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
@@ -191,7 +165,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Projects - With links to project details */}
+      {/* Featured Projects */}
       <section 
         id="achievements-section" 
         ref={el => registerSection('achievements-section', el)} 
@@ -229,7 +203,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section - Spotify Card Style with Enhanced Design */}
+      {/* About Section */}
       <section 
         id="about-section" 
         ref={el => registerSection('about-section', el)} 
@@ -262,7 +236,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Skills Section - Apple Style Cards with Enhanced Design */}
+      {/* Skills Section */}
       <section 
         id="skills-section" 
         ref={el => registerSection('skills-section', el)} 
@@ -331,7 +305,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Certification Roadmap - Netflix Timeline Style with Enhanced Effects */}
+      {/* Certification Roadmap */}
       <section 
         id="cert-roadmap" 
         ref={el => registerSection('cert-roadmap', el)} 
@@ -343,10 +317,8 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">Certification Roadmap</h2>
             
             <div className="max-w-4xl mx-auto relative">
-              {/* Timeline line with enhanced glow */}
               <div className="absolute h-full w-1 bg-gradient-to-b from-pink-500 to-purple-500 left-[10px] md:left-1/2 transform md:-translate-x-1/2 top-0 shadow-glow"></div>
               
-              {/* Timeline items */}
               <div className="space-y-16">
                 {skills.certRoadmap.map((stage, idx) => (
                   <div 
@@ -355,7 +327,6 @@ export default function Home() {
                       idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                     }`}
                   >
-                    {/* Timeline dot with enhanced effects */}
                     <div 
                       className={`absolute left-[10px] md:left-1/2 top-3 w-5 h-5 rounded-full transform -translate-x-1/2 z-10 ${
                         stage.completed ? 'bg-green-500 shadow-lg shadow-green-500/50 animate-pulse' : 
@@ -364,7 +335,6 @@ export default function Home() {
                       }`}
                     ></div>
                     
-                    {/* Content with enhanced effects */}
                     <div className="pl-10 md:pl-0 md:w-[45%]">
                       <div className="glass p-6 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-lg">
                         <div className="flex items-center justify-between mb-4">
@@ -387,7 +357,6 @@ export default function Home() {
                       </div>
                     </div>
                     
-                    {/* Spacer for alternating layout */}
                     <div className="hidden md:block md:w-[55%]"></div>
                   </div>
                 ))}
@@ -397,7 +366,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Certifications - Spotify Card Grid with Enhanced Design */}
+      {/* Certifications */}
       <section 
         id="cert-section" 
         ref={el => registerSection('cert-section', el)} 
@@ -442,7 +411,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* GitHub Activity - Apple Card Style with Enhanced Design */}
+      {/* GitHub Activity */}
       <section 
         id="github-section" 
         ref={el => registerSection('github-section', el)} 
@@ -467,7 +436,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact CTA - New Section */}
+      {/* Contact CTA */}
       <section 
         id="contact-section" 
         ref={el => registerSection('contact-section', el)} 
@@ -491,7 +460,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer - Minimal Apple Style with Enhanced Design */}
+      {/* Footer */}
       <footer className="py-12 px-4 border-t border-white/10 bg-black">
         <div className="container mx-auto text-center">
           <div className="flex justify-center gap-6 mb-8">
@@ -508,13 +477,6 @@ export default function Home() {
           <p className="text-gray-500">© {new Date().getFullYear()} Chirag Dewan. All rights reserved.</p>
         </div>
       </footer>
-      
-      {/* Add custom style block for shadow-glow */}
-      <style jsx>{`
-        .shadow-glow {
-          box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-        }
-      `}</style>
     </div>
   );
 }
