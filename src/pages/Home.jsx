@@ -11,17 +11,20 @@ export default function Home() {
   const [titleText, setTitleText] = useState('');
   const fullTitleText = "Cyber Research Scientist"; // Fixed typo from "Cber RRsearch"
   
-  useEffect(() => {
-    // Typewriter effect
-    let index = 0;
-    const typingInterval = setInterval(() => {
-      if (index < fullTitleText.length) {
-        setTitleText(prev => prev + fullTitleText.charAt(index));
-        index++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 100);
+ useEffect(() => {
+  let index = 0;
+  const typingInterval = setInterval(() => {
+    if (index < fullTitleText.length) {
+      setTitleText(prev => prev + fullTitleText.charAt(index));
+      index++;
+    } else {
+      clearInterval(typingInterval);
+    }
+  }, 100);
+
+  // Cleanup function
+  return () => clearInterval(typingInterval);
+}, []);
 
     // Intersection Observer for scroll animations
     const observer = new IntersectionObserver(
