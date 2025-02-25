@@ -6,53 +6,42 @@ export default function Home() {
   // Animation state
   const [isVisible, setIsVisible] = useState({});
   const sectionsRef = useRef({});
-
-// Typewriter effect for title
-const [titleText, setTitleText] = useState('');
-// Use this exact text for your typewriter effect, with correct spelling:
-// C-y-b-e-r R-e-s-e-a-r-c-h S-c-i-e-n-t-i-s-t
-const fullTitleText = "Cyber Researcher"; // Fixed typo from "Cber esearch"
-
 useEffect(() => {
+  // Typewriter effect
   let index = 0;
-  let timeoutId;
-
-  const typeNextChar = () => {
+  const typingInterval = setInterval(() => {
     if (index < fullTitleText.length) {
       setTitleText(prev => prev + fullTitleText.charAt(index));
       index++;
-      timeoutId = setTimeout(typeNextChar, 100);
-    }
-  };
-
-  typeNextChar();
-
-  return () => clearTimeout(timeoutId);
-}, []);
-
-    // Intersection Observer for scroll animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    // Observe all sections
-    Object.values(sectionsRef.current).forEach(ref => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => {
+    } else {
       clearInterval(typingInterval);
-      observer.disconnect();
-    };
-  }, []);
+    }
+  }, 100);
 
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  // Observe all sections
+  Object.values(sectionsRef.current).forEach(ref => {
+    if (ref) observer.observe(ref);
+  });
+
+  // Cleanup function
+  return () => {
+    clearInterval(typingInterval);
+    observer.disconnect();
+  };
+}, []);
+  
   // Register a section ref
   const registerSection = (id, ref) => {
     if (ref && !sectionsRef.current[id]) {
