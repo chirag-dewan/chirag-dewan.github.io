@@ -113,26 +113,26 @@ export default function Home() {
   const [activeSkillCategory, setActiveSkillCategory] = useState('languages');
 
   return (
-    <div className="min-h-screen container mx-auto px-4 py-12">
+    <div className="min-h-screen container mx-auto px-4 py-8">
       {/* Hero Section */}
-      <section className="mb-16 text-center relative">
+      <section className="mb-20 text-center relative py-8">
         {/* Visual elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
         
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fadeIn">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Chirag Dewan
         </h1>
-        <div className="h-10">
+        <div className="h-10 mb-4">
           <p className="text-xl text-gray-400 typewriter">
             {titleText}
           </p>
         </div>
-        <p className="text-xl text-gray-400 italic mt-6 animate-fadeIn" style={{ animationDelay: '1.5s' }}>
+        <p className="text-xl text-gray-400 italic mb-8 max-w-3xl mx-auto">
           "In the realm of cybersecurity, continuous learning isn't just a choice – it's the foundation of excellence."
         </p>
         
-        <div className="flex justify-center gap-4 mt-10 animate-fadeIn" style={{ animationDelay: '2s' }}>
+        <div className="flex flex-wrap justify-center gap-4 mt-8">
           <Link to="/projects" className="button-primary">View Projects</Link>
           <Link to="/resume" className="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 transition-all">Resume</Link>
         </div>
@@ -142,7 +142,7 @@ export default function Home() {
       <section 
         id="about-section" 
         ref={el => registerSection('about-section', el)} 
-        className="mb-16 glass p-8 rounded-lg"
+        className="mb-20 glass p-8 rounded-lg"
       >
         <div className={`transition-all duration-700 ${isVisible['about-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl font-bold mb-6">About Me</h2>
@@ -164,12 +164,12 @@ export default function Home() {
       <section 
         id="skills-section" 
         ref={el => registerSection('skills-section', el)} 
-        className="mb-16"
+        className="mb-20"
       >
         <div className={`transition-all duration-700 ${isVisible['skills-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h2 className="text-3xl font-bold mb-8 text-center">Professional Skills</h2>
           
-          <div className="flex justify-center mb-6 gap-2 flex-wrap">
+          <div className="flex justify-center mb-8 gap-2 flex-wrap">
             {Object.keys(skills).filter(key => key !== 'certifications' && key !== 'certRoadmap').map((category) => (
               <button
                 key={category}
@@ -185,23 +185,24 @@ export default function Home() {
             ))}
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6">
             {skills[activeSkillCategory].map((skill, idx) => (
               <div 
                 key={skill.name} 
                 className="glass p-6 rounded-lg hover:shadow-lg transition-all"
                 style={{ 
                   animationDelay: `${idx * 0.1}s`,
-                  opacity: 0,
-                  animation: 'fadeIn 0.5s forwards',
-                  animationDelay: `${idx * 0.1}s`
+                  opacity: isVisible['skills-section'] ? 1 : 0,
+                  transform: isVisible['skills-section'] ? 'translateY(0)' : 'translateY(20px)',
+                  transition: `opacity 0.5s ease, transform 0.5s ease`,
+                  transitionDelay: `${idx * 0.1}s`
                 }}
               >
                 <div className="flex justify-between mb-2">
                   <span className="font-bold">{skill.name}</span>
                   <span className="text-pink-500">{skill.level}%</span>
                 </div>
-                <div className="skill-bar mb-2">
+                <div className="skill-bar mb-3">
                   <div 
                     className="skill-progress" 
                     style={{ '--skill-level': `${skill.level}%` }}
@@ -218,33 +219,33 @@ export default function Home() {
       <section 
         id="cert-roadmap" 
         ref={el => registerSection('cert-roadmap', el)} 
-        className="mb-16 glass p-8 rounded-lg"
+        className="mb-20 glass p-8 rounded-lg"
       >
         <div className={`transition-all duration-700 ${isVisible['cert-roadmap'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl font-bold mb-6">Certification Roadmap</h2>
+          <h2 className="text-3xl font-bold mb-8">Certification Roadmap</h2>
           
-          <div className="relative py-4">
+          <div className="relative">
             {/* Timeline line */}
-            <div className="absolute h-full w-0.5 bg-gradient-to-b from-pink-500 to-purple-500 left-[15px] md:left-[50%] top-0"></div>
+            <div className="absolute h-full w-1 bg-gradient-to-b from-pink-500 to-purple-500 left-[7px] md:left-[50%] top-0 transform md:translate-x-[-50%]"></div>
             
             {/* Timeline items */}
-            <div className="space-y-12">
+            <div className="space-y-10">
               {skills.certRoadmap.map((stage, idx) => (
-                <div key={idx} className={`relative flex flex-col md:flex-row md:items-center gap-6 ${
-                  idx % 2 === 0 ? 'md:flex-row-reverse' : ''
+                <div key={idx} className={`relative flex items-start ${
+                  idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                 }`}>
                   {/* Timeline dot */}
                   <div 
-                    className={`absolute left-[15px] md:left-[50%] w-6 h-6 rounded-full -translate-x-1/2 border-2 ${
+                    className={`absolute left-[7px] md:left-[50%] top-3 w-4 h-4 rounded-full transform translate-x-[-50%] border-2 ${
                       stage.completed ? 'bg-green-500 border-green-600' : 
-                      stage.inProgress ? 'bg-yellow-500 border-yellow-600 animate-pulse' : 
+                      stage.inProgress ? 'bg-yellow-500 border-yellow-600' : 
                       'bg-gray-700 border-gray-600'
                     }`}
                   ></div>
                   
                   {/* Content */}
-                  <div className="md:w-[45%] pl-10 md:pl-0">
-                    <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                  <div className="pl-10 md:pl-0 md:w-[45%]">
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-all">
                       <div className="flex items-center justify-between mb-3">
                         <h3 className="font-bold text-lg">{stage.name}</h3>
                         <span className={`text-sm px-2 py-1 rounded-full ${
@@ -266,7 +267,7 @@ export default function Home() {
                   </div>
                   
                   {/* Spacer for alternating layout */}
-                  <div className="hidden md:block md:w-[45%]"></div>
+                  <div className="hidden md:block md:w-[55%]"></div>
                 </div>
               ))}
             </div>
@@ -278,24 +279,24 @@ export default function Home() {
       <section 
         id="cert-section" 
         ref={el => registerSection('cert-section', el)} 
-        className="glass p-8 rounded-lg mb-16"
+        className="glass p-8 rounded-lg mb-20"
       >
         <div className={`transition-all duration-700 ${isVisible['cert-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl font-bold mb-6">Certifications</h2>
+          <h2 className="text-3xl font-bold mb-8">Certifications</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {skills.certifications.map((cert, idx) => (
               <div 
                 key={cert.name} 
-                className="content-card p-4 hover:scale-105 transition-all"
+                className="content-card p-5 hover:scale-105 transition-all"
                 style={{ 
-                  animationDelay: `${idx * 0.1}s`,
-                  opacity: 0,
-                  animation: 'fadeIn 0.5s forwards',
-                  animationDelay: `${idx * 0.1 + 0.2}s`
+                  opacity: isVisible['cert-section'] ? 1 : 0,
+                  transform: isVisible['cert-section'] ? 'translateY(0)' : 'translateY(20px)',
+                  transition: `opacity 0.5s ease, transform 0.5s ease`,
+                  transitionDelay: `${idx * 0.1}s`
                 }}
               >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">{cert.icon}</span>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl">{cert.icon}</span>
                   <h3 className="font-bold">{cert.name}</h3>
                 </div>
                 <div className="flex justify-between items-center">
@@ -318,11 +319,11 @@ export default function Home() {
       <section 
         id="github-section" 
         ref={el => registerSection('github-section', el)} 
-        className="glass p-8 rounded-lg mb-16"
+        className="glass p-8 rounded-lg mb-8"
       >
         <div className={`transition-all duration-700 ${isVisible['github-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h2 className="text-3xl font-bold mb-6">GitHub Activity</h2>
-          <div className="flex justify-center">
+          <h2 className="text-3xl font-bold mb-8">GitHub Activity</h2>
+          <div className="flex justify-center overflow-x-auto py-2">
             <GitHubCalendar 
               username="chirag-dewan"
               colorScheme="dark"
