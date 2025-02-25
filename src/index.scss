@@ -9,6 +9,11 @@
   --hover-glow: 0 0 20px rgba(255, 80, 128, 0.4);
 }
 
+/* Added shadow-glow class for enhanced effects */
+.shadow-glow {
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+}
+
 body {
   @apply font-sans bg-black text-white;
   background: radial-gradient(circle at top right, #1a1a1a, #000);
@@ -84,12 +89,12 @@ body {
 
 .nav-link {
   @apply relative py-2 transition-colors duration-300;
-  &::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
-    background: var(--primary-gradient);
-  }
-  &:hover::after {
-    @apply w-full;
-  }
+}
+.nav-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300;
+  background: var(--primary-gradient);
+}
+.nav-link:hover::after {
+  @apply w-full;
 }
