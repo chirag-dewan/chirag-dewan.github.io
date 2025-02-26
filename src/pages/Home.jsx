@@ -6,42 +6,46 @@ export default function Home() {
   // Animation state
   const [isVisible, setIsVisible] = useState({});
   const sectionsRef = useRef({});
-useEffect(() => {
-  // Typewriter effect
-  let index = 0;
-  const typingInterval = setInterval(() => {
-    if (index < fullTitleText.length) {
-      setTitleText(prev => prev + fullTitleText.charAt(index));
-      index++;
-    } else {
-      clearInterval(typingInterval);
-    }
-  }, 100);
 
-  // Intersection Observer for scroll animations
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  // Observe all sections
-  Object.values(sectionsRef.current).forEach(ref => {
-    if (ref) observer.observe(ref);
-  });
-
-  // Cleanup function
-  return () => {
-    clearInterval(typingInterval);
-    observer.disconnect();
-  };
-}, []);
+  // Typewriter effect for title - FIXED SPELLING
+  const [titleText, setTitleText] = useState('');
+  const fullTitleText = "Cyber Research Scientist"; // Corrected spelling
   
+  useEffect(() => {
+    // Typewriter effect
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index < fullTitleText.length) {
+        setTitleText(prev => prev + fullTitleText.charAt(index));
+        index++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 100);
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    // Observe all sections
+    Object.values(sectionsRef.current).forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      clearInterval(typingInterval);
+      observer.disconnect();
+    };
+  }, []);
+
   // Register a section ref
   const registerSection = (id, ref) => {
     if (ref && !sectionsRef.current[id]) {
