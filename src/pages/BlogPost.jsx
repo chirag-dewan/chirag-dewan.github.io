@@ -5,264 +5,55 @@ export default function BlogPost() {
   const { postId } = useParams();
   
   const blogPosts = {
-    'reverse-engineering-basics': {
-      title: 'Getting Started with Reverse Engineering: A Beginner\'s Guide',
-      date: 'February 15, 2024',
+    'welcome-intro': {
+      title: 'Welcome to My Cybersecurity Journey',
+      date: 'February 27, 2025',
       author: 'Chirag Dewan',
-      readTime: '8 min read',
-      tags: ['Reverse Engineering', 'Cybersecurity', 'Beginner'],
+      readTime: '4 min read',
+      tags: ['Personal', 'Cybersecurity', 'Introduction'],
       content: `
-# Getting Started with Reverse Engineering: A Beginner's Guide
+# Welcome to My Cybersecurity Journey
 
-Reverse engineering is the process of analyzing a system, device, or piece of software to understand its inner workings, design, and implementation. In the cybersecurity context, it's often used to understand how software functions, identify vulnerabilities, or analyze malware.
+Hey there! I'm Chirag Dewan, a Cybersecurity Researcher based in Boston, MA. If you're reading this, you've just stumbled upon my little corner of the digital world where I'll be sharing my adventures in the realm of cybersecurity.
 
-## Why Learn Reverse Engineering?
+## A Bit About Me
 
-Reverse engineering skills are valuable for several reasons:
+I've always been drawn to understanding how things work by taking them apart. That curiosity naturally led me to cybersecurity, where breaking down systems is actually part of making them stronger. Currently at RTX BBN, I get to channel this passion into tangible security solutions.
 
-1. **Security Research**: Finding vulnerabilities in software before malicious actors do
-2. **Malware Analysis**: Understanding how malware operates to develop better defenses
-3. **Compatibility & Interoperability**: Understanding how systems work to create compatible solutions
-4. **Legacy System Maintenance**: Supporting systems without documentation
+My day-to-day work involves everything from developing intelligent packet parsers to reverse-engineering firmware and creating proof-of-concept exploits. There's something incredibly satisfying about finding a vulnerability before the bad actors do and helping patch it up.
 
-## Essential Tools
+## What Drives Me
 
-To get started with reverse engineering, you'll need:
+What gets me out of bed every morning is the constantly evolving nature of security threats. Each day brings new challenges, techniques, and opportunities to learn. With an active Top Secret clearance, I've had the privilege of working on some fascinating projects that push the boundaries of what's possible in defensive security.
 
-### Disassemblers & Decompilers
-- **Ghidra**: NSA's free and open-source software reverse engineering tool
-- **IDA Pro**: Industry-standard interactive disassembler
-- **Radare2**: Open-source command-line disassembler and debugger
+Some of my personal projects include:
+- Building a real-time network packet sniffer (because sometimes you just need to see what's happening at the packet level)
+- Creating an automated malware analysis environment with Docker and YARA
+- Developing a machine learning-powered intrusion detection system
 
-### Debuggers
-- **GDB**: GNU Project Debugger for Unix-like systems
-- **WinDbg**: Windows debugger
-- **x64dbg**: Open-source Windows debugger
+## What to Expect on This Blog
 
-## Basic Workflow
+I started this blog to share insights that might help others navigating the complex world of cybersecurity. You can expect:
 
-A typical reverse engineering workflow involves:
+- Deep dives into interesting security concepts
+- Walkthroughs of personal projects and tools I've built
+- Thoughts on emerging threats and defense strategies
+- Occasional tutorials on techniques I've found valuable
 
-1. **Initial Analysis**: Determine the file type, architecture, and compiler
-2. **Static Analysis**: Examine the code without execution (using disassemblers)
-3. **Dynamic Analysis**: Run the program to observe behavior (using debuggers)
-4. **Documentation**: Document findings and create a map of program functionality
+I'm also excited to introduce several weekly features:
 
-## Getting Started with Ghidra
+- **Malware of the Week**: Detailed analysis of interesting malware samples, breaking down their techniques and potential mitigations
+- **Offensive/Defensive Tool Spotlight**: Highlighting useful security tools with practical demonstrations
+- **Research Paper Summaries**: Digestible breakdowns of important cybersecurity research papers and their real-world implications
 
-Ghidra is an excellent tool for beginners due to its powerful features and zero cost:
+Security is a community effort, and I believe in the power of sharing knowledge (responsibly, of course). Whether you're a seasoned security professional or just curious about how to better protect your digital life, I hope you'll find something valuable here.
 
-\`\`\`
-// Sample of what decompiled code might look like in Ghidra
+Thanks for joining me on this journey. I'm looking forward to the conversations and connections that grow from this space.
 
-int check_password(char *input_password) {
-  size_t len;
-  int i;
-  
-  len = strlen(input_password);
-  if (len != 10) {
-    return 0;
-  }
-  for (i = 0; i < 10; i++) {
-    if (input_password[i] != stored_password[i]) {
-      return 0;
-    }
-  }
-  return 1;
-}
-\`\`\`
-
-## Practice Suggestions
-
-To build your skills:
-
-1. Start with **Crackmes**: Small programs designed to be reverse engineered
-2. Analyze **Open Source Software**: Understanding code you can verify
-3. Join **CTF Competitions**: Capture the Flag events with reverse engineering challenges
-4. Contribute to **Security Research**: Participate in bug bounty programs
-
-## Ethical Considerations
-
-Always remember:
-- Obtain proper authorization before reverse engineering any software
-- Respect intellectual property rights and end-user license agreements
-- Disclose vulnerabilities responsibly
-- Never use these skills for malicious purposes
-
-## Next Steps
-
-After getting comfortable with basic reverse engineering:
-
-1. Learn about code obfuscation and how to defeat it
-2. Explore anti-debugging techniques
-3. Study different architectures (ARM, MIPS)
-4. Dive into specific domains like mobile apps or IoT devices
-
-Remember that reverse engineering is a skill that requires patience, persistence, and continual learning. Start small, be methodical, and don't get discouraged by complexity.
+Stay curious and secure,
+Chirag
       `,
-      relatedPosts: ['threat-hunting-techniques', 'machine-learning-security']
-    },
-    'threat-hunting-techniques': {
-      title: 'Advanced Threat Hunting Techniques in Enterprise Networks',
-      date: 'January 28, 2024',
-      author: 'Chirag Dewan',
-      readTime: '12 min read',
-      tags: ['Threat Hunting', 'Enterprise Security', 'Advanced'],
-      content: `
-# Advanced Threat Hunting Techniques in Enterprise Networks
-
-Threat hunting is a proactive security approach that focuses on the pursuit of attacks and malicious actors in your network that may have evaded existing security solutions. Unlike traditional reactive security measures, threat hunting assumes compromise and actively looks for evidence of malicious activity.
-
-## The Need for Proactive Threat Hunting
-
-Modern attackers have become increasingly sophisticated, using techniques that can bypass traditional security controls:
-
-1. **Living off the land** - Using legitimate tools and processes for malicious purposes
-2. **Fileless malware** - Operating entirely in memory to avoid detection
-3. **Supply chain attacks** - Compromising trusted software to distribute malware
-4. **Zero-day exploits** - Leveraging unknown vulnerabilities
-
-## Essential Data Sources for Threat Hunting
-
-Effective threat hunting requires visibility across multiple data sources:
-
-- **Endpoint telemetry**: Process creation, file modifications, registry changes
-- **Network traffic**: DNS requests, HTTP connections, TLS metadata
-- **Authentication logs**: Login attempts, privilege escalations, account modifications
-- **Email security logs**: Attachment types, sender reputation, link analysis
-- **Cloud service logs**: API calls, resource provisioning, configuration changes
-
-## Advanced Hunting Methodologies
-
-### 1. Hypothesis-Based Hunting
-
-Start with a specific theory about attacker behavior:
-
-\`\`\`
-Hypothesis: Attackers are using PowerShell Empire for post-exploitation
-Evidence to look for:
-- Suspicious PowerShell command-line parameters (e.g., -enc, -exec bypass)
-- PowerShell processes spawned by unusual parent processes
-- Outbound connections from PowerShell to uncommon domains
-\`\`\`
-
-### 2. TTP-Based Hunting
-
-Focus on specific Tactics, Techniques, and Procedures (TTPs) mapped to the MITRE ATT&CK framework:
-
-\`\`\`
-TTP: T1055 - Process Injection
-Hunt for:
-- Memory allocation patterns indicating shellcode injection
-- DLL injection via CreateRemoteThread
-- Process hollowing signatures
-\`\`\`
-
-### 3. Anomaly-Based Hunting
-
-Identify statistical outliers and unusual patterns:
-
-\`\`\`
-Examples:
-- Processes with rare parent-child relationships
-- Unusual login times or locations for privileged users
-- Abnormal data transfer volumes or destinations
-\`\`\`
-
-## Advanced Detection Techniques
-
-### Behavioral Analysis
-
-Look for sequences of events that indicate malicious behavior:
-
-\`\`\`
-Example pattern:
-1. Office document execution
-2. Command line interpreter spawn
-3. Network connection to low-reputation domain
-4. Registry modification to establish persistence
-\`\`\`
-
-### Stack Counting
-
-Analyze frequency distributions to identify rare or unusual occurrences:
-
-\`\`\`python
-# Pseudocode for stack counting
-def stack_count(events, field):
-    counts = {}
-    for event in events:
-        key = event[field]
-        counts[key] = counts.get(key, 0) + 1
-    
-    # Sort by frequency (least common first)
-    return sorted(counts.items(), key=lambda x: x[1])
-\`\`\`
-
-### Timeline Analysis
-
-Reconstruct attack sequences through temporal analysis:
-
-\`\`\`
-Timeline example:
-08:23:15 - Email received with attachment
-08:23:47 - User opens attachment
-08:23:52 - PowerShell process spawned
-08:24:01 - Connection to C2 server established
-08:24:15 - Scheduled task created for persistence
-\`\`\`
-
-## Tools for Advanced Threat Hunting
-
-- **Osquery**: SQL-powered operating system instrumentation
-- **ELK Stack**: Elasticsearch, Logstash, and Kibana for log aggregation and analysis
-- **Zeek (formerly Bro)**: Network security monitoring
-- **YARA**: Pattern matching for malware identification
-- **Volatility**: Memory forensics framework
-
-## Building a Sustainable Threat Hunting Program
-
-1. **Define hunting processes**: Establish methodologies, documentation standards, and automation opportunities
-2. **Build a hunting library**: Maintain a repository of queries, techniques, and findings
-3. **Measure effectiveness**: Track metrics such as dwell time reduction and coverage of the attack surface
-4. **Share knowledge**: Regular knowledge transfer sessions between hunters and broader security team
-
-## Future of Threat Hunting
-
-As threats evolve, so must hunting techniques:
-
-1. **AI-assisted hunting**: Machine learning to identify subtle anomalies and connections
-2. **Automated response**: Moving from detection to remediation with minimal human intervention
-3. **Threat intelligence integration**: Incorporating external IOCs and TTPs into hunting workflows
-4. **Cloud-native hunting**: Adapting methodologies for serverless, container, and microservice architectures
-
-Remember that threat hunting is not a one-time activity but a continuous process of improvement and adaptation to stay ahead of evolving threats.
-      `,
-      relatedPosts: ['reverse-engineering-basics', 'cloud-security-best-practices']
-    },
-    'machine-learning-security': {
-      title: 'Leveraging Machine Learning for Security Analytics',
-      date: 'December 15, 2023',
-      author: 'Chirag Dewan',
-      readTime: '10 min read',
-      tags: ['Machine Learning', 'Security Analytics', 'Data Science'],
-      content: `# Machine Learning for Security Analytics
-
-Content for this post is coming soon.
-      `,
-      relatedPosts: ['reverse-engineering-basics', 'threat-hunting-techniques']
-    },
-    'cloud-security-best-practices': {
-      title: 'Cloud Security Best Practices for Multi-Cloud Environments',
-      date: 'November 8, 2023',
-      author: 'Chirag Dewan',
-      readTime: '15 min read',
-      tags: ['Cloud Security', 'AWS', 'Azure', 'GCP'],
-      content: `# Cloud Security Best Practices
-
-Content for this post is coming soon.
-      `,
-      relatedPosts: ['threat-hunting-techniques', 'machine-learning-security']
+      relatedPosts: []
     }
   };
 
@@ -366,32 +157,6 @@ Content for this post is coming soon.
           {renderContent(post.content)}
         </article>
       </div>
-      
-      {post.relatedPosts && post.relatedPosts.length > 0 && (
-        <section className="glass p-8 rounded-xl border border-white/10">
-          <h2 className="text-2xl font-bold mb-6">Related Articles</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {post.relatedPosts.map(relatedId => {
-              const relatedPost = blogPosts[relatedId];
-              if (!relatedPost) return null;
-              
-              return (
-                <Link
-                  key={relatedId}
-                  to={`/blog/${relatedId}`}
-                  className="p-5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group"
-                >
-                  <h3 className="font-bold mb-2 group-hover:text-pink-400 transition-colors">{relatedPost.title}</h3>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-400">{relatedPost.date}</span>
-                    <span className="text-pink-500">{relatedPost.readTime}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
     </div>
   );
 }
