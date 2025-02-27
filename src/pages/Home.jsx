@@ -2,39 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import GitHubCalendar from 'react-github-calendar';
 import { Link } from 'react-router-dom';
 
-// Fixed Typewriter Component
-const TypewriterEffect = ({ text, delay = 100, className }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
-  const index = useRef(0);
-  
-  useEffect(() => {
-    setDisplayText('');
-    index.current = 0;
-    setIsTyping(true);
-    
-    if (!text) return;
-    
-    const intervalId = setInterval(() => {
-      if (index.current < text.length) {
-        setDisplayText(prev => prev + text.charAt(index.current));
-        index.current += 1;
-      } else {
-        setIsTyping(false);
-        clearInterval(intervalId);
-      }
-    }, delay);
-    
-    return () => clearInterval(intervalId);
-  }, [text, delay]);
-  
+// Simple animated text component (replaces typewriter)
+const AnimatedText = ({ text, className }) => {
   return (
-    <span className={className || ""}>
-      {displayText}
-      <span 
-        className={`inline-block w-[2px] h-[1em] bg-pink-500 ml-1 align-middle ${isTyping ? 'animate-pulse' : 'opacity-0'}`}
-        style={{ animationDuration: '0.75s' }}
-      />
+    <span className={`${className || ""} animate-fadeIn`}>
+      {text}
     </span>
   );
 };
@@ -197,9 +169,8 @@ export default function Home() {
           
           <div className="h-16 mb-8">
             <p className="text-2xl md:text-3xl text-gray-300 inline-block">
-              <TypewriterEffect 
+              <AnimatedText 
                 text="Cyber Research Scientist" 
-                delay={100}
                 className="font-medium"
               />
             </p>
@@ -227,7 +198,122 @@ export default function Home() {
             <div className="w-1.5 h-3 bg-white/60 rounded-full animate-[scroll_1.5s_infinite]"></div>
           </div>
         </div>
+      {/* GitHub Activity - Enhanced with better visuals */}
+      <section 
+        id="github-section" 
+        ref={el => registerSection('github-section', el)} 
+        className="py-24 px-4 relative overflow-hidden"
+      >
+        <div className="absolute -top-40 -left-20 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl"></div>
+        <div className="container mx-auto relative z-10">
+          <div className={`transition-all duration-700 ${isVisible['github-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">GitHub Activity</h2>
+            
+            <div className="max-w-5xl mx-auto glass p-8 rounded-xl border border-white/10 backdrop-blur-md hover:border-white/20 transition-all shadow-xl shadow-pink-500/5">
+              <div className="flex justify-center overflow-x-auto py-4">
+                <GitHubCalendar 
+                  username="chirag-dewan"
+                  colorScheme="dark"
+                  blockSize={12}
+                  blockMargin={4}
+                />
+              </div>
+              
+              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="text-2xl font-bold text-green-400 mb-1">120+</div>
+                  <div className="text-sm text-gray-400">Contributions</div>
+                </div>
+                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="text-2xl font-bold text-blue-400 mb-1">15+</div>
+                  <div className="text-sm text-gray-400">Repositories</div>
+                </div>
+                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="text-2xl font-bold text-purple-400 mb-1">8+</div>
+                  <div className="text-sm text-gray-400">Pull Requests</div>
+                </div>
+                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="text-2xl font-bold text-pink-400 mb-1">3+</div>
+                  <div className="text-sm text-gray-400">Open Source Projects</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
+
+      {/* Contact CTA - Enhanced with better visuals */}
+      <section 
+        id="contact-section" 
+        ref={el => registerSection('contact-section', el)} 
+        className="py-24 px-4 bg-gradient-to-r from-pink-900/20 to-purple-900/20"
+      >
+        <div className="container mx-auto">
+          <div className={`transition-all duration-700 ${isVisible['contact-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8">Let's Connect</h2>
+              <p className="text-xl text-gray-300 mb-10">
+                Interested in collaboration or have questions about my work? I'm always open to discussing new projects and opportunities.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
+                <a 
+                  href="mailto:chirag0728@gmail.com" 
+                  className="px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full text-lg font-medium inline-flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-pink-500/20 w-full sm:w-auto justify-center"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Email Me
+                </a>
+                <a 
+                  href="https://linkedin.com/in/cdewan" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="px-8 py-4 bg-blue-600 rounded-full text-lg font-medium inline-flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-blue-500/20 w-full sm:w-auto justify-center"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                  Connect on LinkedIn
+                </a>
+              </div>
+              
+              <div className="flex justify-center gap-6">
+                <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  GitHub
+                </a>
+                <a href="/blog" className="text-gray-400 hover:text-white transition-colors">
+                  Blog
+                </a>
+                <a href="/resume" className="text-gray-400 hover:text-white transition-colors">
+                  Resume
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer - Minimal Apple Style with Enhanced Design */}
+      <footer className="py-12 px-4 border-t border-white/10 bg-black">
+        <div className="container mx-auto text-center">
+          <div className="flex justify-center gap-6 mb-8">
+            <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/cdewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
+              LinkedIn
+            </a>
+            <a href="/blog" className="text-gray-400 hover:text-white transition-colors">
+              Blog
+            </a>
+          </div>
+          <p className="text-gray-500">© {new Date().getFullYear()} Chirag Dewan. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
 
       {/* Featured Projects - With enhanced cards and animations */}
       <section 
@@ -304,15 +390,15 @@ export default function Home() {
               
               <div className="mt-10 pt-8 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                 <div className="p-4 rounded-lg bg-white/5">
-                  <div className="text-3xl font-bold text-pink-500 mb-2">4+</div>
-                  <div className="text-sm text-gray-400">Years in Cybersecurity</div>
+                  <div className="text-3xl font-bold text-pink-500 mb-2">1.5+</div>
+                  <div className="text-sm text-gray-400">Years Full-Time</div>
                 </div>
                 <div className="p-4 rounded-lg bg-white/5">
                   <div className="text-3xl font-bold text-blue-500 mb-2">TS</div>
                   <div className="text-sm text-gray-400">Clearance Level</div>
                 </div>
                 <div className="p-4 rounded-lg bg-white/5">
-                  <div className="text-3xl font-bold text-purple-500 mb-2">15+</div>
+                  <div className="text-3xl font-bold text-purple-500 mb-2">3+</div>
                   <div className="text-sm text-gray-400">Security Projects</div>
                 </div>
                 <div className="p-4 rounded-lg bg-white/5">
@@ -356,47 +442,62 @@ export default function Home() {
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {skills[activeSkillCategory].map((skill, idx) => (
-                <div 
-                  key={skill.name} 
-                  className="glass p-6 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white/30 hover:shadow-xl hover:scale-[1.03] hover:bg-white/5 group"
-                  style={{ 
-                    opacity: isVisible['skills-section'] ? 1 : 0,
-                    transform: isVisible['skills-section'] ? 'translateY(0)' : 'translateY(20px)',
-                    transition: `opacity 0.5s ease, transform 0.5s ease, border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease`,
-                    transitionDelay: `${idx * 0.1}s`
-                  }}
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 p-2 rounded-lg group-hover:scale-110 transition-transform">
-                      {skill.icon}
-                    </span>
-                    <span className="text-xl font-bold group-hover:text-pink-400 transition-colors">{skill.name}</span>
+              {skills[activeSkillCategory].map((skill, idx) => {
+                // Convert numerical level to proficiency label
+                let proficiency = "Beginner";
+                if (skill.level >= 90) proficiency = "Expert";
+                else if (skill.level >= 80) proficiency = "Advanced";
+                else if (skill.level >= 65) proficiency = "Intermediate";
+                
+                return (
+                  <div 
+                    key={skill.name} 
+                    className="glass p-6 rounded-xl border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white/30 hover:shadow-xl hover:scale-[1.03] hover:bg-white/5 group"
+                    style={{ 
+                      opacity: isVisible['skills-section'] ? 1 : 0,
+                      transform: isVisible['skills-section'] ? 'translateY(0)' : 'translateY(20px)',
+                      transition: `opacity 0.5s ease, transform 0.5s ease, border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease`,
+                      transitionDelay: `${idx * 0.1}s`
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-2xl bg-gradient-to-br from-pink-500/20 to-purple-500/20 p-2 rounded-lg group-hover:scale-110 transition-transform">
+                        {skill.icon}
+                      </span>
+                      <span className="text-xl font-bold group-hover:text-pink-400 transition-colors">{skill.name}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-gray-400 text-sm">Proficiency</span>
+                      <span className={`text-sm px-2 py-1 rounded-full ${
+                        proficiency === "Expert" ? "bg-pink-500/20 text-pink-400" :
+                        proficiency === "Advanced" ? "bg-purple-500/20 text-purple-400" :
+                        proficiency === "Intermediate" ? "bg-blue-500/20 text-blue-400" :
+                        "bg-gray-500/20 text-gray-400"
+                      }`}>
+                        {proficiency}
+                      </span>
+                    </div>
+                    
+                    <div className="relative h-2 rounded-full overflow-hidden bg-gray-900/50 mb-4 group-hover:bg-gray-900/70 transition-colors">
+                      <div className="absolute top-0 left-0 bottom-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" style={{ width: `${skill.level}%` }}></div>
+                      <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-full filter blur-md" style={{ width: `${skill.level}%` }}></div>
+                      <div 
+                        className="absolute top-0 right-0 bottom-0 w-20 bg-gradient-to-r from-transparent to-white/20 rounded-full animate-[shimmer_2s_infinite]" 
+                        style={{ 
+                          width: '50%',
+                          transform: 'translateX(-100%)',
+                          animation: 'shimmer 2s infinite',
+                          opacity: 0.3,
+                          display: isVisible['skills-section'] ? 'block' : 'none'
+                        }}
+                      ></div>
+                    </div>
+                    
+                    <p className="text-gray-400 group-hover:text-gray-300 transition-colors">{skill.description}</p>
                   </div>
-                  
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-400 text-sm">Proficiency</span>
-                    <span className="text-pink-500 font-medium">{skill.level}%</span>
-                  </div>
-                  
-                  <div className="relative h-2 rounded-full overflow-hidden bg-gray-900/50 mb-4 group-hover:bg-gray-900/70 transition-colors">
-                    <div className="absolute top-0 left-0 bottom-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500" style={{ width: `${skill.level}%` }}></div>
-                    <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-full filter blur-md" style={{ width: `${skill.level}%` }}></div>
-                    <div 
-                      className="absolute top-0 right-0 bottom-0 w-20 bg-gradient-to-r from-transparent to-white/20 rounded-full animate-[shimmer_2s_infinite]" 
-                      style={{ 
-                        width: '50%',
-                        transform: 'translateX(-100%)',
-                        animation: 'shimmer 2s infinite',
-                        opacity: 0.3,
-                        display: isVisible['skills-section'] ? 'block' : 'none'
-                      }}
-                    ></div>
-                  </div>
-                  
-                  <p className="text-gray-400 group-hover:text-gray-300 transition-colors">{skill.description}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -542,121 +643,3 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* GitHub Activity - Enhanced with better visuals */}
-      <section 
-        id="github-section" 
-        ref={el => registerSection('github-section', el)} 
-        className="py-24 px-4 relative overflow-hidden"
-      >
-        <div className="absolute -top-40 -left-20 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl"></div>
-        <div className="container mx-auto relative z-10">
-          <div className={`transition-all duration-700 ${isVisible['github-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-            <h2 className="text-4xl md:text-5xl font-bold mb-16 text-center">GitHub Activity</h2>
-            
-            <div className="max-w-5xl mx-auto glass p-8 rounded-xl border border-white/10 backdrop-blur-md hover:border-white/20 transition-all shadow-xl shadow-pink-500/5">
-              <div className="flex justify-center overflow-x-auto py-4">
-                <GitHubCalendar 
-                  username="chirag-dewan"
-                  colorScheme="dark"
-                  blockSize={12}
-                  blockMargin={4}
-                />
-              </div>
-              
-              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                  <div className="text-2xl font-bold text-green-400 mb-1">120+</div>
-                  <div className="text-sm text-gray-400">Contributions</div>
-                </div>
-                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                  <div className="text-2xl font-bold text-blue-400 mb-1">15+</div>
-                  <div className="text-sm text-gray-400">Repositories</div>
-                </div>
-                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                  <div className="text-2xl font-bold text-purple-400 mb-1">8+</div>
-                  <div className="text-sm text-gray-400">Pull Requests</div>
-                </div>
-                <div className="p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                  <div className="text-2xl font-bold text-pink-400 mb-1">3+</div>
-                  <div className="text-sm text-gray-400">Open Source Projects</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA - Enhanced with better visuals */}
-      <section 
-        id="contact-section" 
-        ref={el => registerSection('contact-section', el)} 
-        className="py-24 px-4 bg-gradient-to-r from-pink-900/20 to-purple-900/20"
-      >
-        <div className="container mx-auto">
-          <div className={`transition-all duration-700 ${isVisible['contact-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-8">Let's Connect</h2>
-              <p className="text-xl text-gray-300 mb-10">
-                Interested in collaboration or have questions about my work? I'm always open to discussing new projects and opportunities.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
-                <a 
-                  href="mailto:chirag0728@gmail.com" 
-                  className="px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full text-lg font-medium inline-flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-pink-500/20 w-full sm:w-auto justify-center"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Email Me
-                </a>
-                <a 
-                  href="https://linkedin.com/in/cdewan" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="px-8 py-4 bg-blue-600 rounded-full text-lg font-medium inline-flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-blue-500/20 w-full sm:w-auto justify-center"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                  Connect on LinkedIn
-                </a>
-              </div>
-              
-              <div className="flex justify-center gap-6">
-                <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                  GitHub
-                </a>
-                <a href="/blog" className="text-gray-400 hover:text-white transition-colors">
-                  Blog
-                </a>
-                <a href="/resume" className="text-gray-400 hover:text-white transition-colors">
-                  Resume
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer - Minimal Apple Style with Enhanced Design */}
-      <footer className="py-12 px-4 border-t border-white/10 bg-black">
-        <div className="container mx-auto text-center">
-          <div className="flex justify-center gap-6 mb-8">
-            <a href="https://github.com/chirag-dewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
-              GitHub
-            </a>
-            <a href="https://linkedin.com/in/cdewan" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
-              LinkedIn
-            </a>
-            <a href="/blog" className="text-gray-400 hover:text-white transition-colors">
-              Blog
-            </a>
-          </div>
-          <p className="text-gray-500">© {new Date().getFullYear()} Chirag Dewan. All rights reserved.</p>
-        </div>
-      </footer>
-    </div>
-  );
-}
