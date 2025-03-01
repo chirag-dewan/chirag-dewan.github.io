@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import AnimatedHero from '../components/AnimatedHero';
 import ProjectShowcase from '../components/ProjectShowcase';
 import SkillHexagon from '../components/SkillHexagon';
-import ExperienceTimeline from '../components/ExperienceTimeline';
 import InteractiveTerminal from '../components/InteractiveTerminal';
 import ContactSection from '../components/ContactSection';
 
@@ -79,55 +78,13 @@ const skills = {
   ]
 };
 
-const professionalExperience = [
-  {
-    company: "RTX BBN",
-    position: "Cyber Researcher",
-    location: "Cambridge, MA",
-    period: "May 2024 – Present",
-    description: "Leading security research initiatives focused on vulnerability discovery and threat analysis for critical infrastructure systems.",
-    responsibilities: [
-      "Develop and implement packet parsing and analysis systems for network traffic inspection",
-      "Conduct reverse engineering of firmware to identify and document security vulnerabilities",
-      "Create proof-of-concept exploit code to demonstrate impact of discovered vulnerabilities",
-      "Design and implement security automation pipelines for continuous vulnerability testing"
-    ]
-  },
-  {
-    company: "Raytheon, RTX",
-    position: "Cyber Engineer",
-    location: "Aurora, CO",
-    period: "June 2023 – May 2024",
-    description: "Led security hardening initiatives and performed extensive threat modeling to secure enterprise systems and critical infrastructure.",
-    responsibilities: [
-      "Performed comprehensive threat modeling and vulnerability analysis for critical systems",
-      "Implemented hardening measures for Linux systems using SELinux and automated security scans",
-      "Built secure environments for malware analysis and behavior monitoring",
-      "Developed security automation frameworks integrated with CI/CD pipelines"
-    ]
-  },
-  {
-    company: "Raytheon, RTX",
-    position: "Senior Cyber Engineering Intern",
-    location: "Aurora, CO",
-    period: "May 2022 – June 2023",
-    description: "Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.",
-    responsibilities: [
-      "Simulated real-world attacks to test security controls and detection capabilities",
-      "Reverse-engineered binaries to identify and document exploitable vulnerabilities",
-      "Created custom vulnerability scanners that combined multiple open-source tools",
-      "Analyzed malware samples to document behaviors and improve detection capabilities"
-    ]
-  }
-];
-
 export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <AnimatedHero 
         name="Chirag Dewan"
-        title="Cyber Research Scientist"
+        title="Software Development Engineer II"
         description="In the realm of cybersecurity, continuous learning isn't just a choice – it's the foundation of excellence."
       />
       
@@ -161,20 +118,6 @@ export default function Home() {
           </div>
           
           <SkillHexagon skillData={skills} />
-        </div>
-      </section>
-      
-      {/* Experience Timeline */}
-      <section className="py-20 px-4 bg-black relative overflow-hidden">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold gradient-text mb-6">Professional Experience</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              My journey through cybersecurity challenges and achievements
-            </p>
-          </div>
-          
-          <ExperienceTimeline experiences={professionalExperience} />
         </div>
       </section>
       
