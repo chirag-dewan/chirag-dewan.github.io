@@ -6,6 +6,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import ParticleNetwork from './components/ParticleNetwork';
+import ThreeBackground from './components/ThreeBackground';
+import AnimatedHero from './components/AnimatedHero';
+import InteractiveTerminal from './components/InteractiveTerminal';
+import ProjectShowcase from './components/ProjectShowcase';
+import SkillGlobe from './components/SkillGlobe';
+import SkillHexagon from './components/SkillHexagon';
+import ExperienceTimeline from './components/ExperienceTimeline';
+import ContactSection from './components/ContactSection';
+import ProjectCards from './components/ProjectCards';
+import BlogCards from './components/BlogCards';
 
 // Import pages
 import Home from './pages/Home';
@@ -15,7 +25,6 @@ import Resume from './pages/Resume';
 import Experience from './pages/Experience';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
-import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
 
 // Import styles
@@ -38,6 +47,7 @@ const PageTransition = ({ children }) => {
 // Main app content with router
 const AppContent = () => {
   const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   // Scroll to top on route change
   useEffect(() => {
@@ -46,7 +56,8 @@ const AppContent = () => {
 
   return (
     <div className="relative min-h-screen w-full bg-black text-white font-sans enhanced-bg">
-      <ParticleNetwork />
+      {/* Use ThreeBackground for home page, ParticleNetwork for other pages */}
+      {isHomePage ? <ThreeBackground /> : <ParticleNetwork />}
       
       <Navigation />
       
@@ -106,14 +117,6 @@ const AppContent = () => {
               element={
                 <PageTransition>
                   <Resume />
-                </PageTransition>
-              }
-            />
-            <Route 
-              path="/contact" 
-              element={
-                <PageTransition>
-                  <Contact />
                 </PageTransition>
               }
             />
