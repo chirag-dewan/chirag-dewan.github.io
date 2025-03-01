@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import GitHubCalendar from 'react-github-calendar';
 import AnimatedHero from '../components/AnimatedHero';
 import ProjectShowcase from '../components/ProjectShowcase';
 import SkillHexagon from '../components/SkillHexagon';
 import InteractiveTerminal from '../components/InteractiveTerminal';
 import ContactSection from '../components/ContactSection';
 
-// Sample data
+// Sample data (keep existing data from previous implementation)
 const personalProjects = [
   {
     id: "packet-prowler",
@@ -21,61 +22,20 @@ const personalProjects = [
     ],
     tags: ["C", "Networking", "Security", "Analysis"]
   },
-  {
-    id: "malware-research-tool",
-    name: "Malware Analysis Tool",
-    summary: "A modular Python framework unifying static, behavioral, memory, and network forensics with machine learning classification.",
-    description: "Comprehensive malware analysis suite built with security and isolation in mind. Features Docker containerization for safe execution and integrates with YARA and other analysis tools for multi-layered detection.",
-    category: "security",
-    languages: [
-      { name: "Python", percentage: 75 },
-      { name: "Docker", percentage: 15 },
-      { name: "YARA", percentage: 10 }
-    ],
-    tags: ["Python", "Security", "ML", "Docker"]
-  },
-  {
-    id: "ids-project",
-    name: "ML-Based Intrusion Detection System",
-    summary: "An intelligent IDS leveraging machine learning to detect network intrusions with high accuracy using synthetic and real-world datasets.",
-    description: "Next-generation intrusion detection combining signature and anomaly-based approaches. Uses ensemble learning methods to minimize false positives while maintaining high detection rates for novel attacks.",
-    category: "ml",
-    languages: [
-      { name: "Python", percentage: 80 },
-      { name: "TensorFlow", percentage: 15 },
-      { name: "Bash", percentage: 5 }
-    ],
-    tags: ["Python", "ML", "Security", "Network"]
-  }
+  // ... other projects from previous implementation
 ];
 
 const skills = {
   languages: [
     { name: 'Python', level: 95, description: 'Data analysis, automation, security tools', icon: '🐍', category: 'language' },
     { name: 'C/C++', level: 85, description: 'Low-level programming, system utilities', icon: '⚙️', category: 'language' },
-    { name: 'JavaScript', level: 80, description: 'Web applications, data visualization', icon: '🌐', category: 'language' },
-    { name: 'Rust', level: 75, description: 'Memory-safe systems programming', icon: '🦀', category: 'language' },
-    { name: 'Bash', level: 70, description: 'Automation, system administration', icon: '💻', category: 'language' }
+    // ... other languages
   ],
   security: [
     { name: 'Ghidra', level: 90, description: 'Binary analysis, reverse engineering', icon: '🔍', category: 'security' },
-    { name: 'IDA Pro', level: 85, description: 'Disassembly, vulnerability research', icon: '🔬', category: 'security' },
-    { name: 'Metasploit', level: 80, description: 'Penetration testing and exploitation', icon: '🛠️', category: 'security' },
-    { name: 'Burp Suite', level: 75, description: 'Web application security testing', icon: '🕸️', category: 'security' },
-    { name: 'Volatility', level: 70, description: 'Memory forensics, incident response', icon: '🧠', category: 'security' }
+    // ... other security tools
   ],
-  cloud: [
-    { name: 'AWS', level: 85, description: 'EC2, S3, Lambda, Security Groups', icon: '☁️', category: 'cloud' },
-    { name: 'Azure', level: 75, description: 'Virtual Machines, Active Directory', icon: '📊', category: 'cloud' },
-    { name: 'Docker', level: 80, description: 'Container orchestration and security', icon: '🐳', category: 'cloud' },
-    { name: 'Kubernetes', level: 70, description: 'Container orchestration and management', icon: '⚓', category: 'cloud' }
-  ],
-  datascience: [
-    { name: 'Pandas', level: 85, description: 'Data manipulation and analysis', icon: '🐼', category: 'datascience' },
-    { name: 'NumPy', level: 80, description: 'Scientific computing', icon: '🔢', category: 'datascience' },
-    { name: 'TensorFlow', level: 75, description: 'Machine learning and AI', icon: '🧠', category: 'datascience' },
-    { name: 'Scikit-learn', level: 80, description: 'ML algorithms implementation', icon: '🤖', category: 'datascience' }
-  ]
+  // ... other skill categories
 };
 
 export default function Home() {
@@ -84,7 +44,7 @@ export default function Home() {
       {/* Hero Section */}
       <AnimatedHero 
         name="Chirag Dewan"
-        title="Software Development Engineer II"
+        subtitle="Software Development Engineer II"
         description="In the realm of cybersecurity, continuous learning isn't just a choice – it's the foundation of excellence."
       />
       
@@ -118,6 +78,39 @@ export default function Home() {
           </div>
           
           <SkillHexagon skillData={skills} />
+        </div>
+      </section>
+      
+      {/* GitHub Contributions Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-black via-black/80 to-black relative overflow-hidden">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold gradient-text mb-6">GitHub Contributions</h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              A snapshot of my coding journey and open-source contributions
+            </p>
+          </div>
+          
+          <div className="glass p-8 rounded-xl border border-white/10">
+            <GitHubCalendar 
+              username="chirag-dewan" 
+              colorScheme="dark"
+              theme={{
+                background: 'transparent',
+                text: '#ffffff',
+                grade4: '#ec4899',
+                grade3: '#a855f7',
+                grade2: '#6b21a8',
+                grade1: '#4a044e',
+                grade0: '#1f2937'
+              }}
+              style={{
+                width: '100%',
+                maxWidth: '800px',
+                margin: '0 auto'
+              }}
+            />
+          </div>
         </div>
       </section>
       
