@@ -2,82 +2,64 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const HexagonGrid = ({ skills }) => {
-  // To store the positions of hexagons
-  const [hexPositions, setHexPositions] = useState([]);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredSkill, setHoveredSkill] = useState(null);
   
-  // Calculate hexagon positions
-  useEffect(() => {
-    const numSkills = skills.length;
-    const radius = Math.min(window.innerWidth * 0.25, 300); // Responsive radius
-    const positions = [];
+  // Calculate hexagon positions in a more visually appealing layout
+  const calculateHexPositions = () => {
+    // Define a specific order for prominent skills to be more centrally located
+    const centerSkills = ['Python', 'Ghidra', 'C/C++', 'AWS'];
     
-    // Central hex
-    positions.push({ x: 0, y: 0 });
+    // Sort skills to put important ones in center positions
+    const sortedSkills = [...skills].sort((a, b) => {
+      const aIndex = centerSkills.indexOf(a.name);
+      const bIndex = centerSkills.indexOf(b.name);
+      
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return b.level - a.level; // Otherwise sort by skill level
+    });
     
-    // First ring - 6 hexagons
-    const firstRingCount = Math.min(6, numSkills - 1);
-    for (let i = 0; i < firstRingCount; i++) {
-      const angle = (Math.PI / 3) * i;
-      positions.push({
-        x: radius * Math.cos(angle),
-        y: radius * Math.sin(angle)
-      });
-    }
-    
-    // Second ring if needed - 12 hexagons
-    if (numSkills > 7) {
-      const secondRingCount = Math.min(12, numSkills - 7);
-      const secondRadius = radius * 1.75;
-      for (let i = 0; i < secondRingCount; i++) {
-        const angle = (Math.PI / 6) * i;
-        positions.push({
-          x: secondRadius * Math.cos(angle),
-          y: secondRadius * Math.sin(angle)
-        });
-      }
-    }
-    
-    setHexPositions(positions.slice(0, numSkills));
-  }, [skills]);
-  
-  // Function to calculate gradient based on skill level
-  const getGradient = (level) => {
-    if (level >= 90) return 'from-pink-500 to-purple-500';
-    if (level >= 80) return 'from-purple-500 to-indigo-500';
-    if (level >= 70) return 'from-blue-500 to-cyan-500';
-    return 'from-green-500 to-emerald-500';
+    return sortedSkills;
   };
+
+  const sortedSkills = calculateHexPositions();
   
-  // Function to calculate size based on skill level
-  const getHexSize = (level) => {
-    // Base size for reference (will be scaled based on level)
-    const baseSize = Math.min(window.innerWidth / 12, 70);
-    return baseSize * (0.8 + (level / 100) * 0.4); // Scale between 80% and 120% of base size
+  // Function to calculate gradient based on skill level and category
+  const getGradient = (skill) => {
+    const category = skill.category || 'default';
+    
+    const gradients = {
+      'language': { from: '#EC4899', to: '#D946EF' },  // Pink to fuchsia
+      'security': { from: '#A855F7', to: '#8B5CF6' },  // Purple to violet
+      'cloud': { from: '#3B82F6', to: '#6366F1' },     // Blue to indigo
+      'datascience': { from: '#10B981', to: '#059669' }, // Emerald to green
+      'default': { from: '#6D28D9', to: '#4F46E5' }    // Purple to indigo
+    };
+    
+    const colors = gradients[category] || gradients.default;
+    return `linear-gradient(135deg, ${colors.from}, ${colors.to})`;
   };
   
   return (
-    <div className="w-full py-10">
-      <div className="relative flex items-center justify-center mx-auto" style={{ height: '60vh', maxHeight: '600px', minHeight: '400px' }}>
-        {hexPositions.map((position, index) => {
-          const skill = skills[index];
-          const hexSize = getHexSize(skill.level);
-          const isCenter = index === 0;
-          const gradient = getGradient(skill.level);
+    <div className="w-full min-h-[500px] py-8 relative flex items-center justify-center">
+      {/* Floating hexagons */}
+      <div className="flex flex-wrap justify-center items-center max-w-4xl mx-auto gap-8 py-8">
+        {sortedSkills.map((skill, index) => {
+          // Calculate size based on skill level (higher level = larger hexagon)
+          const size = 80 + (skill.level * 0.4);
+          const isHovered = hoveredSkill === skill.name;
           
           return (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, scale: 0, rotate: -30 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ 
                 opacity: 1, 
                 scale: 1,
-                rotate: 0,
-                x: position.x,
-                y: position.y,
                 transition: { 
-                  duration: 0.6, 
-                  delay: index * 0.1,
+                  duration: 0.5, 
+                  delay: index * 0.05,
                   type: "spring",
                   stiffness: 260,
                   damping: 20
@@ -85,36 +67,29 @@ const HexagonGrid = ({ skills }) => {
               }}
               whileHover={{ 
                 scale: 1.15,
-                zIndex: 10, 
+                zIndex: 10,
                 transition: { duration: 0.2 }
               }}
-              className="absolute"
-              style={{ marginLeft: -hexSize / 2, marginTop: -hexSize / 2 }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              className="relative"
+              onMouseEnter={() => setHoveredSkill(skill.name)}
+              onMouseLeave={() => setHoveredSkill(null)}
             >
-              {/* Hexagon Container */}
+              {/* Hexagon */}
               <div 
-                className={`hex-container flex items-center justify-center ${hoveredIndex === index ? 'z-10' : 'z-0'}`}
+                className="hex relative flex items-center justify-center" 
                 style={{ 
-                  width: `${hexSize}px`, 
-                  height: `${hexSize * 1.1547}px` // Hexagon height ratio
+                  width: `${size}px`, 
+                  height: `${size * 0.866}px`,
+                  background: getGradient(skill),
+                  transition: "all 0.3s ease"
                 }}
               >
-                {/* Hexagon Background */}
-                <div 
-                  className={`hex-bg absolute inset-0 bg-gradient-to-br ${gradient} opacity-${isCenter ? '90' : '70'}`}
-                ></div>
-                
-                {/* Hexagon Content */}
-                <div className="hex-content relative z-10 flex flex-col items-center justify-center text-center p-2">
+                <div className="flex flex-col items-center justify-center text-center z-10 p-2">
                   <div className="text-2xl mb-1">{skill.icon}</div>
-                  <div className="text-white text-xs font-bold overflow-hidden text-ellipsis">
-                    {skill.name}
-                  </div>
+                  <div className="text-white text-sm font-bold">{skill.name}</div>
                   
-                  {/* Only show level indicator for hovered hexagon */}
-                  {hoveredIndex === index && (
+                  {/* Show level indicator on hover */}
+                  {isHovered && (
                     <motion.div 
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -123,7 +98,7 @@ const HexagonGrid = ({ skills }) => {
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${skill.level}%` }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
+                        transition={{ duration: 0.5 }}
                         className="h-full bg-white"
                       ></motion.div>
                     </motion.div>
@@ -131,24 +106,41 @@ const HexagonGrid = ({ skills }) => {
                 </div>
               </div>
               
-              {/* Skill details popup on hover */}
-              {hoveredIndex === index && (
+              {/* Pulse effect on hover */}
+              {isHovered && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, scale: 1 }}
+                  animate={{ 
+                    opacity: [0, 0.2, 0],
+                    scale: [1, 1.4, 1.8]
+                  }}
+                  transition={{ 
+                    duration: 1.5,
+                    repeat: Infinity,
+                    repeatType: "loop"
+                  }}
+                  className="absolute inset-0 hex"
+                  style={{ 
+                    background: getGradient(skill),
+                    width: `${size}px`, 
+                    height: `${size * 0.866}px`,
+                  }}
+                />
+              )}
+              
+              {/* Skill details popup on hover */}
+              {isHovered && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-gray-900/90 backdrop-blur-sm p-3 rounded-lg shadow-lg w-48 z-20 border border-gray-700"
-                  style={{ top: hexSize * 0.6 }}
+                  className="absolute left-1/2 transform -translate-x-1/2 mt-4 bg-gray-900/90 backdrop-blur-md p-3 rounded-lg shadow-lg w-48 z-20 border border-gray-700"
+                  style={{ top: `${size * 0.866}px` }}
                 >
                   <div className="text-center mb-2">
-                    <span className="text-lg font-bold">{skill.name}</span>
+                    <span className="text-lg font-bold text-white">{skill.name}</span>
                     <div className="flex items-center justify-center gap-1">
-                      <div className="text-pink-400 text-sm">{skill.level}%</div>
-                      <div className="text-gray-400 text-xs">
-                        {skill.level >= 90 ? 'Expert' : 
-                         skill.level >= 80 ? 'Advanced' : 
-                         skill.level >= 70 ? 'Intermediate' : 'Familiar'}
-                      </div>
+                      <div className="text-pink-400 text-sm font-mono">{skill.level}%</div>
                     </div>
                   </div>
                   <p className="text-xs text-gray-300">{skill.description}</p>
@@ -161,15 +153,7 @@ const HexagonGrid = ({ skills }) => {
       
       {/* CSS for hexagon shape */}
       <style jsx>{`
-        .hex-container {
-          position: relative;
-        }
-        
-        .hex-bg {
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-        }
-        
-        .hex-content {
+        .hex {
           clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
       `}</style>
@@ -180,12 +164,12 @@ const HexagonGrid = ({ skills }) => {
 const SkillHexagon = ({ skillData }) => {
   // Process skill data to get a mix of skills from different categories
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [activeCategory, setActiveCategory] = useState('all');
   
   useEffect(() => {
     if (!skillData) return;
     
-    // Function to get top skills from each category
-    const getTopSkills = () => {
+    const getAllSkills = () => {
       // Get categories (excluding certifications and certRoadmap)
       const categories = Object.keys(skillData).filter(
         key => key !== 'certifications' && key !== 'certRoadmap'
@@ -194,34 +178,63 @@ const SkillHexagon = ({ skillData }) => {
       // Prepare an array to hold all skills
       let allSkills = [];
       
-      // Add the top 3 skills from each category
+      // Add skills from each category
       categories.forEach(category => {
         const categorySkills = skillData[category]
-          .sort((a, b) => b.level - a.level)
-          .slice(0, 3)
           .map(skill => ({ ...skill, category }));
         
         allSkills = [...allSkills, ...categorySkills];
       });
       
-      // Sort all skills by level and take top 19 (1 central + 6 inner ring + 12 outer ring)
-      return allSkills
-        .sort((a, b) => b.level - a.level)
-        .slice(0, 19);
+      return allSkills;
     };
     
-    setSelectedSkills(getTopSkills());
-  }, [skillData]);
+    const getCategorySkills = (category) => {
+      if (category === 'all') {
+        return getAllSkills().slice(0, 12); // Limit to 12 skills for all categories
+      }
+      return skillData[category] || [];
+    };
+    
+    setSelectedSkills(getCategorySkills(activeCategory));
+  }, [skillData, activeCategory]);
+  
+  // Categories for filtering
+  const categories = [
+    { id: 'all', name: 'All' },
+    { id: 'languages', name: 'Languages' },
+    { id: 'security', name: 'Security' },
+    { id: 'cloud', name: 'Cloud' },
+    { id: 'datascience', name: 'Data Science' }
+  ];
   
   return (
     <div className="py-12 px-4">
       <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-6">
           Core Competencies
         </h2>
-        <p className="text-gray-300 max-w-2xl mx-auto">
-          A visual representation of my key skills and technologies, with larger hexagons indicating higher proficiency levels.
+        <p className="text-gray-300 max-w-2xl mx-auto mb-10">
+          A visual representation of my key skills and technologies, with larger hexagons
+          indicating higher proficiency levels.
         </p>
+        
+        {/* Category filter buttons */}
+        <div className="flex flex-wrap justify-center gap-3 mb-8">
+          {categories.map(category => (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                activeCategory === category.id ? 
+                'bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-lg shadow-pink-500/20' : 
+                'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
       </div>
       
       {selectedSkills.length > 0 && <HexagonGrid skills={selectedSkills} />}
