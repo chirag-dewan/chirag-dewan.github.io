@@ -333,3 +333,359 @@ body {
 .prose blockquote {
   @apply border-l-4 border-pink-500 pl-4 py-2 my-6 text-gray-400 italic;
 }
+
+/* Fix for broken arrows in projects */
+.arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.group:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+/* Enhanced card hover effects */
+.project-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom right, rgba(236, 72, 153, 0.05), rgba(168, 85, 247, 0.05));
+  z-index: -1;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px -15px rgba(236, 72, 153, 0.3);
+}
+
+.project-card:hover::before {
+  transform: translateY(0);
+}
+
+/* Enhanced background animation */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient-bg {
+  background: linear-gradient(-45deg, #0a0a0a, #121212, #1a1a1a, #0f0f0f);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+/* Improved glass effect */
+.enhanced-glass {
+  background: rgba(17, 17, 25, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Glowing border effect */
+.glow-border {
+  position: relative;
+}
+
+.glow-border::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: linear-gradient(45deg, #ec4899, #8b5cf6) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-border:hover::after {
+  opacity: 1;
+}
+
+/* Enhanced skill bars */
+.skill-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.skill-progress {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.skill-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%);
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Enhanced typography */
+.heading-gradient {
+  background: linear-gradient(90deg, #ffffff, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: textShine 4s ease-in-out infinite alternate;
+}
+
+@keyframes textShine {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Improved interactive elements */
+.interactive-button {
+  position: relative;
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.interactive-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #ec4899, #8b5cf6);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.interactive-button:hover {
+  color: white;
+  border-color: transparent;
+}
+
+.interactive-button:hover::before {
+  opacity: 1;
+}
+
+/* Certification badge styling */
+.certification-badge {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.certification-badge::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent
+  );
+  transform: rotate(45deg);
+  animation: badge-shine 3s infinite;
+}
+
+@keyframes badge-shine {
+  0% {
+    transform: rotate(45deg) translateY(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateY(100%);
+  }
+}
+
+/* Timeline styling */
+.timeline-connector {
+  @apply absolute left-7 md:left-1/2 top-0 h-full w-1;
+  background: linear-gradient(to bottom, #ec4899, #8b5cf6);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+}
+
+.timeline-node {
+  @apply absolute left-7 md:left-1/2 w-5 h-5 transform -translate-x-1/2;
+  background: linear-gradient(45deg, #ec4899, #8b5cf6);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+}
+
+.timeline-node::before {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  background: inherit;
+  animation: pulse 2s ease-out infinite;
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Matrix-style code background overlay */
+.matrix-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 20h-2v-6h2v6zm0 12h-2v-6h2v6zm0 12h-2v-6h2v6zm12-24h-2v-6h2v6zm0 12h-2v-6h2v6zm0 12h-2v-6h2v6zm12-24h-2v-6h2v6zm0 12h-2v-6h2v6zm0 12h-2v-6h2v6zm12-24h-2v-6h2v6zm0 12h-2v-6h2v6zm0 12h-2v-6h2v6z' fill='rgba(236, 72, 153, 0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.1;
+}
+
+/* AWS Certified Badge */
+.aws-badge {
+  position: relative;
+  background: linear-gradient(to right, #232F3E, #0D1F36);
+  border: 1px solid #FF9900;
+  box-shadow: 0 0 15px rgba(255, 153, 0, 0.3);
+  overflow: hidden;
+}
+
+.aws-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 153, 0, 0.3), transparent);
+  animation: aws-badge-shine 3s infinite;
+}
+
+@keyframes aws-badge-shine {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.floating-element {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Typewriter effect */
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid rgba(236, 72, 153, 0.75);
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: 
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: rgba(236, 72, 153, 0.75) }
+}
+
+/* Neon glow effect for important elements */
+.neon-glow {
+  text-shadow: 
+    0 0 5px rgba(236, 72, 153, 0.5),
+    0 0 10px rgba(236, 72, 153, 0.3),
+    0 0 15px rgba(236, 72, 153, 0.1);
+  animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse {
+  from {
+    text-shadow: 
+      0 0 5px rgba(236, 72, 153, 0.5),
+      0 0 10px rgba(236, 72, 153, 0.3),
+      0 0 15px rgba(236, 72, 153, 0.1);
+  }
+  to {
+    text-shadow: 
+      0 0 10px rgba(236, 72, 153, 0.7),
+      0 0 20px rgba(236, 72, 153, 0.5),
+      0 0 30px rgba(236, 72, 153, 0.3);
+  }
+}
