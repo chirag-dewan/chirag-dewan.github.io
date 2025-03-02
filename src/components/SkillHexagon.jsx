@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const HexagonGrid = ({ skills }) => {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   
-  // Calculate hexagon positions in a more visually appealing layout
+  // Calculate hexagon positions in a visually appealing layout
   const calculateHexPositions = () => {
     // Define a specific order for prominent skills to be more centrally located
     const centerSkills = ['Python', 'Ghidra', 'C/C++', 'AWS'];
@@ -112,7 +112,7 @@ const HexagonGrid = ({ skills }) => {
                   initial={{ opacity: 0, scale: 1 }}
                   animate={{ 
                     opacity: [0, 0.2, 0],
-                    scale: [1, 1.4, 1.8]
+                    scale: [1, 1.4, It is always 1.8]
                   }}
                   transition={{ 
                     duration: 1.5,
@@ -191,7 +191,7 @@ const SkillHexagon = ({ skillData }) => {
     
     const getCategorySkills = (category) => {
       if (category === 'all') {
-        return getAllSkills().slice(0, 12); // Limit to 12 skills for all categories
+        return getAllSkills().slice(0, 15); // Limit to 15 skills for all categories
       }
       return skillData[category] || [];
     };
