@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const InteractiveTerminal = () => {
+const EnhancedTerminal = () => {
+  // Terminal state
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([]);
   const [currentPath, setCurrentPath] = useState('~/portfolio');
@@ -9,19 +10,25 @@ const InteractiveTerminal = () => {
   const [commandHistory, setCommandHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isTyping, setIsTyping] = useState(true);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [theme, setTheme] = useState('dark'); // 'dark', 'matrix', 'midnight'
+  
+  // DOM refs
   const inputRef = useRef(null);
   const terminalRef = useRef(null);
+  const containerRef = useRef(null);
   
-  // Introduction message
-  const introMessage = `Welcome to Chirag Dewan's portfolio terminal. Type 'help' for a list of commands.`;
+  // Introduction message and animation
   const introLines = [
-    'cybersecurity-portfolio $ ./welcome.sh',
-    'Initializing environment...',
+    'cybersecurity-portfolio $ ./secure_boot.sh',
+    'Initializing secure environment...',
     'Loading modules: [software] [security] [web] [cloud] [machine-learning]',
-    'Environment ready. Welcome to Chirag Dewan\'s portfolio.'
+    'Establishing secure connection...',
+    'Connection established.',
+    'Welcome to Chirag Dewan\'s Security Operations Center.'
   ];
   
-  // File system structure for ls and cd commands
+  // File system structure
   const fileSystem = {
     '~': {
       type: 'dir',
@@ -168,9 +175,8 @@ Location: Dallas-Fort Worth, TX` }
     }
   };
   
-  // Initial commands and responses
+  // Typing intro animation
   useEffect(() => {
-    // Simulate typing the introduction message
     let timer;
     let charIndex = 0;
     let lineIndex = 0;
@@ -189,7 +195,10 @@ Location: Dallas-Fort Worth, TX` }
         }
       } else {
         // When finished typing, add the intro message to history
-        setHistory([{ type: 'system', content: introMessage }]);
+        setHistory([{ 
+          type: 'system', 
+          content: 'Type \'help\' for a list of available commands.' 
+        }]);
         setIsTyping(false);
       }
     };
@@ -199,7 +208,7 @@ Location: Dallas-Fort Worth, TX` }
     return () => clearTimeout(timer);
   }, []);
   
-  // Auto-scroll to bottom on new entries
+  // Auto-scroll terminal to bottom
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
@@ -213,7 +222,26 @@ Location: Dallas-Fort Worth, TX` }
     }
   };
 
-  // Get contents of a path in the file system
+  // Path resolution
+  const resolvePath = (path) => {
+    if (path.startsWith('~') || path.startsWith('/')) {
+      return path.startsWith('~') ? path : '~' + path;
+    }
+    
+    if (path === '.') return currentPath;
+    if (path === '..') {
+      const parts = currentPath.split('/');
+      if (parts.length > 1) {
+        parts.pop();
+        return parts.join('/') || '~';
+      }
+      return '~';
+    }
+    
+    return `${currentPath}/${path}`;
+  };
+
+  // Get node at path helper
   const getNodeAtPath = (path) => {
     const parts = path.split('/').filter(part => part !== '');
     let currentNode = fileSystem;
@@ -233,7 +261,7 @@ Location: Dallas-Fort Worth, TX` }
     return currentNode;
   };
   
-  // Get the list of contents in the current directory
+  // Get directory contents helper
   const getDirectoryContents = (path) => {
     const node = getNodeAtPath(path);
     if (!node || node.type !== 'dir') return "Not a directory";
@@ -242,7 +270,6 @@ Location: Dallas-Fort Worth, TX` }
       return `${item.type === 'dir' ? name + '/' : name}`;
     });
     
-    // Sort directories first, then files
     return contents.sort((a, b) => {
       const aIsDir = a.endsWith('/');
       const bIsDir = b.endsWith('/');
@@ -251,8 +278,8 @@ Location: Dallas-Fort Worth, TX` }
       return a.localeCompare(b);
     }).join('\n');
   };
-  
-  // Handle command execution
+
+  // Command execution
   const executeCommand = (cmd) => {
     if (!cmd.trim()) return;
     
@@ -262,8 +289,6 @@ Location: Dallas-Fort Worth, TX` }
     
     // Add command to history
     setHistory(prev => [...prev, { type: 'command', content: `${currentPath} $ ${cmd}` }]);
-    
-    // Add to command history for up/down navigation
     setCommandHistory(prev => [...prev, cmd]);
     setHistoryIndex(-1);
     
@@ -280,13 +305,14 @@ Location: Dallas-Fort Worth, TX` }
   projects         - Show portfolio projects
   contact          - Display contact information
   resume           - Show professional experience
-  cd [directory]   - Change directory (simulate navigation)
+  cd [directory]   - Change directory
   ls [directory]   - List contents of directory
   cat [file]       - View contents of a file
   pwd              - Print working directory
   echo [text]      - Display text
   date             - Display current date and time
-  whoami           - Display current user`
+  whoami           - Display current user
+  theme [name]     - Change terminal theme (dark, matrix, midnight)`
         }]);
         break;
         
@@ -479,6 +505,21 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
         }]);
         break;
       
+      case 'theme':
+        if (args.length === 0 || !['dark', 'matrix', 'midnight'].includes(args[0])) {
+          setHistory(prev => [...prev, { 
+            type: 'error', 
+            content: 'Usage: theme [dark|matrix|midnight]'
+          }]);
+        } else {
+          setTheme(args[0]);
+          setHistory(prev => [...prev, { 
+            type: 'system', 
+            content: `Terminal theme changed to ${args[0]}`
+          }]);
+        }
+        break;
+        
       case 'sudo':
         setHistory(prev => [...prev, { 
           type: 'error', 
@@ -532,47 +573,30 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
             content: 'Network operations not available in this terminal simulation.'
           }]);
         } else if (command === 'matrix') {
+          setTheme('matrix');
           setHistory(prev => [...prev, { 
             type: 'system', 
-            content: 'Wake up, Neo...'
+            content: 'Entering the Matrix... Theme changed to matrix.'
           }]);
+        } else if (command === 'hack') {
+          setHistory(prev => [...prev, { 
+            type: 'error', 
+            content: 'Unauthorized access attempt detected. This incident has been logged.'
+          }]);
+          
+          // Fake alert after a short delay
+          setTimeout(() => {
+            setHistory(prev => [...prev, { 
+              type: 'system', 
+              content: 'Just kidding! But security is no joke. 😎'
+            }]);
+          }, 1500);
         } else {
           setHistory(prev => [...prev, { 
             type: 'error', 
             content: `Command not found: ${command}. Type 'help' for available commands.`
           }]);
         }
-    }
-  };
-  
-  // Helper function to resolve paths
-  const resolvePath = (path) => {
-    // Handle absolute paths
-    if (path.startsWith('~') || path.startsWith('/')) {
-      return path.startsWith('~') ? path : '~' + path;
-    }
-    
-    // Handle relative paths
-    if (path === '.') return currentPath;
-    if (path === '..') {
-      const parts = currentPath.split('/');
-      if (parts.length > 1) {
-        parts.pop();
-        return parts.join('/') || '~';
-      }
-      return '~';
-    }
-    
-    // Standard relative path
-    return `${currentPath}/${path}`;
-  };
-  
-  // Handle form submission (command entry)
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (input.trim() && !isTyping) {
-      executeCommand(input);
-      setInput('');
     }
   };
   
@@ -599,53 +623,134 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      // Auto-complete functionality could be added here
+      // Auto-complete could be added here
     }
   };
   
+  // Handle form submission (command entry)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim() && !isTyping) {
+      executeCommand(input);
+      setInput('');
+    }
+  };
+  
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'matrix':
+        return {
+          bg: 'bg-black',
+          text: 'text-green-500',
+          promptColor: 'text-green-400',
+          commandColor: 'text-green-300',
+          responseColor: 'text-green-500',
+          errorColor: 'text-red-400',
+          systemColor: 'text-green-400',
+          headerBg: 'bg-green-900',
+          inputBg: 'bg-black',
+          caretColor: 'text-green-500',
+          borderColor: 'border-green-800'
+        };
+      case 'midnight':
+        return {
+          bg: 'bg-gray-900',
+          text: 'text-blue-400',
+          promptColor: 'text-blue-500',
+          commandColor: 'text-blue-200',
+          responseColor: 'text-blue-300',
+          errorColor: 'text-red-400',
+          systemColor: 'text-cyan-400',
+          headerBg: 'bg-gray-800',
+          inputBg: 'bg-gray-900',
+          caretColor: 'text-blue-400',
+          borderColor: 'border-blue-900'
+        };
+      case 'dark':
+      default:
+        return {
+          bg: 'bg-black',
+          text: 'text-white',
+          promptColor: 'text-pink-500',
+          commandColor: 'text-white',
+          responseColor: 'text-green-400',
+          errorColor: 'text-red-400',
+          systemColor: 'text-blue-400',
+          headerBg: 'bg-gray-800',
+          inputBg: 'bg-black',
+          caretColor: 'text-white',
+          borderColor: 'border-gray-700'
+        };
+    }
+  };
+  
+  const styles = getThemeStyles();
+
   return (
     <motion.div 
+      ref={containerRef}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-full max-w-4xl mx-auto"
+      className={`w-full max-w-4xl mx-auto ${isMaximized ? 'fixed inset-0 z-50 max-w-none mx-0 rounded-none' : ''}`}
     >
-      <div className="bg-gray-900 rounded-lg overflow-hidden shadow-2xl border border-gray-700">
+      <div className={`${styles.bg} rounded-lg overflow-hidden shadow-2xl ${styles.borderColor} border transition-all duration-300`}>
         {/* Terminal header */}
-        <div className="bg-gray-800 px-4 py-2 flex items-center">
-          <div className="flex space-x-2 mr-4">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+        <div className={`${styles.headerBg} px-4 py-2 flex items-center justify-between`}>
+          <div className="flex space-x-2">
+            <button 
+              onClick={() => setHistory([])} 
+              className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
+              title="Clear terminal"
+            ></button>
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            <button 
+              onClick={() => setIsMaximized(!isMaximized)} 
+              className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors"
+              title={isMaximized ? "Minimize" : "Maximize"}
+            ></button>
           </div>
-          <div className="text-gray-400 text-sm font-mono flex-1 text-center">visitor@portfolio:~</div>
+          <div className={`${styles.text} text-sm font-mono flex-1 text-center`}>
+            visitor@portfolio:~
+          </div>
+          <div className="flex space-x-2">
+            <select 
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              className="text-xs bg-black text-gray-300 border border-gray-700 rounded py-0.5 px-1 focus:outline-none focus:ring-1 focus:ring-pink-500"
+            >
+              <option value="dark">Dark</option>
+              <option value="matrix">Matrix</option>
+              <option value="midnight">Midnight</option>
+            </select>
+          </div>
         </div>
         
         {/* Terminal content */}
         <div 
           ref={terminalRef}
-          className="bg-black bg-opacity-90 p-4 h-96 overflow-y-auto font-mono text-sm"
+          className={`${styles.bg} ${styles.text} p-4 h-96 overflow-y-auto font-mono text-sm ${isMaximized ? 'h-[calc(100vh-40px)]' : ''} transition-all duration-300`}
           onClick={handleTerminalClick}
         >
           {/* Animated typing introduction */}
           {typingIntroduction && (
-            <pre className="text-green-400 whitespace-pre-line">{typingIntroduction}</pre>
+            <pre className={`${styles.responseColor} whitespace-pre-line`}>{typingIntroduction}</pre>
           )}
           
           {/* Command history */}
           {history.map((entry, index) => (
             <div key={index} className="mb-2">
               {entry.type === 'command' && (
-                <div className="text-white">{entry.content}</div>
+                <div className={styles.commandColor}>{entry.content}</div>
               )}
               {entry.type === 'response' && (
-                <pre className="text-green-400 whitespace-pre-wrap mb-2">{entry.content}</pre>
+                <pre className={`${styles.responseColor} whitespace-pre-wrap mb-2`}>{entry.content}</pre>
               )}
               {entry.type === 'error' && (
-                <div className="text-red-400">{entry.content}</div>
+                <div className={styles.errorColor}>{entry.content}</div>
               )}
               {entry.type === 'system' && (
-                <div className="text-blue-400">{entry.content}</div>
+                <div className={styles.systemColor}>{entry.content}</div>
               )}
             </div>
           ))}
@@ -653,14 +758,14 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
           {/* Command input */}
           {!isTyping && (
             <form onSubmit={handleSubmit} className="flex items-center">
-              <span className="text-pink-400 whitespace-nowrap">{currentPath} $</span>
+              <span className={`${styles.promptColor} whitespace-nowrap`}>{currentPath} $</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 ml-2 bg-transparent text-white outline-none"
+                className={`flex-1 ml-2 ${styles.inputBg} ${styles.text} outline-none caret-${styles.caretColor}`}
                 autoFocus
                 autoComplete="off"
                 spellCheck="false"
@@ -670,12 +775,12 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
           
           {/* Blinking cursor */}
           {isTyping && (
-            <span className="inline-block h-4 w-2 bg-white animate-pulse"></span>
+            <span className={`inline-block h-4 w-2 ${styles.text} animate-pulse`}></span>
           )}
         </div>
         
         {/* Terminal footer with hint */}
-        <div className="bg-gray-800 px-4 py-2 text-xs text-gray-400">
+        <div className={`${styles.headerBg} px-4 py-2 text-xs text-gray-400`}>
           <div className="flex justify-between items-center">
             <span>Type 'help' for available commands</span>
             <span>
@@ -708,4 +813,4 @@ Senior Cyber Engineering Intern | Aurora, CO | May 2022 - June 2023
   );
 };
 
-export default InteractiveTerminal;
+export default EnhancedTerminal;
