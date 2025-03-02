@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -28,7 +28,7 @@ const ProjectCard = ({ project, index }) => {
     >
       <Link
         to={`/projects/${project.id}`}
-        className={`block h-full glass-card rounded-xl overflow-hidden transition-all duration-500 ${getPatternClass(project.category)}`}
+        className={`block h-full glass-card rounded-xl overflow-hidden transition-all duration-500 project-card ${getPatternClass(project.category)}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -126,7 +126,7 @@ const ProjectCard = ({ project, index }) => {
             <span className="inline-flex items-center text-sm font-medium text-pink-400 group">
               View Details
               <svg 
-                className={`w-4 h-4 ml-1 ${isHovered ? 'translate-x-1' : ''} transition-transform duration-300`}
+                className="w-4 h-4 ml-1 arrow-icon"
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24" 
