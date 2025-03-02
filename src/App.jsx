@@ -5,8 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 // Import components
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import ParticleNetwork from './components/ParticleNetwork';
-import ThreeBackground from './components/ThreeBackground';
+import AdvancedBackground from './components/AdvancedBackground'; // Import the new enhanced background
 import AnimatedHero from './components/AnimatedHero';
 import InteractiveTerminal from './components/InteractiveTerminal';
 import ProjectShowcase from './components/ProjectShowcase';
@@ -47,21 +46,20 @@ const PageTransition = ({ children }) => {
 // Main app content with router
 const AppContent = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
-
+  
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
   return (
-    <div className="relative min-h-screen w-full bg-black text-white font-sans enhanced-bg">
-      {/* Use ThreeBackground for home page, ParticleNetwork for other pages */}
-      {isHomePage ? <ThreeBackground /> : <ParticleNetwork />}
+    <div className="relative min-h-screen w-full text-white font-sans animated-gradient-bg">
+      {/* Use the Advanced Background for all pages now */}
+      <AdvancedBackground />
       
       <Navigation />
       
-      <main className="w-full mx-auto">
+      <main className="w-full mx-auto relative z-10">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route 
