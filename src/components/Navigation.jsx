@@ -1,18 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const Navigation = () => {
-  const location = useLocation();
+const ModernNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   
-  // Handle scroll effect for navigation
+  // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
+      // Change navbar appearance on scroll
+      const isScrolled = window.scrollY > 20;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
+      }
+      
+      // Determine active section based on scroll position
+      const sections = ['home', 'skills', 'projects', 'experience', 'contact'];
+      const sectionElements = sections.map(id => document.getElementById(id));
+      const validSections = sectionElements.filter(el => el !== null);
+      
+      if (validSections.length > 0) {
+        const currentSection = validSections.reduce((nearest, section) => {
+          const rect = section.getBoundingClientRect();
+          const offset = rect.top + window.scrollY;
+          const distance = Math.abs(window.scrollY - offset + 200);
+          
+          return distance < Math.abs(window.scrollY - (nearest?.offset || 0) + 200)
+            ? { id: section.id, offset }
+            : nearest;
+        }, { id: validSections[0].id, offset: validSections[0].getBoundingClientRect().top + window.scrollY });
+        
+        setActiveSection(currentSection.id);
       }
     };
 
@@ -22,206 +41,205 @@ const Navigation = () => {
     };
   }, [scrolled]);
 
-  // Close mobile menu when route changes
-  useEffect(() => {
+  // Close mobile menu when clicking a section link
+  const handleSectionClick = (sectionId) => {
     setMenuOpen(false);
-  }, [location]);
-  
-  // Navigation items
-  const navItems = [
-    { path: '/', label: 'About' },
-    { path: '/experience', label: 'Experience' },
-    { path: '/projects', label: 'Projects' },
-    { path: '/blog', label: 'Blog' },
-    { path: '/resume', label: 'Resume' }
-  ];
-
-  // Check if path matches (including partial matches for nested routes)
-  const isActive = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    setActiveSection(sectionId);
+    
+    // Smooth scroll to section
+    const section = document.getElementById(sectionId);
+    if (section) {
+      window.scrollTo({
+        top: section.offsetTop - 80, // Account for navbar height
+        behavior: 'smooth'
+      });
     }
-    return location.pathname.startsWith(path);
   };
 
+  // Navigation items
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'experience', label: 'Experience' },
+    { id: 'contact', label: 'Contact' }
+  ];
+
   return (
-    <>
-      {/* Navigation Progress Indicator */}
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'py-2 backdrop-blur-xl bg-black/80 shadow-lg shadow-black/10' 
+          : 'py-5 bg-transparent'
+      }`}
+    >
+      {/* Progress indicator - shows scroll progress */}
       <motion.div 
-        className="fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 to-purple-500 z-50"
-        initial={{ scaleX: 0 }}
-        animate={{ 
-          scaleX: location.pathname === '/' ? 0.1 : 1,
-          transition: { duration: 0.5, ease: "easeInOut" }
+        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500"
+        style={{ 
+          width: `${Math.min((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100, 100)}%`,
+          opacity: scrolled ? 1 : 0,
+          transition: 'width 0.1s, opacity 0.3s'
         }}
-        style={{ transformOrigin: "0% 50%" }}
       />
-      
-      <header 
-        className={`flex items-center justify-between px-6 py-4 glass sticky top-0 z-40 transition-all duration-300 ${
-          scrolled ? 'py-3 bg-opacity-95 backdrop-blur-lg shadow-lg' : 'py-4 bg-opacity-70'
-        }`}
-      >
+
+      <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <Link 
-          to="/" 
-          className={`relative text-xl font-bold transition-all duration-300 ${
-            scrolled ? 'scale-90' : 'scale-100'
-          }`}
+        <motion.a 
+          href="#home"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative z-50"
+          onClick={() => handleSectionClick('home')}
         >
-          <span className="gradient-text font-mono">CD.</span>
-          {/* Subtle glow effect behind the logo */}
-          <div className="absolute -inset-2 bg-pink-500/10 rounded-full blur-xl -z-10 opacity-50"></div>
-        </Link>
-        
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden z-50 focus:outline-none w-10 h-10 flex items-center justify-center" 
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="relative w-6 h-5">
-            <motion.span 
-              className="absolute h-0.5 w-full bg-white transform transition-all duration-300"
-              animate={{ 
-                top: menuOpen ? '0.5rem' : 0,
-                rotate: menuOpen ? 45 : 0,
+          <span className={`font-bold text-2xl transition-all duration-300 ${
+            scrolled ? 'text-white' : 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500'
+          }`}>
+            CD
+            <span className="text-pink-500">.</span>
+          </span>
+        </motion.a>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center space-x-1">
+          {navItems.map((item, index) => (
+            <motion.a
+              key={item.id}
+              href={`#${item.id}`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 * index }}
+              className="relative px-4 py-2 text-gray-300 hover:text-white transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSectionClick(item.id);
               }}
-            />
-            <motion.span 
-              className="absolute h-0.5 bg-white transform transition-all duration-300 top-2"
-              animate={{ 
-                opacity: menuOpen ? 0 : 1,
-                width: menuOpen ? 0 : '100%'
-              }}
-            />
-            <motion.span 
-              className="absolute h-0.5 w-full bg-white transform transition-all duration-300"
-              animate={{ 
-                top: menuOpen ? '0.5rem' : '1rem',
-                rotate: menuOpen ? -45 : 0
-              }}
-            />
-          </div>
-        </button>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-6">
-          {navItems.map((item) => (
-            <Link 
-              key={item.path}
-              to={item.path} 
-              className={`nav-link relative py-2 transition-colors duration-300 ${
-                isActive(item.path) ? 'text-pink-500' : 'text-white hover:text-pink-500'
-              }`}
             >
               {item.label}
-              {isActive(item.path) && (
+              {activeSection === item.id && (
                 <motion.span 
-                  className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-pink-500 to-purple-500 w-full"
-                  layoutId="activeNav"
+                  layoutId="activeNavIndicator"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 to-purple-500"
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
-            </Link>
+            </motion.a>
           ))}
-          
-          {/* GitHub Link */}
-          <a 
-            href="https://github.com/chirag-dewan" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="nav-link relative py-2 text-white hover:text-pink-500 transition-colors duration-300 flex items-center gap-1"
+
+          {/* Special CTA button */}
+          <motion.a
+            href="https://github.com/chirag-dewan"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+            className="ml-4 px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:shadow-lg hover:shadow-pink-500/20 transition-all duration-300"
           >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            GitHub
-          </a>
+            <span className="flex items-center">
+              <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              GitHub
+            </span>
+          </motion.a>
         </nav>
-        
-        {/* Mobile Navigation Overlay */}
+
+        {/* Mobile menu button */}
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          <div className="flex flex-col items-center justify-center w-6 h-6">
+            <span 
+              className={`block w-6 h-0.5 bg-white transition-transform duration-300 ease-in-out ${
+                menuOpen ? 'rotate-45 translate-y-1.5' : ''
+              }`}
+            ></span>
+            <span 
+              className={`block w-6 h-0.5 bg-white mt-1.5 transition-opacity duration-300 ease-in-out ${
+                menuOpen ? 'opacity-0' : 'opacity-100'
+              }`}
+            ></span>
+            <span 
+              className={`block w-6 h-0.5 bg-white mt-1.5 transition-transform duration-300 ease-in-out ${
+                menuOpen ? '-rotate-45 -translate-y-1.5' : ''
+              }`}
+            ></span>
+          </div>
+        </motion.button>
+
+        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {menuOpen && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/95 backdrop-blur-lg flex flex-col items-center justify-center z-30 md:hidden"
+            <motion.div
+              initial={{ opacity: 0, clipPath: "circle(0% at top right)" }}
+              animate={{ opacity: 1, clipPath: "circle(150% at top right)" }}
+              exit={{ opacity: 0, clipPath: "circle(0% at top right)" }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex items-center justify-center"
             >
-              <nav className="flex flex-col items-center gap-8 text-2xl">
-                {navItems.map((item) => (
-                  <motion.div
-                    key={item.path}
+              <nav className="flex flex-col items-center justify-center space-y-8 w-full">
+                {navItems.map((item, index) => (
+                  <motion.a
+                    key={item.id}
+                    href={`#${item.id}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: navItems.indexOf(item) * 0.1 }}
+                    transition={{ duration: 0.3, delay: 0.1 * index }}
+                    className={`text-3xl font-bold ${
+                      activeSection === item.id 
+                        ? 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500' 
+                        : 'text-gray-300'
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSectionClick(item.id);
+                    }}
                   >
-                    <Link 
-                      to={item.path} 
-                      className={`block py-2 px-4 ${
-                        isActive(item.path) 
-                          ? 'text-pink-500 border-b-2 border-pink-500' 
-                          : 'text-white border-b-2 border-transparent'
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </motion.div>
+                    {item.label}
+                  </motion.a>
                 ))}
-                
+
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                  className="flex space-x-4 mt-8"
                 >
                   <a 
                     href="https://github.com/chirag-dewan" 
                     target="_blank" 
-                    rel="noreferrer" 
-                    className="flex items-center gap-2 py-2 px-4 text-white border-b-2 border-transparent"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" clipRule="evenodd" d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                     </svg>
-                    GitHub
+                  </a>
+                  <a 
+                    href="https://linkedin.com/in/cdewan"
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
                   </a>
                 </motion.div>
               </nav>
-              
-              {/* Social Links in Mobile Menu */}
-              <motion.div 
-                className="mt-12 flex gap-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                <a 
-                  href="https://linkedin.com/in/cdewan" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                </a>
-                <a 
-                  href="mailto:chirag0728@gmail.com"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  </svg>
-                </a>
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </header>
-    </>
+      </div>
+    </header>
   );
 };
 
-export default Navigation;
+export default ModernNavbar;
