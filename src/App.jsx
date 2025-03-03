@@ -9,7 +9,7 @@ import AdvancedBackground from './components/AdvancedBackground'; // Import the 
 import AnimatedHero from './components/AnimatedHero';
 import InteractiveTerminal from './components/InteractiveTerminal';
 import ProjectShowcase from './components/ProjectShowcase';
-import SkillGlobe from './components/SkillGlobe';
+import SkillGlobe from './components/InteractiveSkillGlobe';
 import SkillHexagon from './components/SkillHexagon';
 import ExperienceTimeline from './components/ExperienceTimeline';
 import ContactSection from './components/ContactSection';
