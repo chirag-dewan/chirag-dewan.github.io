@@ -976,7 +976,7 @@ const FuturisticInterface = () => {
   );
 };
 
-export default FuturisticInterface;PRIMARY RESPONSIBILITIES</h4>
+export default FuturisticInterface;</h4>
                     <ul className="list-disc list-inside space-y-1 text-slate-300 mb-3">
                       <li>Simulated attacks to test security controls</li>
                       <li>Reverse-engineered binaries to identify vulnerabilities</li>
