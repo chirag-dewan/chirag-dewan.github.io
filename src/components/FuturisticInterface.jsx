@@ -469,16 +469,16 @@ const FuturisticInterface = () => {
                     
                     <h4 className="text-sm text-cyan-400 font-medium mb-2">PRIMARY RESPONSIBILITIES</h4>
                     <ul className="list-disc list-inside space-y-1 text-slate-300 mb-3">
-                      <li>Simulated attacks to test security controls</li>
-                      <li>Reverse-engineered binaries to identify vulnerabilities</li>
-                      <li>Created custom vulnerability scanners</li>
-                      <li>Analyzed malware samples to improve detection</li>
+                      <li>Simulated real-world attacks to test security controls and detection capabilities</li>
+                      <li>Reverse-engineered binaries to identify and document exploitable vulnerabilities</li>
+                      <li>Created custom vulnerability scanners that combined multiple open-source tools</li>
+                      <li>Analyzed malware samples to document behaviors and improve detection capabilities</li>
                     </ul>
                     
                     <div className="flex flex-wrap gap-2 mt-4">
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Security Assessment</span>
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Reverse Engineering</span>
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Tool Development</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Penetration Testing</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Vulnerability Analysis</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Security Research</span>
                     </div>
                   </div>
                 </div>
@@ -497,7 +497,7 @@ const FuturisticInterface = () => {
           >
             <h2 className="text-2xl font-bold text-cyan-400 mb-6">SECURE COMMUNICATIONS</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-slate-800/50 p-4 rounded-md">
                 <h3 className="text-lg font-semibold text-pink-400 mb-4">// CONTACT PROTOCOLS</h3>
                 
@@ -544,73 +544,6 @@ const FuturisticInterface = () => {
                     <div className="bg-slate-700/70 p-3 rounded-full">
                       <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
-                    </svg>
-                  </div>
-                  
-                  <div className="text-center mb-3">
-                    <div className="text-lg font-bold text-cyan-400">Biometric Authentication</div>
-                    <div className="text-sm text-slate-300">Place finger on scanner to continue</div>
-                  </div>
-                  
-                  <div 
-                    ref={scannerRef}
-                    className={`w-full h-16 border-2 rounded-md flex items-center justify-center cursor-pointer ${
-                      glitchEffect ? 'border-pink-500 bg-pink-500/10 animate-pulse' : 'border-cyan-500 bg-cyan-800/10'
-                    }`}
-                    onClick={() => setGlitchEffect(false)}
-                  >
-                    {glitchEffect ? (
-                      <div className="text-pink-500 font-bold text-sm">ACCESS DENIED - RETRYING...</div>
-                    ) : (
-                      <div className="text-cyan-400 text-sm">SCANNING...</div>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              <div className="font-mono text-sm text-green-400 mb-6 h-48 overflow-y-auto bg-black/70 p-3 rounded-md" ref={terminalRef}>
-                {typingIntroduction && (
-                  <div className="whitespace-pre-line">{typingIntroduction}</div>
-                )}
-                {terminalHistory.map((line, index) => (
-                  <div 
-                    key={index} 
-                    className={`mb-1 ${
-                      line.includes('ALERT') ? 'text-pink-500 font-bold' : ''
-                    }`}
-                  >
-                    {line}
-                  </div>
-                ))}
-              </div>
-              
-              <div className="text-center text-xs text-slate-400">
-                © {new Date().getFullYear()} CHIRAG DEWAN • CYBER SECURITY DASHBOARD
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      
-      {/* Background animation and styling */}
-      <style jsx>{`
-        .glass-panel {
-          background-color: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(12px);
-          border-radius: 0.5rem;
-          border: 1px solid rgba(148, 163, 184, 0.1);
-        }
-        
-        @keyframes scanAnimation {
-          0% { background-position: 0% 0%; }
-          100% { background-position: 0% 100%; }
-        }
-      `}</style>
-    </div>
-  );
-};
-
-export default FuturisticInterface;645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
                       </svg>
                     </div>
                     <div>
@@ -983,20 +916,78 @@ export default FuturisticInterface;645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 
               
               {biometricAuth && (
                 <div className={`mb-6 p-4 border rounded-md ${glitchEffect ? 'border-pink-500 bg-pink-500/10' : 'border-cyan-500 bg-cyan-800/10'}`}>
-                  <div className="flex items-center justify-center mb-3">
-                    <svg className="w-12 h-12 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.
+                  <div className="text-center mb-3">
+                    <div className="text-lg font-bold text-cyan-400">Biometric Authentication</div>
+                    <div className="text-sm text-slate-300">Place finger on scanner to continue</div>
+                  </div>
+                  
+                  <div 
+                    ref={scannerRef}
+                    className={`w-full h-16 border-2 rounded-md flex items-center justify-center cursor-pointer ${
+                      glitchEffect ? 'border-pink-500 bg-pink-500/10 animate-pulse' : 'border-cyan-500 bg-cyan-800/10'
+                    }`}
+                    onClick={() => setGlitchEffect(false)}
+                  >
+                    {glitchEffect ? (
+                      <div className="text-pink-500 font-bold text-sm">ACCESS DENIED - RETRYING...</div>
+                    ) : (
+                      <div className="text-cyan-400 text-sm">SCANNING...</div>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              <div className="font-mono text-sm text-green-400 mb-6 h-48 overflow-y-auto bg-black/70 p-3 rounded-md" ref={terminalRef}>
+                {terminalHistory.map((line, index) => (
+                  <div 
+                    key={index} 
+                    className={`mb-1 ${
+                      line.includes('ALERT') ? 'text-pink-500 font-bold' : ''
+                    }`}
+                  >
+                    {line}
+                  </div>
+                ))}
+              </div>
+              
+              <div className="text-center text-xs text-slate-400">
+                © {new Date().getFullYear()} CHIRAG DEWAN • CYBER SECURITY DASHBOARD
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      {/* Background animation and styling */}
+      <style jsx>{`
+        .glass-panel {
+          background-color: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(12px);
+          border-radius: 0.5rem;
+          border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        @keyframes scanAnimation {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 0% 100%; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default FuturisticInterface;PRIMARY RESPONSIBILITIES</h4>
                     <ul className="list-disc list-inside space-y-1 text-slate-300 mb-3">
-                      <li>Develop packet parsing systems for network traffic inspection</li>
-                      <li>Conduct reverse engineering of firmware</li>
-                      <li>Create proof-of-concept exploit code</li>
-                      <li>Implement security automation pipelines</li>
+                      <li>Simulated attacks to test security controls</li>
+                      <li>Reverse-engineered binaries to identify vulnerabilities</li>
+                      <li>Created custom vulnerability scanners</li>
+                      <li>Analyzed malware samples to improve detection</li>
                     </ul>
                     
                     <div className="flex flex-wrap gap-2 mt-4">
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Security Research</span>
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Exploit Development</span>
-                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Automation</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Security Assessment</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Reverse Engineering</span>
+                      <span className="bg-slate-700/50 px-2 py-1 rounded text-xs">Tool Development</span>
                     </div>
                   </div>
                 </div>
@@ -1059,4 +1050,4 @@ export default FuturisticInterface;645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 
                       Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.
                     </p>
                     
-                    <h4 className="text-sm text-cyan-400 font-medium mb-2">PRIMARY RESPONSIBILITIES</h4>
+                    <h4 className="text-sm text-cyan-400 font-medium mb-2">
