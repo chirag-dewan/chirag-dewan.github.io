@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const EnhancedBackground = () => {
+const AdvancedBackground = () => {
   const canvasRef = useRef(null);
   
   useEffect(() => {
@@ -18,269 +18,214 @@ const EnhancedBackground = () => {
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      
-      // Reinitialize nodes when resize
-      initializeNodes();
+      // Reinitialize particles when resize
+      initParticles();
     };
     
     window.addEventListener('resize', handleResize);
     
-    // Mouse tracking
+    // Set up mouse tracking
     const mouse = {
       x: undefined,
       y: undefined,
-      radius: canvas.width < 768 ? 60 : 100,
-      active: false
+      radius: 150
     };
     
-    // Handle mouse events
+    // Handle mouse movement
     const handleMouseMove = (event) => {
       mouse.x = event.clientX;
       mouse.y = event.clientY;
-      mouse.active = true;
-    };
-    
-    const handleMouseLeave = () => {
-      mouse.active = false;
-    };
-    
-    const handleTouchMove = (event) => {
-      if (event.touches.length > 0) {
-        mouse.x = event.touches[0].clientX;
-        mouse.y = event.touches[0].clientY;
-        mouse.active = true;
-      }
-    };
-    
-    const handleTouchEnd = () => {
-      mouse.active = false;
     };
     
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
     
-    // Node collection
-    let nodes = [];
+    // Particle collection
+    let particles = [];
     
-    // Calculate number of nodes based on screen size
-    const getNodeCount = () => {
-      const baseCount = 60;
-      const screenSize = Math.min(window.innerWidth, window.innerHeight);
-      return Math.max(30, Math.min(100, Math.floor(baseCount * (screenSize / 1000))));
+    // Calculate number of particles based on screen size
+    const getParticleCount = () => {
+      const baseCount = 70;
+      const screenFactor = Math.min(window.innerWidth, window.innerHeight) / 1000;
+      return Math.floor(baseCount * screenFactor) + 50;
     };
     
-    // Color theme - cybersecurity inspired
-    const colors = {
-      primary: { r: 236, g: 72, b: 153 },    // Pink
-      secondary: { r: 168, g: 85, b: 247 },  // Purple
-      tertiary: { r: 59, g: 130, b: 246 },   // Blue
-      quaternary: { r: 20, g: 184, b: 166 }  // Teal
-    };
-    
-    // Node class with enhanced behavior
-    class Node {
-      constructor(x, y) {
-        // Position
-        this.x = x || Math.random() * canvas.width;
-        this.y = y || Math.random() * canvas.height;
+    // Particle class with enhanced behavior
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
         this.baseX = this.x;
         this.baseY = this.y;
+        this.size = Math.random() * 2 + 1;
+        this.density = Math.random() * 30 + 10;
+        this.angle = Math.random() * 360;
+        this.speed = Math.random() * 0.2 + 0.1;
+        this.uniqueColor = this.getRandomColor();
         
-        // Visual properties
-        this.size = Math.random() * 3 + 1;
-        this.color = this.getRandomColor(0.4);
-        this.shadowColor = this.getRandomColor(0.1);
-        this.shadowBlur = Math.random() * 15 + 5;
-        
-        // Movement properties
-        this.speed = Math.random() * 0.2 + 0.05;
-        this.direction = Math.random() * Math.PI * 2;
-        this.moveRange = Math.random() * 2 + 1;
-        this.noiseOffset = Math.random() * 1000;
-        this.pulseSpeed = Math.random() * 0.02 + 0.01;
-        this.pulseSize = this.size * (Math.random() * 0.3 + 0.1);
-        this.pulsePhase = Math.random() * Math.PI * 2;
-        
-        // Connection properties
-        this.connectionStrength = Math.random() * 0.5 + 0.5;
-        this.maxConnections = Math.floor(Math.random() * 3) + 2;
-        this.connectRadius = Math.random() * 100 + 75;
+        // Add slight movement even when not interacting with mouse
+        this.amplitude = Math.random() * 2 + 1;
+        this.period = Math.random() * 0.2 + 0.1;
+        this.timeOffset = Math.random() * 100;
       }
       
-      // Get a random color from our theme
-      getRandomColor(alpha = 1) {
-        const colorKeys = Object.keys(colors);
-        const colorKey = colorKeys[Math.floor(Math.random() * colorKeys.length)];
-        const color = colors[colorKey];
-        return `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+      getRandomColor() {
+        // Create a palette of cybersecurity-themed colors
+        const colors = [
+          {r: 236, g: 72, b: 153, a: 0.7},  // Pink
+          {r: 168, g: 85, b: 247, a: 0.7},  // Purple
+          {r: 59, g: 130, b: 246, a: 0.5},  // Blue
+          {r: 20, g: 184, b: 166, a: 0.5}   // Teal
+        ];
+        
+        const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+        return `rgba(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b}, ${selectedColor.a})`;
       }
       
-      // Update node position and appearance
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.uniqueColor;
+        ctx.fill();
+      }
+      
       update(time) {
-        // Gentle independent movement using noise-like pattern
-        const t = time * 0.001;
-        const moveX = Math.cos(t * this.speed + this.noiseOffset) * this.moveRange;
-        const moveY = Math.sin(t * this.speed + this.noiseOffset) * this.moveRange;
-        
-        this.x = this.baseX + moveX;
-        this.y = this.baseY + moveY;
-        
-        // Pulse size
-        const pulse = Math.sin(t * this.pulseSpeed + this.pulsePhase);
-        const currentSize = this.size + pulse * this.pulseSize;
-        
-        // Handle mouse interaction
-        if (mouse.active) {
+        // Mouse interaction logic
+        if (mouse.x !== undefined && mouse.y !== undefined) {
           const dx = mouse.x - this.x;
           const dy = mouse.y - this.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          // Apply repulsion effect
+          // Repulsion effect when mouse is near
           if (distance < mouse.radius) {
-            const forceDirection = { 
-              x: dx / distance,
-              y: dy / distance 
-            };
+            const forceDirectionX = dx / distance;
+            const forceDirectionY = dy / distance;
             const force = (mouse.radius - distance) / mouse.radius;
-            const repulsion = 5;
             
-            this.x -= forceDirection.x * force * repulsion;
-            this.y -= forceDirection.y * force * repulsion;
+            this.x -= forceDirectionX * force * this.density * 0.05;
+            this.y -= forceDirectionY * force * this.density * 0.05;
+          } else {
+            // Gentle autonomous movement using sinusoidal patterns
+            const t = time * 0.001 + this.timeOffset;
+            
+            // Circular motion around base position
+            const offsetX = Math.cos(t * this.period) * this.amplitude;
+            const offsetY = Math.sin(t * this.period) * this.amplitude;
+            
+            this.x = this.baseX + offsetX;
+            this.y = this.baseY + offsetY;
+            
+            // Gradually return to base position if pushed too far by mouse
+            const distFromBase = Math.sqrt(
+              Math.pow(this.x - this.baseX, 2) + 
+              Math.pow(this.y - this.baseY, 2)
+            );
+            
+            if (distFromBase > 50) {
+              this.x += (this.baseX - this.x) * 0.01;
+              this.y += (this.baseY - this.y) * 0.01;
+            }
           }
         }
         
-        // Boundary checks - wrap around
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
-        
-        // Draw node
-        ctx.shadowColor = this.shadowColor;
-        ctx.shadowBlur = this.shadowBlur;
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        this.draw();
       }
+    }
+    
+    // Initialize particles
+    const initParticles = () => {
+      particles = [];
+      const particleCount = getParticleCount();
       
-      // Connect to nearby nodes
-      connectNodes(nodes, time) {
-        let connectionsCount = 0;
-        
-        for (const node of nodes) {
-          // Skip self-connection and limit number of connections
-          if (node === this || connectionsCount >= this.maxConnections) continue;
-          
-          const dx = this.x - node.x;
-          const dy = this.y - node.y;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    };
+    
+    // Draw connections between particles
+    const connectParticles = (time) => {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x;
+          const dy = particles[a].y - particles[b].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < this.connectRadius) {
-            connectionsCount++;
+          // Adjust connection distance based on screen size
+          const maxDistance = Math.min(canvas.width, canvas.height) / 8;
+          
+          if (distance < maxDistance) {
+            // Calculate connection opacity based on distance
+            const opacity = 1 - (distance / maxDistance);
             
-            // Calculate opacity based on distance
-            const opacity = (1 - distance / this.connectRadius) * 0.5 * this.connectionStrength;
+            // Create gradient for line
+            const gradient = ctx.createLinearGradient(
+              particles[a].x, 
+              particles[a].y, 
+              particles[b].x, 
+              particles[b].y
+            );
             
-            // Pulse effect for connection lines
-            const t = time * 0.001;
-            const pulse = (Math.sin(t + this.pulsePhase) + 1) * 0.1 + 0.1;
+            // Pulsing effect for connections
+            const pulse = (Math.sin(time * 0.001) + 1) * 0.1 + 0.1;
             
-            // Create gradient for connection
-            const gradient = ctx.createLinearGradient(this.x, this.y, node.x, node.y);
-            gradient.addColorStop(0, this.color.replace(/[^,]+(?=\))/, opacity * pulse));
-            gradient.addColorStop(1, node.color.replace(/[^,]+(?=\))/, opacity * pulse));
+            // Extract colors from particle unique colors for the gradient
+            const colorA = particles[a].uniqueColor;
+            const colorB = particles[b].uniqueColor;
             
-            // Draw connection
+            gradient.addColorStop(0, colorA.replace(/[^,]+(?=\))/, opacity * pulse));
+            gradient.addColorStop(1, colorB.replace(/[^,]+(?=\))/, opacity * pulse));
+            
             ctx.strokeStyle = gradient;
-            ctx.lineWidth = opacity * 2;
+            ctx.lineWidth = opacity * 0.8;
             ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(node.x, node.y);
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
             ctx.stroke();
           }
         }
       }
-    }
-    
-    // Initialize nodes with improved distribution
-    const initializeNodes = () => {
-      nodes = [];
-      const nodeCount = getNodeCount();
-      
-      // Create a more even distribution using grid-based approach
-      const gridSize = Math.sqrt(nodeCount);
-      const cellWidth = canvas.width / gridSize;
-      const cellHeight = canvas.height / gridSize;
-      
-      for (let i = 0; i < nodeCount; i++) {
-        // Calculate grid position
-        const gridX = i % gridSize;
-        const gridY = Math.floor(i / gridSize);
-        
-        // Base position at cell center with some randomness
-        const x = (gridX + 0.5) * cellWidth + (Math.random() - 0.5) * cellWidth * 0.8;
-        const y = (gridY + 0.5) * cellHeight + (Math.random() - 0.5) * cellHeight * 0.8;
-        
-        nodes.push(new Node(x, y));
-      }
     };
     
-    // Initialize nodes
-    initializeNodes();
-    
-    // Animation loop
-    const animate = (timestamp) => {
+    // Animation loop with time parameter
+    const animate = (time) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Draw a subtle gradient background
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 0,
-        canvas.width / 2, canvas.height / 2, canvas.width / 2
-      );
-      gradient.addColorStop(0, 'rgba(13, 13, 13, 1)');
-      gradient.addColorStop(1, 'rgba(5, 5, 5, 1)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Update particles
+      particles.forEach(particle => {
+        particle.update(time);
+      });
       
-      // First draw all node connections
-      for (const node of nodes) {
-        node.connectNodes(nodes, timestamp);
-      }
+      // Connect particles
+      connectParticles(time);
       
-      // Then draw all nodes on top
-      for (const node of nodes) {
-        node.update(timestamp);
-      }
-      
-      // Continue animation loop
       animationFrameId = requestAnimationFrame(animate);
     };
     
-    // Start animation
+    // Initialize and start animation
+    initParticles();
     animate(0);
     
-    // Cleanup function
+    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
   
   return (
     <canvas 
-      ref={canvasRef}
-      className="fixed inset-0 -z-10 pointer-events-none w-full h-full"
-      style={{ background: '#050505' }}
+      ref={canvasRef} 
+      className="fixed inset-0 -z-10 pointer-events-none" 
+      style={{ 
+        background: 'linear-gradient(135deg, #050505, #0a0a0a 50%, #0c0c0c)',
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%'
+      }}
     />
   );
 };
 
-export default EnhancedBackground;
+export default AdvancedBackground;
