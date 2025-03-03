@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 // Import components
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
-import AdvancedBackground from './components/AdvancedBackground'; // Import the new enhanced background
+import AdvancedBackground from './components/EnhancedBackground'; // Import the new enhanced background
 import AnimatedHero from './components/AnimatedHero';
 import InteractiveTerminal from './components/InteractiveTerminal';
 import ProjectShowcase from './components/ProjectShowcase';
