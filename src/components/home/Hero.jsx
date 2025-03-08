@@ -24,7 +24,7 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-6 text-xl text-apple-gray-600 max-w-3xl mx-auto"
           >
-            Crafting robust security solutions at the intersection of research and cutting-edge technology
+            Building innovative software solutions with a focus on performance, scalability and elegant design
           </motion.p>
           
           <motion.div 
@@ -55,11 +55,11 @@ const Hero = () => {
             className="mt-16 p-6 bg-apple-gray-900 rounded-apple-lg text-white max-w-2xl mx-auto shadow-apple-lg"
           >
             <p className="text-apple-gray-200 italic">
-              "In a digital landscape filled with vulnerabilities, I hunt for the gaps that others miss. 
-              Every line of code tells a story—and sometimes, that story reveals a critical weakness."
+              "Software engineering is the art of translating human intention into machine execution. 
+              The best solutions are those that elegantly balance user needs, system constraints, and future adaptability."
             </p>
             <div className="mt-4 text-sm text-apple-gray-400 text-right">
-              — The Security Engineer's Manifesto
+              — Engineering Principles at GM Financial
             </div>
           </motion.div>
         </div>
