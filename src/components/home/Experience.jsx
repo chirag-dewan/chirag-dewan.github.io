@@ -49,42 +49,55 @@ const Experience = () => {
   
   const experiences = [
     {
-      company: "GM Financial",
-      position: "Software Engineer II",
-      location: "Dallas, TX",
-      period: "March 2024 – Present",
-      description: "Working with enterprise software applications to enhance financial service platforms and optimize customer-facing solutions.",
-      responsibilities: [
-        "Developing scalable microservices architecture using Java Spring Boot and RESTful APIs",
-        "Implementing modern frontend solutions with React and TypeScript for financial dashboards",
-        "Optimizing database performance and query structures for high-volume financial transactions",
-        "Collaborating in Agile teams to deliver iterative improvements to customer-facing applications"
-      ]
-    },
-    {
       company: "RTX BBN",
-      position: "Software Engineer",
+      position: "Cyber Research Engineer I",
       location: "Cambridge, MA",
-      period: "June 2023 – February 2024",
-      description: "Engineered software solutions for complex enterprise systems, focusing on reliability and scalability.",
+      period: "May 2025 – Present",
+      description: "Leading security research initiatives focused on vulnerability discovery and threat analysis for critical infrastructure systems.",
       responsibilities: [
-        "Designed and implemented data processing systems for large-scale information analysis",
-        "Developed automated testing frameworks that improved code quality and deployment reliability",
-        "Created modular backend services integrated with CI/CD pipelines for efficient deployment",
-        "Optimized system performance through code improvements and architectural enhancements"
+        "Engineered custom protocol fuzzers for SCADA systems using AFL++ and libFuzzer, identifying 3 vulnerabilities in industrial control systems",
+        "Reverse-engineered proprietary firmware using IDA Pro and Ghidra, uncovering 5+ critical memory corruption vulnerabilities",
+        "Automated vulnerability discovery by developing Python-based fuzzing harnesses integrated with LLVM sanitizer toolchain",
+        "Designed and implemented Proof-of-Concept (PoC) exploits utilizing command injections, buffer overflows and race conditions"
       ]
     },
     {
-      company: "Raytheon, RTX",
-      position: "Software Engineering Intern",
+      company: "RTX (Formerly Raytheon)",
+      position: "Cyber Engineer",
+      location: "Aurora, CO",
+      period: "June 2023 – May 2024",
+      description: "Led security hardening initiatives and performed extensive threat modeling to secure enterprise systems and critical infrastructure.",
+      responsibilities: [
+        "Conducted comprehensive threat modeling using STRIDE methodology and MITRE ATT&CK",
+        "Strengthened RedHat Linux systems by customizing SELinux policies and integrating OVAL-based automated compliance scans",
+        "Developed and deployed 50+ custom Yara rules and Sigma detections for emergent malware and adversary behaviors",
+        "Reduced mean time to detection (MTTD) by 45% through improved detection techniques"
+      ]
+    },
+    {
+      company: "RTX (Formerly Raytheon)",
+      position: "Senior Cyber Intern",
       location: "Aurora, CO",
       period: "May 2022 – June 2023",
-      description: "Contributed to enterprise software projects while learning industry best practices in software development.",
+      description: "Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.",
       responsibilities: [
-        "Participated in software development for data analysis and visualization tools",
-        "Collaborated on building robust system monitoring and reporting solutions",
-        "Assisted in creating documentation and test cases for software components",
-        "Gained experience with enterprise-level version control and deployment processes"
+        "Executed advanced persistent threat (APT) simulations with Cobalt Strike, Empire, and custom C2 frameworks",
+        "Reverse-engineered legacy binaries using Ghidra and IDA Pro, uncovering 15+ exploitable vulnerabilities",
+        "Implemented mitigation strategies via patching and exploit-resistant code refactoring",
+        "Enhanced blue team defense strategies through realistic attack simulations"
+      ]
+    },
+    {
+      company: "Reata Pharmaceuticals",
+      position: "Information Security Intern",
+      location: "Dallas, TX",
+      period: "May 2021 – August 2021",
+      description: "Assisted in security assessments and compliance verification for healthcare systems.",
+      responsibilities: [
+        "Performed in-depth vulnerability assessments using Nessus and OpenVAS",
+        "Designed custom scan policies to ensure HIPAA and HITRUST compliance in healthcare systems",
+        "Supported security incident response and remediation efforts",
+        "Contributed to the implementation of security best practices"
       ]
     }
   ];
@@ -100,15 +113,15 @@ const Experience = () => {
         >
           <h2 className="heading-md text-apple-gray-900">Professional Experience</h2>
           <p className="mt-4 text-lg text-apple-gray-600 max-w-3xl mx-auto">
-            My journey through software engineering roles across financial technology and enterprise systems
+            My journey through challenging roles in cybersecurity research and engineering
           </p>
           
           {/* Dark storytelling element */}
           <div className="mt-8 p-6 bg-apple-gray-900 rounded-apple-lg text-white max-w-3xl mx-auto shadow-apple-lg">
             <p className="text-apple-gray-200">
-              Throughout my career, I've approached each role with a commitment to creating exceptional software.
-              From financial systems at GM Financial to enterprise solutions at RTX, my focus has been on
-              building applications that blend technical excellence with practical business value.
+              Throughout my career, I've focused on finding and addressing security vulnerabilities in critical systems.
+              From industrial control systems at RTX BBN to healthcare compliance at Reata Pharmaceuticals,
+              my work has centered on making digital infrastructure more secure and resilient.
             </p>
           </div>
         </div>
@@ -126,16 +139,16 @@ const Experience = () => {
         {/* Experience summary metrics */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="card p-8 flex flex-col items-center text-center">
-            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">2+</span>
+            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">4+</span>
             <span className="text-apple-gray-600">Years of Experience</span>
           </div>
           <div className="card p-8 flex flex-col items-center text-center">
-            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">15+</span>
-            <span className="text-apple-gray-600">Software Projects</span>
+            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">20+</span>
+            <span className="text-apple-gray-600">Vulnerabilities Discovered</span>
           </div>
           <div className="card p-8 flex flex-col items-center text-center">
-            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">3</span>
-            <span className="text-apple-gray-600">Enterprise Applications</span>
+            <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2">3+</span>
+            <span className="text-apple-gray-600">Security Certifications</span>
           </div>
         </div>
       </div>
