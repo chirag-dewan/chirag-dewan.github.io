@@ -49,9 +49,22 @@ const Experience = () => {
   
   const experiences = [
     {
+      company: "GM Financial",
+      position: "Software Engineer II",
+      location: "Dallas, TX",
+      period: "Starting Soon",
+      description: "Joining GM Financial as a Software Engineer to develop and maintain financial technology solutions.",
+      responsibilities: [
+        "Will be developing enterprise-level financial software applications",
+        "Contributing to microservices architecture and distributed systems",
+        "Working with cross-functional teams to deliver customer-focused solutions",
+        "Implementing best practices in software development and security"
+      ]
+    },
+    {
       company: "RTX BBN",
       position: "Cyber Research Engineer I",
-      location: "",
+      location: "Cambridge, MA",
       period: "May 2025 – Present",
       description: "Leading security research initiatives focused on vulnerability discovery and threat analysis for critical infrastructure systems.",
       responsibilities: [
@@ -64,7 +77,7 @@ const Experience = () => {
     {
       company: "RTX (Formerly Raytheon)",
       position: "Cyber Engineer",
-      location: "",
+      location: "Aurora, CO",
       period: "June 2023 – May 2024",
       description: "Led security hardening initiatives and performed extensive threat modeling to secure enterprise systems and critical infrastructure.",
       responsibilities: [
@@ -77,7 +90,7 @@ const Experience = () => {
     {
       company: "RTX (Formerly Raytheon)",
       position: "Senior Cyber Intern",
-      location: "",
+      location: "Aurora, CO",
       period: "May 2022 – June 2023",
       description: "Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.",
       responsibilities: [
