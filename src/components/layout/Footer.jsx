@@ -146,14 +146,20 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-apple-gray-200">
-          <p className="text-center text-sm text-apple-gray-500">
-            &copy; {currentYear} Chirag Dewan. All rights reserved.
-          </p>
-          <p className="text-center text-xs text-apple-gray-400 mt-1">
-            Cyber Research Engineer I at RTX BBN
-          </p>
-        </div>
+          <div className="mt-12 pt-8 border-t border-apple-gray-200">
+            <p className="text-center text-sm text-apple-gray-500">
+              &copy; {currentYear} Chirag Dewan. All rights reserved.
+            </p>
+            <div className="flex justify-center space-x-4 mt-1">
+              <p className="text-center text-xs text-apple-gray-400">
+                Cyber Research Engineer I at RTX BBN
+              </p>
+              <span className="text-xs text-apple-gray-300">•</span>
+              <p className="text-center text-xs text-apple-gray-400">
+                SWE II at GM Financial (Starting Soon)
+              </p>
+            </div>
+          </div>
       </div>
     </footer>
   );
