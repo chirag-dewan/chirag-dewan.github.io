@@ -14,7 +14,7 @@ const Hero = () => {
           >
             <span className="block">Chirag Dewan</span>
             <span className="block text-apple-gray-600 mt-3 text-3xl sm:text-4xl md:text-5xl">
-              Software Engineer II
+              Software Engineer II at GM Financial
             </span>
           </motion.h1>
           
@@ -24,7 +24,7 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-6 text-xl text-apple-gray-600 max-w-3xl mx-auto"
           >
-            Building innovative software solutions with a focus on performance, scalability and elegant design
+            Building innovative software solutions from Dallas, TX
           </motion.p>
           
           <motion.div 
@@ -46,30 +46,28 @@ const Hero = () => {
               Contact Me
             </a>
           </motion.div>
-          
-          {/* Dark-themed story narrative */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-16 p-6 bg-apple-gray-900 rounded-apple-lg text-white max-w-2xl mx-auto shadow-apple-lg"
-          >
-            <p className="text-apple-gray-200 italic">
-              "Software engineering is the art of translating human intention into machine execution. 
-              The best solutions are those that elegantly balance user needs, system constraints, and future adaptability."
-            </p>
-            <div className="mt-4 text-sm text-apple-gray-400 text-right">
-              — Engineering Principles at GM Financial
-            </div>
-          </motion.div>
         </div>
       </div>
       
-      {/* Decorative elements inspired by Apple's design */}
+      {/* Enhanced decorative elements */}
       <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-apple-gray-50 to-white -z-10"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-apple-gray-50 rounded-full blur-3xl opacity-50 -z-10"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-apple-blue-500/5 rounded-full blur-3xl opacity-50 -z-10"></div>
       <div className="absolute top-[400px] left-1/4 w-[300px] h-[300px] bg-apple-gray-50 rounded-full blur-2xl opacity-30 -z-10"></div>
-      <div className="absolute top-[200px] right-1/4 w-[400px] h-[400px] bg-apple-gray-50 rounded-full blur-2xl opacity-30 -z-10"></div>
+      <div className="absolute top-[200px] right-1/4 w-[400px] h-[400px] bg-apple-blue-500/5 rounded-full blur-2xl opacity-30 -z-10"></div>
+      
+      {/* Animated geometric shapes */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.2, scale: 1 }}
+        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute top-40 right-16 w-32 h-32 bg-apple-blue-500/20 rounded-xl blur-xl -z-10"
+      ></motion.div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.2, scale: 1 }}
+        transition={{ duration: 2, delay: 0.5, repeat: Infinity, repeatType: "reverse" }}
+        className="absolute bottom-20 left-16 w-24 h-24 bg-apple-blue-500/20 rounded-full blur-xl -z-10"
+      ></motion.div>
     </section>
   );
 };
