@@ -6,6 +6,7 @@ import Experience from '../components/home/Experience';
 import Skills from '../components/home/Skills';
 import Projects from '../components/home/Projects';
 import GitHubContributions from '../components/home/GitHubContributions';
+import AnimatedDivider from '../components/home/AnimatedDivider';
 import Contact from '../components/home/Contact';
 
 // Enhanced Animated Section Divider
