@@ -5,6 +5,7 @@ import Hero from '../components/home/Hero';
 import Experience from '../components/home/Experience';
 import Skills from '../components/home/Skills';
 import Projects from '../components/home/Projects';
+import GitHubContributions from '../components/home/GitHubContributions';
 import Contact from '../components/home/Contact';
 
 // Enhanced Animated Section Divider
@@ -275,6 +276,10 @@ const Home = () => {
       <AnimatedDivider delay={0.2} />
       
       <Projects />
+      
+      <AnimatedDivider delay={0.2} />
+      
+      <GitHubContributions />
       
       <AnimatedDivider delay={0.2} />
       
