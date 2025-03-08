@@ -44,15 +44,19 @@ const StatsSection = () => {
   });
 
   const stats = [
-    { label: "Vulnerabilities Found", value: "20+", icon: "shield-alt", color: "text-apple-red" },
-    { label: "Years of Experience", value: "4+", icon: "calendar-alt", color: "text-apple-blue-500" },
-    { label: "Certifications", value: "3+", icon: "certificate", color: "text-apple-green" },
-    { label: "Projects Completed", value: "15+", icon: "project-diagram", color: "text-apple-purple" }
+    { label: "Vulnerabilities Found", value: "20+", icon: "shield-alt", color: "text-apple-red", gradient: "from-red-500/20 to-red-600/5" },
+    { label: "Years of Experience", value: "4+", icon: "calendar-alt", color: "text-apple-blue-500", gradient: "from-blue-500/20 to-blue-600/5" },
+    { label: "Certifications", value: "3+", icon: "certificate", color: "text-apple-green", gradient: "from-green-500/20 to-green-600/5" },
+    { label: "Projects Completed", value: "15+", icon: "project-diagram", color: "text-apple-purple", gradient: "from-purple-500/20 to-purple-600/5" }
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-apple-gray-50">
-      <div className="container-apple">
+    <section className="py-16 bg-gradient-to-b from-white to-apple-gray-50 relative overflow-hidden">
+      {/* Background shapes */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full filter blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full filter blur-3xl"></div>
+      
+      <div className="container-apple relative z-10">
         <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
             <motion.div
@@ -60,25 +64,35 @@ const StatsSection = () => {
               initial={{ y: 50, opacity: 0 }}
               animate={inView ? { y: 0, opacity: 1 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-white rounded-apple-xl p-8 shadow-apple-lg text-center flex flex-col items-center relative overflow-hidden"
+              className={`bg-white rounded-apple-xl p-8 shadow-apple-lg text-center flex flex-col items-center relative overflow-hidden`}
             >
-              <div className="absolute -right-6 -top-6 w-24 h-24 bg-apple-gray-50 rounded-full opacity-30" />
-              <div className="absolute -left-4 -bottom-4 w-16 h-16 bg-apple-gray-50 rounded-full opacity-30" />
+              {/* Background gradient */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-40`}></div>
               
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-opacity-10 ${stat.color === 'text-apple-blue-500' ? 'bg-apple-blue-500/10' : stat.color === 'text-apple-red' ? 'bg-apple-red/10' : stat.color === 'text-apple-green' ? 'bg-apple-green/10' : 'bg-apple-purple/10'}`}>
+              {/* Decorative shapes */}
+              <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/30 rounded-full"></div>
+              <div className="absolute -left-4 -bottom-4 w-16 h-16 bg-white/30 rounded-full"></div>
+              
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 relative z-10 bg-opacity-10 ${stat.color === 'text-apple-blue-500' ? 'bg-apple-blue-500/10' : stat.color === 'text-apple-red' ? 'bg-apple-red/10' : stat.color === 'text-apple-green' ? 'bg-apple-green/10' : 'bg-apple-purple/10'}`}>
                 <i className={`fas fa-${stat.icon} text-2xl ${stat.color}`}></i>
               </div>
               
-              <motion.span
+              <motion.div
+                className="relative z-10"
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={inView ? { scale: 1, opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 + index * 0.1 }}
-                className="text-4xl font-display font-bold text-apple-gray-900 mb-2"
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 100, 
+                  delay: 0.2 + index * 0.1,
+                  duration: 0.8
+                }}
               >
-                {stat.value}
-              </motion.span>
-              
-              <span className="text-apple-gray-600">{stat.label}</span>
+                <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2 block">
+                  {stat.value}
+                </span>
+                <span className="text-apple-gray-600 block">{stat.label}</span>
+              </motion.div>
             </motion.div>
           ))}
         </div>
@@ -161,6 +175,12 @@ const Timeline = () => {
   });
 
   const timelineItems = [
+    {
+      year: "2025",
+      title: "Software Engineer II at GM Financial",
+      description: "Starting Soon - Financial technology development",
+      icon: "dollar-sign"
+    },
     {
       year: "2025",
       title: "Cyber Research Engineer I at RTX BBN",
