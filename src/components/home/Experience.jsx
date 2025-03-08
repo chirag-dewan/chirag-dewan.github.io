@@ -51,7 +51,7 @@ const Experience = () => {
     {
       company: "RTX BBN",
       position: "Cyber Research Engineer I",
-      location: "Cambridge, MA",
+      location: "",
       period: "May 2025 – Present",
       description: "Leading security research initiatives focused on vulnerability discovery and threat analysis for critical infrastructure systems.",
       responsibilities: [
@@ -64,7 +64,7 @@ const Experience = () => {
     {
       company: "RTX (Formerly Raytheon)",
       position: "Cyber Engineer",
-      location: "Aurora, CO",
+      location: "",
       period: "June 2023 – May 2024",
       description: "Led security hardening initiatives and performed extensive threat modeling to secure enterprise systems and critical infrastructure.",
       responsibilities: [
@@ -77,7 +77,7 @@ const Experience = () => {
     {
       company: "RTX (Formerly Raytheon)",
       position: "Senior Cyber Intern",
-      location: "Aurora, CO",
+      location: "",
       period: "May 2022 – June 2023",
       description: "Conducted security assessments and developed tools for vulnerability discovery and exploitation in controlled environments.",
       responsibilities: [
@@ -90,7 +90,7 @@ const Experience = () => {
     {
       company: "Reata Pharmaceuticals",
       position: "Information Security Intern",
-      location: "Dallas, TX",
+      location: "",
       period: "May 2021 – August 2021",
       description: "Assisted in security assessments and compliance verification for healthcare systems.",
       responsibilities: [
