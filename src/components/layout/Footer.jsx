@@ -20,7 +20,7 @@ const Footer = () => {
               </motion.span>
             </Link>
             <p className="text-sm text-apple-gray-600 max-w-xs">
-              Software Engineer II at GM Financial based in Dallas, TX. Specializing in building innovative software solutions.
+              Software Engineer and Cybersecurity professional specializing in vulnerability discovery and reverse engineering.
             </p>
             <div className="mt-6 flex space-x-4">
               <motion.a
@@ -137,10 +137,10 @@ const Footer = () => {
             </h3>
             <div className="space-y-2">
               <p className="text-sm text-apple-gray-600">
-                Dallas, TX
+                chirag0728@gmail.com
               </p>
               <p className="text-sm text-apple-gray-600">
-                chirag0728@gmail.com
+                (919)-771-7668
               </p>
             </div>
           </div>
@@ -151,7 +151,7 @@ const Footer = () => {
             &copy; {currentYear} Chirag Dewan. All rights reserved.
           </p>
           <p className="text-center text-xs text-apple-gray-400 mt-1">
-            Software Engineer II at GM Financial
+            Cyber Research Engineer I at RTX BBN
           </p>
         </div>
       </div>
