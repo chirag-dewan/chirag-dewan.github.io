@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans font-smoothing-antialiased bg-white text-apple-gray-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+  
+  /* Input states */
+  input, textarea, select {
+    @apply transition duration-200;
+    &:focus {
+      @apply outline-none ring-2 ring-apple-blue-500 ring-opacity-50;
+    }
+  }
+}
+
+@layer components {
+  /* Apple-style buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-apple-blue-500 text-white font-medium rounded-full hover:bg-apple-blue-600 transition shadow-sm;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-white text-apple-gray-900 font-medium rounded-full border border-apple-gray-300 hover:bg-apple-gray-50 transition shadow-sm;
+  }
+  
+  /* Apple-style cards */
+  .card {
+    @apply bg-white rounded-apple-lg shadow-apple overflow-hidden;
+    
+    &.hoverable {
+      @apply transition-all duration-300;
+      &:hover {
+        @apply shadow-apple-md transform -translate-y-1;
+      }
+    }
+  }
+  
+  /* Apple-style section dividers */
+  .section-divider {
+    @apply w-24 h-px bg-apple-gray-200 mx-auto my-16;
+  }
+  
+  /* Apple-style headings */
+  .heading-xl {
+    @apply text-5xl sm:text-6xl font-display font-bold tracking-tight;
+  }
+  
+  .heading-lg {
+    @apply text-4xl sm:text-5xl font-display font-bold tracking-tight;
+  }
+  
+  .heading-md {
+    @apply text-3xl sm:text-4xl font-display font-bold tracking-tight;
+  }
+  
+  .heading-sm {
+    @apply text-2xl sm:text-3xl font-display font-semibold tracking-tight;
+  }
+  
+  .heading-xs {
+    @apply text-xl sm:text-2xl font-display font-semibold tracking-tight;
+  }
+  
+  /* Apple-style container */
+  .container-apple {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Apple-style nav links */
+  .nav-link {
+    @apply text-apple-gray-500 hover:text-apple-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-150;
+    
+    &.active {
+      @apply text-apple-gray-900 font-semibold;
+    }
+  }
+  
+  /* Apple-style section */
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  /* Apple-style form elements */
+  .form-input {
+    @apply w-full rounded-apple px-4 py-3 border border-apple-gray-300 focus:border-apple-blue-500 transition-colors;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-apple-gray-700 mb-1;
+  }
+  
+  /* Apple-style skill bar */
+  .skill-bar {
+    @apply h-2 bg-apple-gray-200 rounded-full overflow-hidden;
+    
+    .skill-progress {
+      @apply h-full bg-apple-blue-500 rounded-full transition-all duration-500;
+    }
+  }
+}
+
+/* Apple-style animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.fade-in-down {
+  animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from { 
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apple-style backdrop blur glass effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.glass-effect-dark {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
