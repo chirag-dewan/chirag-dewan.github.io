@@ -1,22 +1,4 @@
-{/* CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 1.6 }}
-          className="mt-12 text-center"
-        >
-          <motion.a 
-            href="https://github.com/chirag-dewan" 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-apple-blue-500 to-blue-600 text-white font-medium rounded-full hover:shadow-lg hover:from-apple-blue-600 hover:to-blue-700 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <i className="fab fa-github mr-3 text-xl"></i>
-            <span className="text-lg">View My GitHub Profile</span>
-          </motion.a>
-        </motion.div>import React from 'react';
+import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
 import GitHubCalendar from 'react-github-calendar';
@@ -200,7 +182,7 @@ const GitHubContributions = () => {
             ))}
           </div>
         </motion.div>
-        
+
         {/* Code Showcase */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -353,6 +335,26 @@ const GitHubContributions = () => {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 1.6 }}
+          className="mt-12 text-center"
+        >
+          <motion.a 
+            href="https://github.com/chirag-dewan" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-apple-blue-500 to-blue-600 text-white font-medium rounded-full hover:shadow-lg hover:from-apple-blue-600 hover:to-blue-700 transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <i className="fab fa-github mr-3 text-xl"></i>
+            <span className="text-lg">View My GitHub Profile</span>
+          </motion.a>
         </motion.div>
       </div>
     </section>
