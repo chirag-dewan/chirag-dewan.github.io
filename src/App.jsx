@@ -1,31 +1,33 @@
 import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
-import FuturisticInterface from './components/FuturisticInterface';
-import SecurityBackground from './components/SecurityBackground';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import NotFound from './pages/NotFound';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
-// Import styles
+// Import light theme styles
 import './index.scss';
 
 const App = () => {
   return (
-    <>
-      {/* Security-themed animated background */}
-      <SecurityBackground />
-      
-      {/* Scanlines effect overlay for CRT feel */}
-      <div className="fixed inset-0 pointer-events-none z-50 opacity-10" 
-           style={{ 
-             background: 'linear-gradient(to bottom, rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%)', 
-             backgroundSize: '100% 4px' 
-           }}>
+    <Router>
+      <div className="app-container bg-white">
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:postId" element={<BlogPost />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
-      
-      {/* Router is required for any internal navigation */}
-      <Router>
-        {/* Main cybersecurity dashboard interface */}
-        <FuturisticInterface />
-      </Router>
-    </>
+    </Router>
   );
 };
 
