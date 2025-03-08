@@ -31,8 +31,12 @@ const Hero = () => {
       ctx.fillStyle = "rgba(0, 10, 30, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Character style
-      ctx.fillStyle = "#0a3bce30"; // Light blue with transparency
+      // Character style - use a gradient for more visual interest
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      gradient.addColorStop(0, "rgba(10, 59, 206, 0.2)");
+      gradient.addColorStop(0.5, "rgba(64, 113, 227, 0.3)");
+      gradient.addColorStop(1, "rgba(10, 59, 206, 0.2)");
+      ctx.fillStyle = gradient;
       ctx.font = `${fontSize}px monospace`;
       
       // Loop over each column
@@ -43,11 +47,12 @@ const Hero = () => {
         // Draw the character
         ctx.fillText(char, i * fontSize, drops[i] * fontSize);
         
-        // Move the drop down
+        // Move the drop down with varying speeds
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.99) {
           drops[i] = 0; // Reset to top
         }
-        drops[i]++;
+        // Randomize speed slightly for more natural effect
+        drops[i] += Math.random() * 0.5 + 0.5;
       }
     };
     
@@ -82,8 +87,13 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="inline-block mb-6 px-4 py-2 bg-white/80 backdrop-blur-lg rounded-full shadow-apple-sm">
-                <span className="text-sm font-medium text-apple-gray-600">Cyber Research Engineer I at RTX BBN</span>
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                <div className="px-4 py-2 bg-white/80 backdrop-blur-lg rounded-full shadow-apple-sm">
+                  <span className="text-sm font-medium text-apple-gray-600">Cyber Research Engineer I at RTX BBN</span>
+                </div>
+                <div className="px-4 py-2 bg-apple-blue-500/80 backdrop-blur-lg rounded-full shadow-apple-sm">
+                  <span className="text-sm font-medium text-white">SWE II at GM Financial (Starting Soon)</span>
+                </div>
               </div>
             </motion.div>
             
