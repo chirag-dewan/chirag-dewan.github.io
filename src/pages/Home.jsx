@@ -5,7 +5,6 @@ const Home = () => {
   const [currentSection, setCurrentSection] = useState('terminal');
   const [terminalLines, setTerminalLines] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
 
   // Matrix rain effect
@@ -17,10 +16,10 @@ const Home = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const chars = "01アセキュリティエンジニア10SECURITY0110HACKDEFENDPROTECT";
+    const chars = "01SECURITY10HACK01DEFEND10PROTECT";
     const charArray = chars.split('');
     const fontSize = 12;
-    const columns = canvas.width / fontSize;
+    const columns = Math.floor(canvas.width / fontSize);
     const drops = [];
 
     for (let x = 0; x < columns; x++) {
@@ -58,15 +57,6 @@ const Home = () => {
       clearInterval(interval);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
-
-  // Mouse tracking
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Terminal simulation
@@ -125,24 +115,14 @@ const Home = () => {
       description: 'ML-powered malware detection and behavioral analysis platform',
       tech: ['Python', 'TensorFlow', 'YARA'],
       status: 'active',
-      threat_level: 'critical',
-      github: 'https://github.com/chirag-dewan/malware-analysis-tool'
+      threat_level: 'critical'
     },
     {
       name: 'ML-Based IDS',
       description: 'Intelligent intrusion detection with ensemble learning',
       tech: ['Python', 'Scikit-learn', 'Network Analysis'],
       status: 'deployed',
-      threat_level: 'medium',
-      github: 'https://github.com/chirag-dewan/IDS-MachineLearningTest'
-    },
-    {
-      name: 'Vulnerability Scanner',
-      description: 'Automated vulnerability discovery and exploitation framework',
-      tech: ['Python', 'Nmap', 'Custom Exploits'],
-      status: 'maintenance',
-      threat_level: 'high',
-      github: '#'
+      threat_level: 'medium'
     }
   ];
 
@@ -163,15 +143,14 @@ const Home = () => {
           </div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-2"
-        >
+        <div className="space-y-2">
           <div className="text-2xl font-bold mb-4 text-cyan-400">
             ╔══════════════════════════════════════════════════════════════╗
+            <br />
             ║                CHIRAG DEWAN - SECURITY RESEARCHER            ║
+            <br />
             ║                GM FINANCIAL | SOFTWARE ENGINEER II           ║
+            <br />
             ╚══════════════════════════════════════════════════════════════╝
           </div>
 
@@ -194,45 +173,39 @@ const Home = () => {
               <div className="w-2 h-5 bg-green-400 animate-pulse"></div>
             </div>
           )}
-        </motion.div>
+        </div>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('skills')}
             className="bg-gray-900 border-2 border-green-400 p-6 rounded-lg hover:bg-green-400 hover:text-black transition-all"
           >
             <div className="text-lg font-bold mb-2">SKILLS.EXE</div>
             <div className="text-sm">Technical Arsenal</div>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('projects')}
             className="bg-gray-900 border-2 border-cyan-400 p-6 rounded-lg hover:bg-cyan-400 hover:text-black transition-all"
           >
             <div className="text-lg font-bold mb-2">PROJECTS.EXE</div>
             <div className="text-sm">Security Tools</div>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('contact')}
             className="bg-gray-900 border-2 border-red-400 p-6 rounded-lg hover:bg-red-400 hover:text-black transition-all"
           >
             <div className="text-lg font-bold mb-2">CONTACT.EXE</div>
             <div className="text-sm">Secure Communication</div>
-          </motion.button>
+          </button>
         </div>
 
         <div className="mt-12 text-center">
           <div className="text-gray-500 text-sm">
             <p>Current Status: <span className="text-green-400">ONLINE</span></p>
             <p>Security Level: <span className="text-red-400">MAXIMUM</span></p>
-            <p>System Uptime: <span className="text-cyan-400">{Math.floor(Date.now() / 1000 / 60 / 60 / 24)} days</span></p>
+            <p>System Uptime: <span className="text-cyan-400">365 days</span></p>
           </div>
         </div>
       </div>
@@ -242,22 +215,15 @@ const Home = () => {
   const SkillsSection = () => (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-8">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">SECURITY ARSENAL</h2>
           <p className="text-xl text-gray-300">Advanced capabilities in cyber warfare and defense</p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {skills.map((skill, index) => (
-            <motion.div
+            <div
               key={skill.name}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.2 }}
               className="bg-black bg-opacity-50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
             >
               <div className="flex justify-between items-center mb-4">
@@ -268,25 +234,19 @@ const Home = () => {
               </div>
               
               <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${skill.level}%` }}
-                  transition={{ duration: 1.5, delay: index * 0.2 }}
-                  className="h-full rounded-full"
-                  style={{ backgroundColor: skill.color }}
+                <div
+                  className="h-full rounded-full transition-all duration-1000"
+                  style={{ 
+                    backgroundColor: skill.color,
+                    width: `${skill.level}%`
+                  }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="mt-16 text-center"
-        >
+        <div className="mt-16 text-center">
           <div className="bg-black bg-opacity-70 rounded-2xl p-8 border border-red-500">
             <h3 className="text-2xl font-bold text-red-400 mb-4">THREAT ASSESSMENT</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -308,17 +268,15 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="mt-8 text-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('terminal')}
             className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold"
           >
             ← RETURN TO TERMINAL
-          </motion.button>
+          </button>
         </div>
       </div>
     </div>
@@ -327,23 +285,15 @@ const Home = () => {
   const ProjectsSection = () => (
     <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black p-8">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">SECURITY OPERATIONS</h2>
           <p className="text-xl text-gray-300">Advanced cybersecurity tools and frameworks</p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <motion.div
+            <div
               key={project.name}
-              initial={{ opacity: 0, y: 100, rotate: -5 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{ delay: index * 0.3 }}
-              whileHover={{ scale: 1.05, rotate: 1 }}
               className="bg-black bg-opacity-80 rounded-xl p-6 border-2 border-gray-700 hover:border-red-500 transition-all"
             >
               <div className="flex justify-between items-start mb-4">
@@ -376,29 +326,29 @@ const Home = () => {
                   {project.status.toUpperCase()}
                 </span>
                 
-                <a 
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-cyan-400 hover:text-cyan-300 transition-colors"
-                >
-                  <span className="mr-2">ANALYZE</span>
-                  <span>→</span>
-                </a>
+                {project.github && (
+                  <a 
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <span className="mr-2">ANALYZE</span>
+                    <span>→</span>
+                  </a>
+                )}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         <div className="mt-12 text-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('terminal')}
             className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold"
           >
             ← RETURN TO TERMINAL
-          </motion.button>
+          </button>
         </div>
       </div>
     </div>
@@ -407,21 +357,13 @@ const Home = () => {
   const ContactSection = () => (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-gray-900 to-black p-8">
       <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">SECURE COMMUNICATION</h2>
           <p className="text-xl text-gray-300">Encrypted channels available</p>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-black bg-opacity-70 rounded-xl p-8 border border-green-500"
-          >
+          <div className="bg-black bg-opacity-70 rounded-xl p-8 border border-green-500">
             <h3 className="text-2xl font-bold text-green-400 mb-6">CONTACT PROTOCOLS</h3>
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
@@ -464,13 +406,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-black bg-opacity-70 rounded-xl p-8 border border-purple-500"
-          >
+          <div className="bg-black bg-opacity-70 rounded-xl p-8 border border-purple-500">
             <h3 className="text-2xl font-bold text-purple-400 mb-6">CURRENT STATUS</h3>
             <div className="space-y-4">
               <div className="bg-gray-800 rounded-lg p-4">
@@ -491,18 +429,16 @@ const Home = () => {
                 <div className="text-gray-400">Security Consulting Available</div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         <div className="mt-12 text-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => setCurrentSection('terminal')}
             className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-bold"
           >
             ← RETURN TO TERMINAL
-          </motion.button>
+          </button>
         </div>
       </div>
     </div>
@@ -510,23 +446,6 @@ const Home = () => {
 
   return (
     <div className="relative">
-      {/* Cursor follower */}
-      <motion.div
-        className="fixed w-6 h-6 border-2 border-green-400 rounded-full pointer-events-none z-50 mix-blend-difference"
-        style={{
-          left: mousePosition.x - 12,
-          top: mousePosition.y - 12,
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 0.3,
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
-      />
-
       <AnimatePresence mode="wait">
         {currentSection === 'terminal' && (
           <motion.div
