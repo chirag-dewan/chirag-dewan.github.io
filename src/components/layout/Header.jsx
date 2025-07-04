@@ -30,7 +30,7 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'glass-effect shadow-apple-sm py-3' : 'bg-white py-5'
+        scrolled ? 'bg-black bg-opacity-90 backdrop-blur-sm border-b border-green-400 shadow-lg' : 'bg-black bg-opacity-70'
       }`}
     >
       <div className="container-apple">
@@ -40,12 +40,12 @@ const Header = () => {
             <motion.span 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-xl font-display font-semibold text-apple-gray-900 relative"
+              className="text-xl font-mono font-semibold text-green-400 relative"
             >
               Chirag Dewan
               <motion.span 
                 layoutId="underline"
-                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-apple-blue-500"
+                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-green-400"
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: location.pathname === '/' ? 1 : 0, width: location.pathname === '/' ? '100%' : '0%' }}
                 transition={{ duration: 0.3 }}
@@ -57,7 +57,7 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8">
             <NavLink 
               to="/" 
-              className={({ isActive }) => `nav-link relative ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`}
+              className={({ isActive }) => `text-green-400 hover:text-cyan-400 transition-colors font-mono relative ${isActive ? 'text-cyan-400 font-medium' : ''}`}
             >
               {({ isActive }) => (
                 <>
@@ -65,7 +65,7 @@ const Header = () => {
                   {isActive && (
                     <motion.span 
                       layoutId="nav-underline"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-apple-blue-500"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-cyan-400"
                       initial={{ width: 0 }}
                       animate={{ width: '100%' }}
                       transition={{ duration: 0.3 }}
@@ -76,7 +76,7 @@ const Header = () => {
             </NavLink>
             <NavLink 
               to="/blog" 
-              className={({ isActive }) => `nav-link relative ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`}
+              className={({ isActive }) => `text-green-400 hover:text-cyan-400 transition-colors font-mono relative ${isActive ? 'text-cyan-400 font-medium' : ''}`}
             >
               {({ isActive }) => (
                 <>
@@ -84,7 +84,7 @@ const Header = () => {
                   {isActive && (
                     <motion.span 
                       layoutId="nav-underline"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-apple-blue-500"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-cyan-400"
                       initial={{ width: 0 }}
                       animate={{ width: '100%' }}
                       transition={{ duration: 0.3 }}
@@ -97,36 +97,17 @@ const Header = () => {
               href="https://github.com/chirag-dewan"
               target="_blank"
               rel="noopener noreferrer"
-              className="nav-link text-apple-gray-600 hover:text-apple-gray-900 transition-colors"
+              className="text-green-400 hover:text-cyan-400 transition-colors font-mono"
             >
               GitHub
             </a>
-            <NavLink 
-              to="/contact" 
-              className={({ isActive }) => `nav-link relative ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`}
-            >
-              {({ isActive }) => (
-                <>
-                  Contact
-                  {isActive && (
-                    <motion.span 
-                      layoutId="nav-underline"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-apple-blue-500"
-                      initial={{ width: 0 }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </>
-              )}
-            </NavLink>
             
             {/* GitHub Link with Icon */}
             <a
               href="https://github.com/chirag-dewan"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 text-apple-gray-600 hover:text-apple-gray-900 transition-colors"
+              className="ml-2 text-green-400 hover:text-cyan-400 transition-colors"
               aria-label="GitHub profile"
             >
               <motion.i 
@@ -145,7 +126,7 @@ const Header = () => {
             aria-label="Toggle menu"
             whileTap={{ scale: 0.9 }}
           >
-            <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'} text-xl text-apple-gray-900`}></i>
+            <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'} text-xl text-green-400`}></i>
           </motion.button>
         </div>
       </div>
@@ -154,7 +135,7 @@ const Header = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div 
-            className="md:hidden glass-effect border-t border-apple-gray-200"
+            className="md:hidden bg-black bg-opacity-95 backdrop-blur-sm border-t border-green-400"
             initial={{ opacity: 0, height: 0, y: -10 }}
             animate={{ opacity: 1, height: 'auto', y: 0 }}
             exit={{ opacity: 0, height: 0, y: -10 }}
@@ -164,7 +145,7 @@ const Header = () => {
               <NavLink
                 to="/"
                 className={({ isActive }) => 
-                  `block py-2 text-base ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`
+                  `block py-2 text-base font-mono ${isActive ? 'text-cyan-400 font-medium' : 'text-green-400'}`
                 }
                 onClick={() => setMenuOpen(false)}
               >
@@ -173,7 +154,7 @@ const Header = () => {
               <NavLink
                 to="/blog"
                 className={({ isActive }) => 
-                  `block py-2 text-base ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`
+                  `block py-2 text-base font-mono ${isActive ? 'text-cyan-400 font-medium' : 'text-green-400'}`
                 }
                 onClick={() => setMenuOpen(false)}
               >
@@ -183,28 +164,19 @@ const Header = () => {
                 href="https://github.com/chirag-dewan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block py-2 text-base text-apple-gray-600"
+                className="block py-2 text-base font-mono text-green-400"
                 onClick={() => setMenuOpen(false)}
               >
                 GitHub
               </a>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) => 
-                  `block py-2 text-base ${isActive ? 'text-apple-gray-900 font-medium' : 'text-apple-gray-600'}`
-                }
-                onClick={() => setMenuOpen(false)}
-              >
-                Contact
-              </NavLink>
               
               {/* Social Links for Mobile */}
-              <div className="pt-4 border-t border-apple-gray-200 flex space-x-6">
+              <div className="pt-4 border-t border-green-400 flex space-x-6">
                 <a
                   href="https://github.com/chirag-dewan"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-apple-gray-600 hover:text-apple-gray-900 transition-colors"
+                  className="text-green-400 hover:text-cyan-400 transition-colors"
                   aria-label="GitHub profile"
                 >
                   <i className="fab fa-github text-xl"></i>
@@ -213,7 +185,7 @@ const Header = () => {
                   href="https://www.linkedin.com/in/cdewan/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-apple-gray-600 hover:text-apple-gray-900 transition-colors"
+                  className="text-green-400 hover:text-cyan-400 transition-colors"
                   aria-label="LinkedIn profile"
                 >
                   <i className="fab fa-linkedin text-xl"></i>
