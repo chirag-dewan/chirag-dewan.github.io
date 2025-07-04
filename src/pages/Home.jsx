@@ -1,310 +1,577 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import Hero from '../components/home/Hero';
-import Experience from '../components/home/Experience';
-import Skills from '../components/home/Skills';
-import Projects from '../components/home/Projects';
-import GitHubContributions from '../components/home/GitHubContributions';
-import AnimatedDivider from '../components/home/AnimatedDivider';
-import Contact from '../components/home/Contact';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Floating animated elements for background
-const FloatingElement = ({ children, delay = 0, x = 0, y = 0, scale = 1, className = "" }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ 
-        opacity: 0.7,
-        y: [y, y-10, y],
-        x: [x, x+5, x],
-        scale: [scale, scale * 1.05, scale]
-      }}
-      transition={{ 
-        duration: 4, 
-        repeat: Infinity, 
-        repeatType: "mirror", 
-        delay 
-      }}
-      className={`absolute ${className}`}
-    >
-      {children}
-    </motion.div>
-  );
-};
+const Home = () => {
+  const [currentSection, setCurrentSection] = useState('terminal');
+  const [terminalLines, setTerminalLines] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const canvasRef = useRef(null);
 
-// Stats Section Component
-const StatsSection = () => {
-  const stats = [
-    { label: "Vulnerabilities Found", value: "20+", icon: "shield-alt", color: "text-apple-red", gradient: "from-red-500/20 to-red-600/5" },
-    { label: "Years of Experience", value: "4+", icon: "calendar-alt", color: "text-apple-blue-500", gradient: "from-blue-500/20 to-blue-600/5" },
-    { label: "Certifications", value: "3+", icon: "certificate", color: "text-apple-green", gradient: "from-green-500/20 to-green-600/5" },
-    { label: "Projects Completed", value: "15+", icon: "project-diagram", color: "text-apple-purple", gradient: "from-purple-500/20 to-purple-600/5" }
+  // Matrix rain effect
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const chars = "01アセキュリティエンジニア10SECURITY0110HACKDEFENDPROTECT";
+    const charArray = chars.split('');
+    const fontSize = 12;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#0F0';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = charArray[Math.floor(Math.random() * charArray.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    const interval = setInterval(draw, 50);
+    
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Mouse tracking
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Terminal simulation
+  useEffect(() => {
+    if (currentSection === 'terminal') {
+      setTerminalLines([]);
+      const commands = [
+        '> initializing security protocols...',
+        '> scanning network infrastructure...',
+        '> vulnerability assessment: COMPLETE',
+        '> threat analysis: 20+ vulnerabilities discovered',
+        '> penetration testing framework: ACTIVE',
+        '> reverse engineering tools: LOADED',
+        '> welcome to chirag_dewan security research lab',
+        '> type "help" for available commands'
+      ];
+
+      let index = 0;
+      const typeCommand = () => {
+        if (index < commands.length) {
+          setIsTyping(true);
+          setTimeout(() => {
+            setTerminalLines(prev => [...prev, commands[index]]);
+            setIsTyping(false);
+            index++;
+            setTimeout(typeCommand, 800);
+          }, Math.random() * 1000 + 500);
+        }
+      };
+
+      const timer = setTimeout(typeCommand, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentSection]);
+
+  const skills = [
+    { name: 'Vulnerability Research', level: 95, color: '#ff6b6b' },
+    { name: 'Reverse Engineering', level: 90, color: '#4ecdc4' },
+    { name: 'Exploit Development', level: 88, color: '#45b7d1' },
+    { name: 'Malware Analysis', level: 92, color: '#96ceb4' },
+    { name: 'Network Security', level: 89, color: '#feca57' },
+    { name: 'SCADA Security', level: 87, color: '#ff9ff3' }
   ];
 
-  return (
-    <section className="py-16 bg-gradient-to-b from-white to-apple-gray-50 relative overflow-hidden">
-      {/* Background shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full filter blur-3xl"></div>
-      
-      <div className="container-apple relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`bg-white rounded-apple-xl p-8 shadow-apple-lg text-center flex flex-col items-center relative overflow-hidden`}
-            >
-              {/* Background gradient */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-40`}></div>
-              
-              {/* Decorative shapes */}
-              <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/30 rounded-full"></div>
-              <div className="absolute -left-4 -bottom-4 w-16 h-16 bg-white/30 rounded-full"></div>
-              
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 relative z-10 bg-opacity-10 ${stat.color === 'text-apple-blue-500' ? 'bg-apple-blue-500/10' : stat.color === 'text-apple-red' ? 'bg-apple-red/10' : stat.color === 'text-apple-green' ? 'bg-apple-green/10' : 'bg-apple-purple/10'}`}>
-                <i className={`fas fa-${stat.icon} text-2xl ${stat.color}`}></i>
-              </div>
-              
-              <motion.div
-                className="relative z-10"
-                initial={{ scale: 0.5, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 100, 
-                  delay: 0.2 + index * 0.1,
-                  duration: 0.8
-                }}
-              >
-                <span className="text-4xl font-display font-bold text-apple-gray-900 mb-2 block">
-                  {stat.value}
-                </span>
-                <span className="text-apple-gray-600 block">{stat.label}</span>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Timeline Component
-const Timeline = () => {
-  const timelineItems = [
+  const projects = [
     {
-      year: "2025",
-      title: "Software Engineer II at GM Financial",
-      description: "Starting Soon - Financial technology development",
-      icon: "dollar-sign"
+      name: 'Packet Prowler',
+      description: 'Advanced C-based network packet sniffer with real-time analysis',
+      tech: ['C', 'libpcap', 'BPF'],
+      status: 'active',
+      threat_level: 'high',
+      github: 'https://github.com/chirag-dewan/Packet-Prowler'
     },
     {
-      year: "2025",
-      title: "Cyber Research Engineer I at RTX BBN",
-      description: "Leading vulnerability research in critical infrastructure",
-      icon: "search"
+      name: 'Malware Analysis Framework',
+      description: 'ML-powered malware detection and behavioral analysis platform',
+      tech: ['Python', 'TensorFlow', 'YARA'],
+      status: 'active',
+      threat_level: 'critical',
+      github: 'https://github.com/chirag-dewan/malware-analysis-tool'
     },
     {
-      year: "2023-2024",
-      title: "Cyber Engineer at RTX",
-      description: "Securing enterprise systems through threat modeling and hardening",
-      icon: "shield-alt"
+      name: 'ML-Based IDS',
+      description: 'Intelligent intrusion detection with ensemble learning',
+      tech: ['Python', 'Scikit-learn', 'Network Analysis'],
+      status: 'deployed',
+      threat_level: 'medium',
+      github: 'https://github.com/chirag-dewan/IDS-MachineLearningTest'
     },
     {
-      year: "2022-2023",
-      title: "Senior Cyber Intern at RTX",
-      description: "Conducting APT simulations and vulnerability discovery",
-      icon: "bug"
-    },
-    {
-      year: "2021",
-      title: "Information Security Intern at Reata Pharmaceuticals",
-      description: "Performing security assessments for healthcare systems",
-      icon: "medkit"
-    },
-    {
-      year: "2023",
-      title: "B.S. Computer Science",
-      description: "Arizona State University",
-      icon: "graduation-cap"
+      name: 'Vulnerability Scanner',
+      description: 'Automated vulnerability discovery and exploitation framework',
+      tech: ['Python', 'Nmap', 'Custom Exploits'],
+      status: 'maintenance',
+      threat_level: 'high',
+      github: '#'
     }
   ];
 
-  return (
-    <section className="py-20 bg-white">
-      <div className="container-apple max-w-4xl mx-auto">
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+  const TerminalSection = () => (
+    <div className="min-h-screen bg-black text-green-400 font-mono p-8 overflow-hidden relative">
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 pointer-events-none opacity-20"
+      />
+      
+      <div className="relative z-10 max-w-4xl mx-auto">
+        <div className="mb-8">
+          <div className="flex items-center space-x-2 mb-4">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span className="ml-4 text-gray-400">chirag_dewan@security-lab</span>
+          </div>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-2"
         >
-          <h2 className="heading-md text-apple-gray-900 mb-4">Professional Journey</h2>
-          <p className="text-lg text-apple-gray-600 max-w-3xl mx-auto">
-            A visual timeline of my career in cybersecurity
-          </p>
+          <div className="text-2xl font-bold mb-4 text-cyan-400">
+            ╔══════════════════════════════════════════════════════════════╗
+            ║                CHIRAG DEWAN - SECURITY RESEARCHER            ║
+            ║                GM FINANCIAL | SOFTWARE ENGINEER II           ║
+            ╚══════════════════════════════════════════════════════════════╝
+          </div>
+
+          {terminalLines.map((line, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flex items-center"
+            >
+              <span className="text-cyan-400 mr-2">$</span>
+              <span>{line}</span>
+            </motion.div>
+          ))}
+
+          {isTyping && (
+            <div className="flex items-center">
+              <span className="text-cyan-400 mr-2">$</span>
+              <div className="w-2 h-5 bg-green-400 animate-pulse"></div>
+            </div>
+          )}
         </motion.div>
 
-        <div className="relative">
-          {/* Timeline central line */}
-          <motion.div
-            initial={{ height: 0 }}
-            whileInView={{ height: '100%' }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5 }}
-            className="absolute left-1/2 transform -translate-x-1/2 w-px bg-apple-gray-200 h-full z-0"
-          />
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('skills')}
+            className="bg-gray-900 border-2 border-green-400 p-6 rounded-lg hover:bg-green-400 hover:text-black transition-all"
+          >
+            <div className="text-lg font-bold mb-2">SKILLS.EXE</div>
+            <div className="text-sm">Technical Arsenal</div>
+          </motion.button>
 
-          {/* Timeline items */}
-          <div className="relative z-10">
-            {timelineItems.map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                className={`flex items-center mb-12 last:mb-0 ${index % 2 === 0 ? 'justify-start' : 'flex-row-reverse'}`}
-              >
-                <div className={`w-5/12 ${index % 2 === 0 ? 'text-right pr-8' : 'text-left pl-8'}`}>
-                  <span className="block text-sm font-medium text-apple-blue-500 mb-1">{item.year}</span>
-                  <h3 className="text-lg font-medium text-apple-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-apple-gray-600">{item.description}</p>
-                </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('projects')}
+            className="bg-gray-900 border-2 border-cyan-400 p-6 rounded-lg hover:bg-cyan-400 hover:text-black transition-all"
+          >
+            <div className="text-lg font-bold mb-2">PROJECTS.EXE</div>
+            <div className="text-sm">Security Tools</div>
+          </motion.button>
 
-                <div className="relative z-10">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", stiffness: 300, delay: 0.3 + index * 0.2 }}
-                    className="w-12 h-12 rounded-full bg-apple-blue-500 flex items-center justify-center shadow-lg"
-                  >
-                    <i className={`fas fa-${item.icon} text-white`}></i>
-                  </motion.div>
-                </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('contact')}
+            className="bg-gray-900 border-2 border-red-400 p-6 rounded-lg hover:bg-red-400 hover:text-black transition-all"
+          >
+            <div className="text-lg font-bold mb-2">CONTACT.EXE</div>
+            <div className="text-sm">Secure Communication</div>
+          </motion.button>
+        </div>
 
-                <div className="w-5/12"></div>
-              </motion.div>
-            ))}
+        <div className="mt-12 text-center">
+          <div className="text-gray-500 text-sm">
+            <p>Current Status: <span className="text-green-400">ONLINE</span></p>
+            <p>Security Level: <span className="text-red-400">MAXIMUM</span></p>
+            <p>System Uptime: <span className="text-cyan-400">{Math.floor(Date.now() / 1000 / 60 / 60 / 24)} days</span></p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
-};
 
-// Skills Showcase Component
-const SkillsShowcase = () => {
-  const skills = [
-    { name: "Reverse Engineering", level: 90, category: "Security" },
-    { name: "Exploit Development", level: 85, category: "Security" },
-    { name: "Python", level: 95, category: "Development" },
-    { name: "C/C++", level: 85, category: "Development" },
-    { name: "Threat Modeling", level: 90, category: "Security" },
-    { name: "Rust", level: 80, category: "Development" }
-  ];
-
-  return (
-    <section className="py-16 bg-apple-gray-900 text-white">
-      <div className="container-apple">
+  const SkillsSection = () => (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-8">
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h2 className="heading-md text-white mb-4">Core Expertise</h2>
-          <p className="text-lg text-apple-gray-300 max-w-3xl mx-auto">
-            Specialized in cybersecurity research, vulnerability discovery, and secure software development
-          </p>
+          <h2 className="text-4xl font-bold text-white mb-4">SECURITY ARSENAL</h2>
+          <p className="text-xl text-gray-300">Advanced capabilities in cyber warfare and defense</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {skills.map((skill, index) => (
             <motion.div
               key={skill.name}
-              initial={{ x: index % 2 === 0 ? -50 : 50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-apple-gray-800 rounded-apple-lg p-6 shadow-lg"
+              initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.2 }}
+              className="bg-black bg-opacity-50 backdrop-blur-sm rounded-xl p-6 border border-gray-700"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-medium text-white">{skill.name}</h3>
-                <span className="px-3 py-1 bg-apple-gray-700 text-apple-gray-300 rounded-full text-xs">
-                  {skill.category}
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-white">{skill.name}</h3>
+                <span className="text-sm px-3 py-1 bg-gray-800 text-green-400 rounded-full">
+                  {skill.level}%
                 </span>
               </div>
               
-              <div className="mt-3 flex items-center">
-                <div className="flex-grow h-2 bg-apple-gray-700 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
-                    className="h-full bg-apple-blue-500 rounded-full"
-                  />
-                </div>
-                <span className="ml-3 text-sm font-medium text-apple-gray-300">{skill.level}%</span>
+              <div className="relative h-3 bg-gray-800 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${skill.level}%` }}
+                  transition={{ duration: 1.5, delay: index * 0.2 }}
+                  className="h-full rounded-full"
+                  style={{ backgroundColor: skill.color }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 animate-pulse"></div>
               </div>
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
 
-const Home = () => {
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5 }}
+          className="mt-16 text-center"
+        >
+          <div className="bg-black bg-opacity-70 rounded-2xl p-8 border border-red-500">
+            <h3 className="text-2xl font-bold text-red-400 mb-4">THREAT ASSESSMENT</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-3xl font-bold text-white">20+</div>
+                <div className="text-red-400">Vulnerabilities Found</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-white">4+</div>
+                <div className="text-green-400">Years Experience</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-white">15+</div>
+                <div className="text-blue-400">Security Tools Built</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-white">100%</div>
+                <div className="text-purple-400">Dedicated to Security</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="mt-8 text-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('terminal')}
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold"
+          >
+            ← RETURN TO TERMINAL
+          </motion.button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ProjectsSection = () => (
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black p-8">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">SECURITY OPERATIONS</h2>
+          <p className="text-xl text-gray-300">Advanced cybersecurity tools and frameworks</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.name}
+              initial={{ opacity: 0, y: 100, rotate: -5 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              transition={{ delay: index * 0.3 }}
+              whileHover={{ scale: 1.05, rotate: 1 }}
+              className="bg-black bg-opacity-80 rounded-xl p-6 border-2 border-gray-700 hover:border-red-500 transition-all"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-xl font-bold text-white">{project.name}</h3>
+                <div className={`px-2 py-1 rounded text-xs font-bold ${
+                  project.threat_level === 'critical' ? 'bg-red-600 text-white' :
+                  project.threat_level === 'high' ? 'bg-orange-600 text-white' :
+                  'bg-yellow-600 text-black'
+                }`}>
+                  {project.threat_level.toUpperCase()}
+                </div>
+              </div>
+              
+              <p className="text-gray-300 mb-4">{project.description}</p>
+              
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.tech.map((tech) => (
+                  <span key={tech} className="px-2 py-1 bg-gray-800 text-green-400 rounded text-sm">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className={`px-3 py-1 rounded text-sm font-bold ${
+                  project.status === 'active' ? 'bg-green-600 text-white' :
+                  project.status === 'deployed' ? 'bg-blue-600 text-white' :
+                  'bg-gray-600 text-white'
+                }`}>
+                  {project.status.toUpperCase()}
+                </span>
+                
+                <a 
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <span className="mr-2">ANALYZE</span>
+                  <span>→</span>
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-12 text-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('terminal')}
+            className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold"
+          >
+            ← RETURN TO TERMINAL
+          </motion.button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ContactSection = () => (
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-gray-900 to-black p-8">
+      <div className="max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl font-bold text-white mb-4">SECURE COMMUNICATION</h2>
+          <p className="text-xl text-gray-300">Encrypted channels available</p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-black bg-opacity-70 rounded-xl p-8 border border-green-500"
+          >
+            <h3 className="text-2xl font-bold text-green-400 mb-6">CONTACT PROTOCOLS</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">@</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold">Email</div>
+                  <div className="text-gray-400">chirag0728@gmail.com</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">LI</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold">LinkedIn</div>
+                  <div className="text-gray-400">linkedin.com/in/cdewan</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gray-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">GH</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold">GitHub</div>
+                  <div className="text-gray-400">github.com/chirag-dewan</div>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold">📞</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold">Phone</div>
+                  <div className="text-gray-400">(919) 771-7668</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-black bg-opacity-70 rounded-xl p-8 border border-purple-500"
+          >
+            <h3 className="text-2xl font-bold text-purple-400 mb-6">CURRENT STATUS</h3>
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-4">
+                <div className="text-green-400 font-bold">GM Financial</div>
+                <div className="text-white">Software Engineer II</div>
+                <div className="text-gray-400">Financial Technology Solutions</div>
+              </div>
+              
+              <div className="bg-gray-800 rounded-lg p-4">
+                <div className="text-blue-400 font-bold">Previous: RTX BBN</div>
+                <div className="text-white">Cyber Research Engineer I</div>
+                <div className="text-gray-400">Vulnerability Research & Analysis</div>
+              </div>
+              
+              <div className="bg-gray-800 rounded-lg p-4">
+                <div className="text-yellow-400 font-bold">Availability</div>
+                <div className="text-white">Open to Opportunities</div>
+                <div className="text-gray-400">Security Consulting Available</div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentSection('terminal')}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-bold"
+          >
+            ← RETURN TO TERMINAL
+          </motion.button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="relative overflow-hidden">
-      {/* Floating decorative elements */}
-      <FloatingElement x={100} y={300} delay={0} className="hidden md:block">
-        <div className="w-16 h-16 bg-blue-500/10 rounded-full blur-xl"></div>
-      </FloatingElement>
-      <FloatingElement x={-50} y={800} delay={1.5} className="hidden md:block">
-        <div className="w-20 h-20 bg-purple-500/10 rounded-full blur-xl"></div>
-      </FloatingElement>
-      <FloatingElement x={-200} y={1200} delay={2.3} className="hidden md:block">
-        <div className="w-24 h-24 bg-green-500/10 rounded-full blur-xl"></div>
-      </FloatingElement>
-      
-      <Hero />
-      
-      <StatsSection />
-      
-      <AnimatedDivider delay={0.2} />
-      
-      <Experience />
-      
-      <AnimatedDivider delay={0.2} />
-      
-      <Timeline />
-      
-      <AnimatedDivider delay={0.2} />
-      
-      <SkillsShowcase />
-      
-      <AnimatedDivider delay={0.2} color="white" />
-      
-      <Projects />
-      
-      <AnimatedDivider delay={0.2} />
-      
-      <GitHubContributions />
-      
-      <AnimatedDivider delay={0.2} />
-      
-      <Contact />
+    <div className="relative">
+      {/* Cursor follower */}
+      <motion.div
+        className="fixed w-6 h-6 border-2 border-green-400 rounded-full pointer-events-none z-50 mix-blend-difference"
+        style={{
+          left: mousePosition.x - 12,
+          top: mousePosition.y - 12,
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 0.3,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+      />
+
+      <AnimatePresence mode="wait">
+        {currentSection === 'terminal' && (
+          <motion.div
+            key="terminal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <TerminalSection />
+          </motion.div>
+        )}
+        
+        {currentSection === 'skills' && (
+          <motion.div
+            key="skills"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <SkillsSection />
+          </motion.div>
+        )}
+        
+        {currentSection === 'projects' && (
+          <motion.div
+            key="projects"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ProjectsSection />
+          </motion.div>
+        )}
+        
+        {currentSection === 'contact' && (
+          <motion.div
+            key="contact"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ContactSection />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
