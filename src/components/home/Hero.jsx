@@ -380,12 +380,14 @@ const Hero = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.8 }}
       >
-        <motion.div
+        <motion.button
+          type="button"
+          aria-label="Scroll to experience section"
           className="w-6 h-10 border-2 border-gray-400 rounded-full p-1 cursor-pointer"
           whileHover={{ scale: 1.1 }}
           onClick={() => {
-            document.querySelector('#experience')?.scrollIntoView({ 
-              behavior: 'smooth' 
+            document.querySelector('#experience')?.scrollIntoView({
+              behavior: 'smooth'
             });
           }}
         >
@@ -394,7 +396,7 @@ const Hero = () => {
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
-        </motion.div>
+        </motion.button>
         <p className="text-sm text-gray-500 mt-2 text-center">Scroll to explore</p>
       </motion.div>
 
