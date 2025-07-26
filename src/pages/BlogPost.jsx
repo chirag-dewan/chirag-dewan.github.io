@@ -114,32 +114,108 @@ const BlogPost = () => {
           
           {/* Post Content */}
           <div 
-            className={`max-w-3xl mx-auto transition-all duration-500 ${
+            className={`max-w-5xl mx-auto transition-all duration-500 ${
               inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
             style={{ transitionDelay: '0.3s' }}
           >
-            <div 
-              className="prose prose-xl max-w-none font-mono
-                prose-headings:text-white prose-headings:font-bold prose-headings:mb-8 prose-headings:mt-12
-                prose-h2:text-3xl prose-h2:border-b prose-h2:border-gray-600 prose-h2:pb-4 prose-h2:leading-tight
-                prose-h3:text-2xl prose-h3:text-blue-400 prose-h3:mb-6 prose-h3:mt-10
-                prose-h4:text-xl prose-h4:text-blue-300 prose-h4:mb-4 prose-h4:mt-8
-                prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8 prose-p:text-lg
-                prose-ul:text-gray-300 prose-ul:text-lg prose-li:mb-3 prose-li:leading-relaxed prose-li:pl-2
-                prose-ol:text-gray-300 prose-ol:text-lg
-                prose-strong:text-white prose-strong:font-semibold
-                prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-3 prose-code:py-1 prose-code:rounded prose-code:text-base
-                prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700 prose-pre:p-6 prose-pre:rounded-lg
-                prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
-                prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:text-gray-400
-                [&>*:first-child]:mt-0
-                [&_h2]:scroll-mt-28
-                [&_h3]:scroll-mt-28
-                [&_p]:font-mono
-                [&_li]:font-mono"
-              dangerouslySetInnerHTML={{ __html: post.content }} 
-            />
+            {/* Terminal-style header */}
+            <div className="bg-gray-900 border border-gray-700 rounded-t-lg p-4 flex items-center gap-2">
+              <div className="flex gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+              <div className="flex-1 text-center">
+                <span className="text-gray-400 text-sm font-mono">
+                  📝 {post.title.toLowerCase().replace(/\s+/g, '-')}.md
+                </span>
+              </div>
+              <div className="text-gray-400 text-sm font-mono">
+                <i className="fas fa-code mr-2"></i>
+                {post.readTime}
+              </div>
+            </div>
+            
+            {/* Content with line numbers */}
+            <div className="bg-gray-900 border-x border-b border-gray-700 rounded-b-lg overflow-hidden">
+              <div className="flex">
+                {/* Line numbers sidebar */}
+                <div className="bg-gray-800 border-r border-gray-700 px-4 py-6 select-none">
+                  <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-6">
+                    {Array.from({ length: 50 }, (_, i) => (
+                      <div key={i + 1} className="text-right min-w-[2rem]">
+                        {String(i + 1).padStart(2, '0')}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Main content */}
+                <div className="flex-1 py-6 px-8">
+                  {/* Markdown metadata header */}
+                  <div className="border-b border-gray-700 pb-6 mb-8">
+                    <div className="text-gray-500 font-mono text-sm space-y-1">
+                      <div>---</div>
+                      <div><span className="text-blue-400">title:</span> "{post.title}"</div>
+                      <div><span className="text-blue-400">author:</span> "{post.author}"</div>
+                      <div><span className="text-blue-400">date:</span> {post.date}</div>
+                      <div><span className="text-blue-400">category:</span> {post.category}</div>
+                      <div><span className="text-blue-400">tags:</span> [{post.tags.map(tag => `"${tag}"`).join(', ')}]</div>
+                      <div><span className="text-blue-400">readTime:</span> "{post.readTime}"</div>
+                      <div>---</div>
+                    </div>
+                  </div>
+                  
+                  {/* Creative intro section */}
+                  <div className="mb-10 p-6 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-2xl">🎯</span>
+                      <h3 className="text-xl font-bold text-blue-400 font-mono">TL;DR</h3>
+                    </div>
+                    <p className="text-gray-300 font-mono text-lg leading-relaxed">
+                      {post.summary}
+                    </p>
+                  </div>
+                  
+                  <div 
+                    className="prose prose-xl max-w-none font-mono
+                      prose-headings:text-white prose-headings:font-bold prose-headings:mb-10 prose-headings:mt-16
+                      prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-0 prose-h1:border-b prose-h1:border-gray-600 prose-h1:pb-6
+                      prose-h2:text-3xl prose-h2:border-b prose-h2:border-gray-600 prose-h2:pb-4 prose-h2:leading-tight prose-h2:mt-20 prose-h2:mb-12
+                      prose-h3:text-2xl prose-h3:text-blue-400 prose-h3:mb-8 prose-h3:mt-16 prose-h3:before:content-['###_'] prose-h3:before:text-gray-500 prose-h3:before:mr-2
+                      prose-h4:text-xl prose-h4:text-blue-300 prose-h4:mb-6 prose-h4:mt-12 prose-h4:before:content-['####_'] prose-h4:before:text-gray-500 prose-h4:before:mr-2
+                      prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8 prose-p:text-lg prose-p:indent-0
+                      prose-ul:text-gray-300 prose-ul:text-lg prose-ul:my-8 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-2 prose-li:before:content-['-_'] prose-li:before:text-blue-400 prose-li:before:font-bold prose-li:before:mr-3
+                      prose-ol:text-gray-300 prose-ol:text-lg prose-ol:my-8 prose-ol:list-none 
+                      prose-strong:text-white prose-strong:font-semibold prose-strong:bg-gray-800/50 prose-strong:px-1 prose-strong:rounded
+                      prose-em:text-yellow-300 prose-em:not-italic prose-em:font-semibold
+                      prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-3 prose-code:py-1 prose-code:rounded prose-code:text-base prose-code:before:content-['`'] prose-code:after:content-['`'] prose-code:before:text-gray-500 prose-code:after:text-gray-500
+                      prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700 prose-pre:p-8 prose-pre:rounded-lg prose-pre:my-10 prose-pre:shadow-lg
+                      prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 prose-a:font-semibold prose-a:underline prose-a:underline-offset-4 prose-a:decoration-blue-400/50
+                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-8 prose-blockquote:py-4 prose-blockquote:text-gray-400 prose-blockquote:bg-blue-900/10 prose-blockquote:rounded-r-lg prose-blockquote:my-8 prose-blockquote:before:content-['>_'] prose-blockquote:before:text-blue-400 prose-blockquote:before:font-bold prose-blockquote:before:mr-3
+                      [&>*:first-child]:mt-0
+                      [&_h2]:scroll-mt-28
+                      [&_h3]:scroll-mt-28
+                      [&_p]:font-mono
+                      [&_li]:font-mono
+                      [&_p]:first-letter:text-2xl [&_p]:first-letter:font-bold [&_p]:first-letter:text-blue-400 [&_p]:first-letter:mr-1"
+                    dangerouslySetInnerHTML={{ __html: post.content }} 
+                  />
+                  
+                  {/* Creative footer section */}
+                  <div className="mt-16 pt-8 border-t border-gray-700">
+                    <div className="flex items-center gap-4 text-gray-400 font-mono text-sm">
+                      <span>💾 Last saved: {new Date().toLocaleString()}</span>
+                      <span>•</span>
+                      <span>📊 {post.content.split(' ').length} words</span>
+                      <span>•</span>
+                      <span>⚡ {post.readTime}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Author Bio */}
