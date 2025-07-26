@@ -21,8 +21,8 @@ const BlogCard = ({ post, index, featured = false }) => {
       className={`group ${featured ? 'col-span-full lg:col-span-2' : ''}`}
     >
       <Link to={`/blog/${post.id}`}>
-        <div className={`card hoverable overflow-hidden h-full flex flex-col ${
-          featured ? 'border-2 border-blue-200' : ''
+        <div className={`bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-lg overflow-hidden h-full flex flex-col transition-colors ${
+          featured ? 'border-2 border-blue-500' : ''
         }`}>
           {/* Featured badge */}
           {featured && (
@@ -35,14 +35,14 @@ const BlogCard = ({ post, index, featured = false }) => {
           )}
           
           {/* Post image/icon */}
-          <div className={`${featured ? 'h-64' : 'h-48'} bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative overflow-hidden`}>
+          <div className={`${featured ? 'h-64' : 'h-48'} bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center relative overflow-hidden`}>
             <span className={`${featured ? 'text-8xl' : 'text-6xl'} transition-transform group-hover:scale-110`}>
               {post.image}
             </span>
             
             {/* Category overlay */}
             <div className="absolute top-4 left-4">
-              <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-800 rounded-full text-xs font-medium">
+              <span className="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white rounded-full text-xs font-medium">
                 {post.category}
               </span>
             </div>
@@ -57,38 +57,38 @@ const BlogCard = ({ post, index, featured = false }) => {
           
           <div className="p-6 flex-grow flex flex-col">
             {/* Metadata */}
-            <div className="flex items-center gap-4 mb-3 text-sm text-gray-500">
+            <div className="flex items-center gap-4 mb-3 text-sm text-gray-400">
               <span>{post.date}</span>
               <span>•</span>
               <span>{post.author}</span>
             </div>
             
             {/* Title */}
-            <h3 className={`${featured ? 'text-2xl' : 'text-xl'} font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2`}>
+            <h3 className={`${featured ? 'text-2xl' : 'text-xl'} font-bold text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-2`}>
               {post.title}
             </h3>
             
             {/* Summary */}
-            <p className="text-gray-600 flex-grow line-clamp-3 mb-4">
+            <p className="text-gray-300 flex-grow line-clamp-3 mb-4">
               {post.summary}
             </p>
             
             {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.slice(0, featured ? 4 : 3).map((tag) => (
-                <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                <span key={tag} className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
                   {tag}
                 </span>
               ))}
               {post.tags.length > (featured ? 4 : 3) && (
-                <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded text-xs">
+                <span className="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs">
                   +{post.tags.length - (featured ? 4 : 3)} more
                 </span>
               )}
             </div>
             
             {/* Read more link */}
-            <div className="flex items-center text-blue-600 font-medium group-hover:text-blue-700 transition-colors">
+            <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
               <span>Read Article</span>
               <i className="fas fa-arrow-right ml-2 text-sm transform group-hover:translate-x-1 transition-transform"></i>
             </div>
@@ -126,7 +126,7 @@ const Blog = () => {
   });
 
   return (
-    <div className="pt-28 pb-20 min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+    <div className="pt-28 pb-20 min-h-screen bg-black">
       <div className="container-apple">
         {/* Header */}
         <motion.div 
@@ -135,27 +135,27 @@ const Blog = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="heading-md text-gray-900 mb-4">Cybersecurity Research & Insights</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <h1 className="heading-md text-white mb-4">Cybersecurity Research & Insights</h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Deep dives into AI security, offensive cybersecurity techniques, and the evolving threat landscape. 
             Insights from vulnerability research and practical security engineering.
           </p>
           
           {/* Stats */}
           <div className="mt-8 flex justify-center">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+            <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg p-6">
               <div className="grid grid-cols-3 gap-8 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-blue-600">{allPosts.length}</div>
-                  <div className="text-sm text-gray-500">Articles</div>
+                  <div className="text-3xl font-bold text-blue-400">{allPosts.length}</div>
+                  <div className="text-sm text-gray-400">Articles</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-purple-600">{featuredPosts.length}</div>
-                  <div className="text-sm text-gray-500">Featured</div>
+                  <div className="text-3xl font-bold text-purple-400">{featuredPosts.length}</div>
+                  <div className="text-sm text-gray-400">Featured</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-green-600">{categories.length - 1}</div>
-                  <div className="text-sm text-gray-500">Categories</div>
+                  <div className="text-3xl font-bold text-green-400">{categories.length - 1}</div>
+                  <div className="text-sm text-gray-400">Categories</div>
                 </div>
               </div>
             </div>
@@ -177,7 +177,7 @@ const Blog = () => {
                 placeholder="Search articles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-12 bg-white border border-gray-300 rounded-full focus:outline-none focus:border-blue-500 shadow-sm"
+                className="w-full px-4 py-3 pl-12 bg-gray-800 border border-gray-600 text-white placeholder-gray-400 rounded-full focus:outline-none focus:border-blue-500 shadow-sm"
               />
               <i className="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
@@ -192,7 +192,7 @@ const Blog = () => {
                 className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                   activeCategory === category
                     ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 shadow-sm'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600 shadow-sm'
                 }`}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -214,7 +214,7 @@ const Blog = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mb-16"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Featured Articles</h2>
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">Featured Articles</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {featuredPosts.slice(0, 2).map((post, index) => (
                 <BlogCard key={post.id} post={post} index={index} featured={true} />
@@ -231,15 +231,15 @@ const Blog = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-white">
               {activeCategory === 'all' ? 'All Articles' : `${activeCategory} Articles`}
-              <span className="text-gray-500 font-normal ml-2">({filteredPosts.length})</span>
+              <span className="text-gray-400 font-normal ml-2">({filteredPosts.length})</span>
             </h2>
             
             {/* Sort Options */}
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-500">Sort by:</span>
-              <select className="bg-white border border-gray-300 rounded-lg px-3 py-1 text-gray-700 focus:outline-none focus:border-blue-500">
+              <span className="text-gray-400">Sort by:</span>
+              <select className="bg-gray-800 border border-gray-600 text-gray-300 rounded-lg px-3 py-1 focus:outline-none focus:border-blue-500">
                 <option>Latest</option>
                 <option>Oldest</option>
                 <option>Most Popular</option>
@@ -259,11 +259,11 @@ const Blog = () => {
               animate={{ opacity: 1 }}
               className="text-center py-20"
             >
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i className="fas fa-search text-gray-400 text-2xl"></i>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-xl font-semibold text-white mb-2">No articles found</h3>
+              <p className="text-gray-300 mb-6">
                 Try adjusting your search terms or category filter.
               </p>
               <button
@@ -316,7 +316,7 @@ const Blog = () => {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-20"
         >
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Explore by Category</h3>
+          <h3 className="text-2xl font-bold text-white mb-8 text-center">Explore by Category</h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.filter(cat => cat !== 'all').map((category, index) => {
               const categoryPosts = getPostsByCategory(category);
@@ -330,21 +330,21 @@ const Blog = () => {
               return (
                 <motion.div
                   key={category}
-                  className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer"
+                  className="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-lg hover:border-gray-600 transition-all duration-300 cursor-pointer"
                   onClick={() => setActiveCategory(category)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                    <i className={`fas fa-${icons[category] || 'shield-alt'} text-blue-600 text-xl`}></i>
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+                    <i className={`fas fa-${icons[category] || 'shield-alt'} text-white text-xl`}></i>
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">{category}</h4>
-                  <p className="text-gray-600 text-sm mb-3">
+                  <h4 className="text-lg font-semibold text-white mb-2">{category}</h4>
+                  <p className="text-gray-300 text-sm mb-3">
                     {categoryPosts.length} article{categoryPosts.length !== 1 ? 's' : ''}
                   </p>
-                  <span className="text-blue-600 text-sm font-medium">
+                  <span className="text-blue-400 text-sm font-medium">
                     Explore →
                   </span>
                 </motion.div>
