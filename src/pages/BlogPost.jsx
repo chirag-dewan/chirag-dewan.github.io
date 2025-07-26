@@ -62,7 +62,7 @@ const BlogPost = () => {
 
 
   return (
-    <div className="pt-28 pb-20 min-h-screen bg-black">
+    <div className="pt-28 pb-20 min-h-screen bg-black font-mono">
       <article className="section">
         <div className="container-apple">
           {/* Post Header */}
@@ -89,15 +89,15 @@ const BlogPost = () => {
               <span className="text-gray-400 text-sm">{post.readTime}</span>
             </div>
             
-            <h1 className="heading-md text-white mb-4">{post.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">{post.title}</h1>
             
             <div className="flex items-center gap-4 mt-6">
               <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-gray-300">
                 <i className="fas fa-user"></i>
               </div>
               <div>
-                <p className="font-medium text-white">{post.author}</p>
-                <p className="text-sm text-gray-400">{post.date}</p>
+                <p className="font-medium text-white text-lg">{post.author}</p>
+                <p className="text-base text-gray-400">{post.date}</p>
               </div>
             </div>
           </div>
@@ -120,17 +120,24 @@ const BlogPost = () => {
             style={{ transitionDelay: '0.3s' }}
           >
             <div 
-              className="prose prose-lg prose-invert max-w-none 
-                prose-headings:text-white prose-headings:font-bold prose-headings:mb-6 prose-headings:mt-8
-                prose-h2:text-2xl prose-h2:border-b prose-h2:border-gray-700 prose-h2:pb-2
-                prose-h3:text-xl prose-h3:text-blue-400
-                prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
-                prose-ul:text-gray-300 prose-li:mb-2 prose-li:leading-relaxed
+              className="prose prose-xl max-w-none font-mono
+                prose-headings:text-white prose-headings:font-bold prose-headings:mb-8 prose-headings:mt-12
+                prose-h2:text-3xl prose-h2:border-b prose-h2:border-gray-600 prose-h2:pb-4 prose-h2:leading-tight
+                prose-h3:text-2xl prose-h3:text-blue-400 prose-h3:mb-6 prose-h3:mt-10
+                prose-h4:text-xl prose-h4:text-blue-300 prose-h4:mb-4 prose-h4:mt-8
+                prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8 prose-p:text-lg
+                prose-ul:text-gray-300 prose-ul:text-lg prose-li:mb-3 prose-li:leading-relaxed prose-li:pl-2
+                prose-ol:text-gray-300 prose-ol:text-lg
                 prose-strong:text-white prose-strong:font-semibold
-                prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-2 prose-code:py-1 prose-code:rounded
-                prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700
+                prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-3 prose-code:py-1 prose-code:rounded prose-code:text-base
+                prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700 prose-pre:p-6 prose-pre:rounded-lg
                 prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300
-                [&>*:first-child]:mt-0"
+                prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:text-gray-400
+                [&>*:first-child]:mt-0
+                [&_h2]:scroll-mt-28
+                [&_h3]:scroll-mt-28
+                [&_p]:font-mono
+                [&_li]:font-mono"
               dangerouslySetInnerHTML={{ __html: post.content }} 
             />
           </div>
@@ -147,8 +154,8 @@ const BlogPost = () => {
                 <i className="fas fa-user text-2xl"></i>
               </div>
               <div>
-                <h3 className="text-xl font-medium text-white mb-2 text-center sm:text-left">About the Author</h3>
-                <p className="text-gray-300 mb-4 leading-relaxed">
+                <h3 className="text-2xl font-medium text-white mb-4 text-center sm:text-left">About the Author</h3>
+                <p className="text-gray-300 mb-6 leading-relaxed text-lg">
                   Chirag Dewan is a Cyber Research Scientist specializing in security solutions and cutting-edge technology. With experience in vulnerability research and threat analysis, he regularly writes about cybersecurity topics and emerging technologies.
                 </p>
                 <div className="flex space-x-4 justify-center sm:justify-start">
@@ -181,7 +188,7 @@ const BlogPost = () => {
               }`}
               style={{ transitionDelay: '0.5s' }}
             >
-              <h2 className="text-2xl font-display font-bold text-white mb-8 text-center">Related Articles</h2>
+              <h2 className="text-3xl font-bold text-white mb-10 text-center">Related Articles</h2>
               
               <div className="grid md:grid-cols-2 gap-8">
                 {relatedPostsList.map((relatedPost, index) => (
@@ -202,8 +209,8 @@ const BlogPost = () => {
                         <span className="text-gray-400 text-sm">{relatedPost.readTime}</span>
                       </div>
                       
-                      <h3 className="text-lg font-medium text-white mb-2">{relatedPost.title}</h3>
-                      <p className="text-sm text-gray-400 mb-4">{relatedPost.date}</p>
+                      <h3 className="text-xl font-medium text-white mb-3 leading-tight">{relatedPost.title}</h3>
+                      <p className="text-base text-gray-400 mb-4">{relatedPost.date}</p>
                       
                       <div className="mt-auto">
                         <Link 

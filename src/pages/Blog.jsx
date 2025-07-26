@@ -57,40 +57,40 @@ const BlogCard = ({ post, index, featured = false }) => {
           
           <div className="p-6 flex-grow flex flex-col">
             {/* Metadata */}
-            <div className="flex items-center gap-4 mb-3 text-sm text-gray-400">
+            <div className="flex items-center gap-4 mb-4 text-base text-gray-400">
               <span>{post.date}</span>
               <span>•</span>
               <span>{post.author}</span>
             </div>
             
             {/* Title */}
-            <h3 className={`${featured ? 'text-2xl' : 'text-xl'} font-bold text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-2`}>
+            <h3 className={`${featured ? 'text-3xl' : 'text-2xl'} font-bold text-white mb-4 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight`}>
               {post.title}
             </h3>
             
             {/* Summary */}
-            <p className="text-gray-300 flex-grow line-clamp-3 mb-4">
+            <p className="text-gray-300 flex-grow line-clamp-3 mb-6 text-lg leading-relaxed">
               {post.summary}
             </p>
             
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-6">
               {post.tags.slice(0, featured ? 4 : 3).map((tag) => (
-                <span key={tag} className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                <span key={tag} className="px-3 py-2 bg-gray-700 text-gray-300 rounded text-sm font-medium">
                   {tag}
                 </span>
               ))}
               {post.tags.length > (featured ? 4 : 3) && (
-                <span className="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs">
+                <span className="px-3 py-2 bg-gray-700 text-gray-400 rounded text-sm">
                   +{post.tags.length - (featured ? 4 : 3)} more
                 </span>
               )}
             </div>
             
             {/* Read more link */}
-            <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
+            <div className="flex items-center text-blue-400 font-medium group-hover:text-blue-300 transition-colors text-lg">
               <span>Read Article</span>
-              <i className="fas fa-arrow-right ml-2 text-sm transform group-hover:translate-x-1 transition-transform"></i>
+              <i className="fas fa-arrow-right ml-2 text-base transform group-hover:translate-x-1 transition-transform"></i>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ const Blog = () => {
   });
 
   return (
-    <div className="pt-28 pb-20 min-h-screen bg-black">
+    <div className="pt-28 pb-20 min-h-screen bg-black font-mono">
       <div className="container-apple">
         {/* Header */}
         <motion.div 
@@ -135,8 +135,8 @@ const Blog = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="heading-md text-white mb-4">Cybersecurity Research & Insights</h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">Cybersecurity Research & Insights</h1>
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
             Deep dives into AI security, offensive cybersecurity techniques, and the evolving threat landscape. 
             Insights from vulnerability research and practical security engineering.
           </p>
@@ -146,16 +146,16 @@ const Blog = () => {
             <div className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg p-6">
               <div className="grid grid-cols-3 gap-8 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-blue-400">{allPosts.length}</div>
-                  <div className="text-sm text-gray-400">Articles</div>
+                  <div className="text-4xl font-bold text-blue-400">{allPosts.length}</div>
+                  <div className="text-base text-gray-400">Articles</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-purple-400">{featuredPosts.length}</div>
-                  <div className="text-sm text-gray-400">Featured</div>
+                  <div className="text-4xl font-bold text-purple-400">{featuredPosts.length}</div>
+                  <div className="text-base text-gray-400">Featured</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-green-400">{categories.length - 1}</div>
-                  <div className="text-sm text-gray-400">Categories</div>
+                  <div className="text-4xl font-bold text-green-400">{categories.length - 1}</div>
+                  <div className="text-base text-gray-400">Categories</div>
                 </div>
               </div>
             </div>
@@ -177,7 +177,7 @@ const Blog = () => {
                 placeholder="Search articles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-12 bg-gray-800 border border-gray-600 text-white placeholder-gray-400 rounded-full focus:outline-none focus:border-blue-500 shadow-sm"
+                className="w-full px-6 py-4 pl-14 bg-gray-800 border border-gray-600 text-white placeholder-gray-400 rounded-full focus:outline-none focus:border-blue-500 shadow-sm text-lg"
               />
               <i className="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
             </div>
@@ -189,7 +189,7 @@ const Blog = () => {
               <motion.button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                className={`px-8 py-4 rounded-full font-medium transition-all duration-300 text-lg ${
                   activeCategory === category
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600 shadow-sm'
@@ -214,7 +214,7 @@ const Blog = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mb-16"
           >
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">Featured Articles</h2>
+            <h2 className="text-4xl font-bold text-white mb-10 text-center">Featured Articles</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {featuredPosts.slice(0, 2).map((post, index) => (
                 <BlogCard key={post.id} post={post} index={index} featured={true} />
@@ -231,9 +231,9 @@ const Blog = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-3xl font-bold text-white">
               {activeCategory === 'all' ? 'All Articles' : `${activeCategory} Articles`}
-              <span className="text-gray-400 font-normal ml-2">({filteredPosts.length})</span>
+              <span className="text-gray-400 font-normal ml-3">({filteredPosts.length})</span>
             </h2>
             
             {/* Sort Options */}
