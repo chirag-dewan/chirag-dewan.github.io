@@ -6,4 +6,17 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react-router-dom", "react-github-calendar"]
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  server: {
+    historyApiFallback: true,
+  },
+  preview: {
+    historyApiFallback: true,
+  },
 });

@@ -3,6 +3,18 @@ import { useParams, Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { getBlogPost, getRelatedPosts } from '../data/blogPosts';
 
+// Function to add markdown indicators to content
+const addMarkdownIndicators = (content) => {
+  return content
+    .replace(/<h2>/g, '<h2><span class="text-gray-500 mr-3 font-mono">##</span>')
+    .replace(/<h3>/g, '<h3><span class="text-gray-500 mr-3 font-mono">###</span>')
+    .replace(/<h4>/g, '<h4><span class="text-gray-500 mr-3 font-mono">####</span>')
+    .replace(/<h5>/g, '<h5><span class="text-gray-500 mr-3 font-mono">#####</span>')
+    .replace(/<h6>/g, '<h6><span class="text-gray-500 mr-3 font-mono">######</span>')
+    .replace(/<ul>/g, '<ul class="markdown-list">')
+    .replace(/<li>/g, '<li><span class="text-blue-400 mr-3 font-bold">-</span>')
+    .replace(/<blockquote>/g, '<blockquote><span class="text-blue-400 mr-3 font-bold">></span>');
+
 const BlogPost = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -143,9 +155,9 @@ const BlogPost = () => {
                 {/* Line numbers sidebar */}
                 <div className="bg-gray-800 border-r border-gray-700 px-4 py-6 select-none">
                   <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-6">
-                    {Array.from({ length: 50 }, (_, i) => (
+                    {Array.from({ length: Math.max(50, Math.ceil(post.content.split('\n').length * 1.5)) }, (_, i) => (
                       <div key={i + 1} className="text-right min-w-[2rem]">
-                        {String(i + 1).padStart(2, '0')}
+                        {String(i + 1).padStart(3, '0')}
                       </div>
                     ))}
                   </div>
@@ -183,34 +195,64 @@ const BlogPost = () => {
                       prose-headings:text-white prose-headings:font-bold prose-headings:mb-10 prose-headings:mt-16
                       prose-h1:text-4xl prose-h1:mb-8 prose-h1:mt-0 prose-h1:border-b prose-h1:border-gray-600 prose-h1:pb-6
                       prose-h2:text-3xl prose-h2:border-b prose-h2:border-gray-600 prose-h2:pb-4 prose-h2:leading-tight prose-h2:mt-20 prose-h2:mb-12
-                      prose-h3:text-2xl prose-h3:text-blue-400 prose-h3:mb-8 prose-h3:mt-16 prose-h3:before:content-['###_'] prose-h3:before:text-gray-500 prose-h3:before:mr-2
-                      prose-h4:text-xl prose-h4:text-blue-300 prose-h4:mb-6 prose-h4:mt-12 prose-h4:before:content-['####_'] prose-h4:before:text-gray-500 prose-h4:before:mr-2
+                      prose-h3:text-2xl prose-h3:text-blue-400 prose-h3:mb-8 prose-h3:mt-16
+                      prose-h4:text-xl prose-h4:text-blue-300 prose-h4:mb-6 prose-h4:mt-12
+                      prose-h5:text-lg prose-h5:text-blue-200 prose-h5:mb-4 prose-h5:mt-8
+                      prose-h6:text-base prose-h6:text-gray-300 prose-h6:mb-3 prose-h6:mt-6
                       prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8 prose-p:text-lg prose-p:indent-0
-                      prose-ul:text-gray-300 prose-ul:text-lg prose-ul:my-8 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-2 prose-li:before:content-['-_'] prose-li:before:text-blue-400 prose-li:before:font-bold prose-li:before:mr-3
-                      prose-ol:text-gray-300 prose-ol:text-lg prose-ol:my-8 prose-ol:list-none 
+                      prose-ul:text-gray-300 prose-ul:text-lg prose-ul:my-8 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-2
+                      prose-ol:text-gray-300 prose-ol:text-lg prose-ol:my-8
                       prose-strong:text-white prose-strong:font-semibold prose-strong:bg-gray-800/50 prose-strong:px-1 prose-strong:rounded
                       prose-em:text-yellow-300 prose-em:not-italic prose-em:font-semibold
-                      prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-3 prose-code:py-1 prose-code:rounded prose-code:text-base prose-code:before:content-['`'] prose-code:after:content-['`'] prose-code:before:text-gray-500 prose-code:after:text-gray-500
+                      prose-code:bg-gray-800 prose-code:text-green-400 prose-code:px-3 prose-code:py-1 prose-code:rounded prose-code:text-base
                       prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700 prose-pre:p-8 prose-pre:rounded-lg prose-pre:my-10 prose-pre:shadow-lg
                       prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 prose-a:font-semibold prose-a:underline prose-a:underline-offset-4 prose-a:decoration-blue-400/50
-                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-8 prose-blockquote:py-4 prose-blockquote:text-gray-400 prose-blockquote:bg-blue-900/10 prose-blockquote:rounded-r-lg prose-blockquote:my-8 prose-blockquote:before:content-['>_'] prose-blockquote:before:text-blue-400 prose-blockquote:before:font-bold prose-blockquote:before:mr-3
+                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-8 prose-blockquote:py-4 prose-blockquote:text-gray-400 prose-blockquote:bg-blue-900/10 prose-blockquote:rounded-r-lg prose-blockquote:my-8
+                      prose-img:rounded-lg prose-img:shadow-lg prose-img:my-8
+                      prose-table:text-gray-300 prose-thead:text-white prose-th:border-gray-600 prose-td:border-gray-700
                       [&>*:first-child]:mt-0
                       [&_h2]:scroll-mt-28
                       [&_h3]:scroll-mt-28
+                      [&_h4]:scroll-mt-28
                       [&_p]:font-mono
                       [&_li]:font-mono
                       [&_p]:first-letter:text-2xl [&_p]:first-letter:font-bold [&_p]:first-letter:text-blue-400 [&_p]:first-letter:mr-1"
-                    dangerouslySetInnerHTML={{ __html: post.content }} 
+                    dangerouslySetInnerHTML={{ __html: addMarkdownIndicators(post.content) }} 
                   />
                   
                   {/* Creative footer section */}
-                  <div className="mt-16 pt-8 border-t border-gray-700">
-                    <div className="flex items-center gap-4 text-gray-400 font-mono text-sm">
-                      <span>💾 Last saved: {new Date().toLocaleString()}</span>
-                      <span>•</span>
+                  <div className="mt-20 pt-8 border-t border-gray-700">
+                    <div className="flex flex-wrap items-center gap-6 text-gray-400 font-mono text-sm">
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        💾 Last saved: {new Date().toLocaleString()}
+                      </span>
+                      <span className="text-gray-600">•</span>
                       <span>📊 {post.content.split(' ').length} words</span>
-                      <span>•</span>
+                      <span className="text-gray-600">•</span>
                       <span>⚡ {post.readTime}</span>
+                      <span className="text-gray-600">•</span>
+                      <span>🎯 {post.tags.length} tags</span>
+                      <span className="text-gray-600">•</span>
+                      <span>📅 {post.date}</span>
+                    </div>
+                    
+                    {/* Git-style commit info */}
+                    <div className="mt-6 p-4 bg-gray-800/50 border border-gray-700 rounded-lg">
+                      <div className="flex items-center gap-3 text-xs font-mono text-gray-400">
+                        <span className="text-green-400">commit</span>
+                        <span className="text-yellow-400">a7f8d2e</span>
+                        <span>({new Date().toISOString().split('T')[0]})</span>
+                      </div>
+                      <div className="mt-2 text-xs text-gray-300 font-mono">
+                        Author: {post.author} &lt;author@cybersec.dev&gt;
+                      </div>
+                      <div className="mt-1 text-xs text-gray-300 font-mono">
+                        Date: {new Date().toISOString()}
+                      </div>
+                      <div className="mt-3 text-sm text-white font-mono">
+                        📝 Add: {post.title}
+                      </div>
                     </div>
                   </div>
                 </div>
