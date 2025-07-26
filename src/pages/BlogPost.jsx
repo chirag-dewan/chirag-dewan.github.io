@@ -14,6 +14,7 @@ const addMarkdownIndicators = (content) => {
     .replace(/<ul>/g, '<ul class="markdown-list">')
     .replace(/<li>/g, '<li><span class="text-blue-400 mr-3 font-bold">-</span>')
     .replace(/<blockquote>/g, '<blockquote><span class="text-blue-400 mr-3 font-bold">></span>');
+};
 
 const BlogPost = () => {
   const { postId } = useParams();
