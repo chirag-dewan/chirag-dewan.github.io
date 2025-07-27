@@ -55,8 +55,8 @@ const addMarkdownIndicators = (content) => {
     })
     .replace(/<h5>/g, '<h5><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">#####</span> ')
     .replace(/<h6>/g, '<h6><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">######</span> ')
-    .replace(/<li>/g, '<li><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">-</span>')
-    .replace(/<blockquote>/g, '<blockquote><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">&gt;</span>');
+    .replace(/<li>/g, '<li><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">-</span> ')
+    .replace(/<blockquote>/g, '<blockquote><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">&gt;</span> ');
 };
 
 const BlogPost = () => {
@@ -622,7 +622,7 @@ const BlogPost = () => {
                       prose-h5:text-xl prose-h5:text-blue-200 prose-h5:mb-6 prose-h5:mt-12
                       prose-h6:text-lg prose-h6:text-gray-300 prose-h6:mb-4 prose-h6:mt-8
                       prose-p:text-gray-200 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg prose-p:indent-0 prose-p:relative
-                      prose-ul:text-gray-200 prose-ul:text-lg prose-ul:my-6 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-4 prose-li:relative prose-li:hover:bg-gray-800/30 prose-li:hover:rounded prose-li:transition-all prose-li:p-2 prose-li:border-l-2 prose-li:border-transparent hover:prose-li:border-blue-400/50
+                      prose-ul:text-gray-200 prose-ul:text-lg prose-ul:my-6 prose-ul:list-none prose-ul:space-y-4 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-0 prose-li:relative prose-li:hover:bg-gray-800/30 prose-li:hover:rounded prose-li:transition-all prose-li:p-3 prose-li:border-l-2 prose-li:border-transparent hover:prose-li:border-blue-400/50
                       prose-ol:text-gray-200 prose-ol:text-lg prose-ol:my-6
                       prose-strong:text-white prose-strong:font-bold prose-strong:bg-gradient-to-r prose-strong:from-blue-600/20 prose-strong:to-purple-600/20 prose-strong:px-2 prose-strong:py-1 prose-strong:rounded prose-strong:border prose-strong:border-blue-500/30
                       prose-em:text-yellow-300 prose-em:not-italic prose-em:font-bold prose-em:bg-yellow-500/20 prose-em:px-1 prose-em:rounded
