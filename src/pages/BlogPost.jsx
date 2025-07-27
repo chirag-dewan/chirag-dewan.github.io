@@ -43,18 +43,18 @@ const addMarkdownIndicators = (content) => {
   return content
     .replace(/<h2>(.*?)<\/h2>/g, (match, text) => {
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h2 id="${id}"><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">##</span>${text}</h2>`;
+      return `<h2 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">##</span> ${text}</h2>`;
     })
     .replace(/<h3>(.*?)<\/h3>/g, (match, text) => {
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h3 id="${id}"><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">###</span>${text}</h3>`;
+      return `<h3 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">###</span> ${text}</h3>`;
     })
     .replace(/<h4>(.*?)<\/h4>/g, (match, text) => {
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h4 id="${id}"><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">####</span>${text}</h4>`;
+      return `<h4 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">####</span> ${text}</h4>`;
     })
-    .replace(/<h5>/g, '<h5><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">#####</span>')
-    .replace(/<h6>/g, '<h6><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">######</span>')
+    .replace(/<h5>/g, '<h5><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">#####</span> ')
+    .replace(/<h6>/g, '<h6><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">######</span> ')
     .replace(/<li>/g, '<li><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">-</span>')
     .replace(/<blockquote>/g, '<blockquote><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">&gt;</span>');
 };
@@ -486,45 +486,31 @@ const BlogPost = () => {
                   
                   <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-4 relative z-10">
                     {(() => {
-                      // Enhanced precise line counting algorithm
-                      const yamlLines = 8; // YAML frontmatter
-                      const tldrLines = 5; // TL;DR section with header
+                      // Realistic line counting algorithm
+                      const yamlLines = 8; // YAML frontmatter (---\ntitle: ...\n---) 
+                      const tldrLines = 6; // TL;DR section with visual elements
                       
-                      // Count actual content lines more accurately
-                      let contentLines = 0;
-                      
-                      // Count headings (each heading = 1 line)
+                      // Much more conservative content line counting
                       const headings = (post.content.match(/<h[1-6]>/g) || []).length;
-                      contentLines += headings;
-                      
-                      // Count paragraphs (estimate 2-3 lines per paragraph based on length)
-                      const paragraphs = post.content.match(/<p>.*?<\/p>/g) || [];
-                      paragraphs.forEach(p => {
-                        const textLength = p.replace(/<[^>]*>/g, '').length;
-                        const estimatedLines = Math.ceil(textLength / 80); // ~80 chars per line
-                        contentLines += Math.max(1, Math.min(4, estimatedLines)); // 1-4 lines per paragraph
-                      });
-                      
-                      // Count list items (each item = 1 line, plus list spacing)
+                      const paragraphs = (post.content.match(/<p>/g) || []).length;
                       const listItems = (post.content.match(/<li>/g) || []).length;
                       const lists = (post.content.match(/<ul>|<ol>/g) || []).length;
-                      contentLines += listItems + lists; // items + list containers
-                      
-                      // Count blockquotes
                       const blockquotes = (post.content.match(/<blockquote>/g) || []).length;
-                      contentLines += blockquotes * 2; // blockquotes typically 2 lines
                       
-                      // Add spacing between sections
-                      const sections = headings; // sections are defined by headings
-                      contentLines += sections; // spacing between sections
+                      // Conservative line calculation
+                      const contentLines = Math.floor(
+                        headings * 1.5 +        // Headings with spacing
+                        paragraphs * 1.8 +      // Paragraphs (most are 1-2 lines)
+                        listItems * 1.2 +       // List items
+                        lists * 0.5 +           // List containers
+                        blockquotes * 2         // Blockquotes
+                      );
                       
-                      const footerStatsLines = 4; // Stats grid
-                      const footerGitLines = 8; // Git commit info
+                      const footerLines = 8; // Footer sections combined
                       
-                      const totalLines = yamlLines + tldrLines + contentLines + footerStatsLines + footerGitLines;
-                      
-                      // Cap at reasonable maximum
-                      const finalLines = Math.min(totalLines, 65);
+                      // Much more conservative total
+                      const totalLines = yamlLines + tldrLines + contentLines + footerLines;
+                      const finalLines = Math.min(Math.max(totalLines, 30), 45); // 30-45 lines max
                       
                       return Array.from({ length: finalLines }, (_, i) => (
                         <div 
