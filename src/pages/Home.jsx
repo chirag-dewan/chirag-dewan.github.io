@@ -119,45 +119,6 @@ const Home = () => {
     { name: 'Team Leadership', level: 85, color: '#059669', description: 'Cross-functional teams, technical mentorship' }
   ];
 
-  // Featured professional projects
-  const projects = [
-    {
-      name: 'AI-Powered Fraud Detection',
-      description: 'Advanced ML system using LangGraph and GPT-4 for real-time financial fraud detection and analysis',
-      tech: ['LangGraph', 'OpenAI GPT-4', 'Python', 'AWS Lambda', 'Docker'],
-      status: 'production',
-      priority: 'high',
-      impact: '75% reduction in manual analysis time, 96% accuracy rate',
-      github: 'https://github.com/chirag-dewan'
-    },
-    {
-      name: 'Cloud Security Infrastructure',
-      description: 'Scalable security platform with automated threat detection and response capabilities',
-      tech: ['Terraform', 'Kubernetes', 'AWS', 'Python', 'Prometheus'],
-      status: 'active',
-      priority: 'high',
-      impact: 'Secured 500+ cloud workloads, 99.9% uptime',
-      github: 'https://github.com/chirag-dewan'
-    },
-    {
-      name: 'Cybersecurity Research Platform',
-      description: 'Comprehensive vulnerability research toolkit for industrial control systems and IoT devices',
-      tech: ['Ghidra', 'IDA Pro', 'Fuzzing', 'Python', 'Network Analysis'],
-      status: 'research',
-      priority: 'medium',
-      impact: 'Enhanced security posture for critical infrastructure',
-      github: '#'
-    },
-    {
-      name: 'Threat Detection Rules Engine',
-      description: 'Custom YARA/Sigma rules with machine learning enhancement for enterprise security',
-      tech: ['YARA', 'Sigma', 'SIEM', 'ML', 'Threat Intelligence'],
-      status: 'deployed',
-      priority: 'high',
-      impact: '50+ detection rules, 45% improvement in threat detection',
-      github: '#'
-    }
-  ];
 
   const TerminalSection = () => (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-green-400 font-mono p-8 overflow-hidden relative">
@@ -215,7 +176,7 @@ const Home = () => {
           )}
         </div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <button
             onClick={() => setCurrentSection('skills')}
             className="group bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-green-400/50 p-6 rounded-xl hover:border-green-400 hover:shadow-lg hover:shadow-green-400/25 transition-all duration-300 backdrop-blur-sm relative overflow-hidden"
@@ -224,17 +185,6 @@ const Home = () => {
             <div className="relative z-10">
               <div className="text-lg font-bold mb-2 text-green-400">⚡ SKILLS</div>
               <div className="text-sm text-gray-300">Technical Arsenal</div>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentSection('projects')}
-            className="group bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-cyan-400/50 p-6 rounded-xl hover:border-cyan-400 hover:shadow-lg hover:shadow-cyan-400/25 transition-all duration-300 backdrop-blur-sm relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-400/5 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="relative z-10">
-              <div className="text-lg font-bold mb-2 text-cyan-400">🚀 PROJECTS</div>
-              <div className="text-sm text-gray-300">Portfolio Showcase</div>
             </div>
           </button>
 
@@ -259,6 +209,32 @@ const Home = () => {
               <div className="text-sm text-gray-300">AI Assistant</div>
             </div>
           </button>
+        </div>
+
+        {/* GitHub Contributions */}
+        <div className="mt-16 p-8 bg-gradient-to-r from-gray-900/80 to-gray-800/80 border border-gray-700 rounded-2xl backdrop-blur-sm">
+          <h3 className="text-2xl font-bold text-white mb-6 text-center">GitHub Activity</h3>
+          <div className="bg-black/50 rounded-xl p-6">
+            <img 
+              src="https://github-readme-stats.vercel.app/api?username=chirag-dewan&show_icons=true&theme=dark&bg_color=00000000&text_color=ffffff&icon_color=00ff00&title_color=00ffff&border_color=333333"
+              alt="GitHub Stats"
+              className="w-full max-w-md mx-auto block rounded-lg"
+            />
+            <div className="mt-6">
+              <img 
+                src="https://github-readme-streak-stats.herokuapp.com/?user=chirag-dewan&theme=dark&background=00000000&ring=00ff00&fire=00ffff&currStreakLabel=ffffff&sideLabels=ffffff&dates=ffffff&currStreakNum=00ff00&sideNums=00ffff&border=333333"
+                alt="GitHub Streak"
+                className="w-full max-w-md mx-auto block rounded-lg"
+              />
+            </div>
+            <div className="mt-6">
+              <img 
+                src="https://github-readme-stats.vercel.app/api/top-langs/?username=chirag-dewan&layout=compact&theme=dark&bg_color=00000000&text_color=ffffff&title_color=00ffff&border_color=333333"
+                alt="Top Languages"
+                className="w-full max-w-md mx-auto block rounded-lg"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="mt-12 text-center">
@@ -345,83 +321,6 @@ const Home = () => {
     </div>
   );
 
-  const ProjectsSection = () => (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 via-gray-900 to-black p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-4">SECURITY RESEARCH</h2>
-          <p className="text-xl text-gray-300">Real projects from RTX BBN research and current work</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <div
-              key={project.name}
-              className="bg-black bg-opacity-80 rounded-xl p-6 border-2 border-gray-700 hover:border-red-500 transition-all"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-white">{project.name}</h3>
-                <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  project.priority === 'high' ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white' :
-                  project.priority === 'medium' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' :
-                  'bg-gradient-to-r from-green-500 to-blue-500 text-white'
-                }`}>
-                  {project.priority.toUpperCase()} PRIORITY
-                </div>
-              </div>
-              
-              <p className="text-gray-300 mb-4">{project.description}</p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tech.map((tech) => (
-                  <span key={tech} className="px-2 py-1 bg-gray-800 text-green-400 rounded text-sm">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              
-              <div className="mb-4">
-                <div className="text-cyan-400 text-sm font-semibold">Impact:</div>
-                <div className="text-gray-300 text-sm">{project.impact}</div>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-                  project.status === 'production' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' :
-                  project.status === 'active' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' :
-                  project.status === 'deployed' ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white' :
-                  'bg-gradient-to-r from-gray-500 to-slate-500 text-white'
-                }`}>
-                  {project.status.toUpperCase()}
-                </span>
-                
-                {project.github !== '#' && (
-                  <a 
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cyan-400 hover:text-cyan-300 transition-colors"
-                  >
-                    <span className="mr-2">VIEW CODE</span>
-                    <span>→</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <button
-            onClick={() => setCurrentSection('terminal')}
-            className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold"
-          >
-            ← RETURN TO TERMINAL
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 
   const ContactSection = () => (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-gray-900 to-black p-8">
@@ -562,16 +461,6 @@ const Home = () => {
           </motion.div>
         )}
         
-        {currentSection === 'projects' && (
-          <motion.div
-            key="projects"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <ProjectsSection />
-          </motion.div>
-        )}
 
         {currentSection === 'demo' && (
           <motion.div
