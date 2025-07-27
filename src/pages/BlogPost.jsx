@@ -467,39 +467,98 @@ const BlogPost = () => {
             <div className="bg-gray-900 border-x border-b border-gray-700 rounded-b-lg overflow-hidden">
               <div className="flex">
                 {/* Enhanced Line numbers sidebar */}
-                <div className="bg-gradient-to-b from-gray-800 to-gray-900 border-r border-gray-600 px-4 py-6 select-none relative overflow-hidden">
+                <div className="bg-gradient-to-b from-gray-800 to-gray-900 border-r border-gray-600 px-4 py-6 select-none relative overflow-hidden min-w-[4rem]">
                   {/* Subtle grid pattern */}
                   <div className="absolute inset-0 opacity-5" style={{
                     backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)',
                     backgroundSize: '20px 20px'
                   }}></div>
                   
+                  {/* Current line indicator */}
+                  <div 
+                    className="absolute left-0 w-1 bg-blue-500 rounded-r-full transition-all duration-300 opacity-75"
+                    style={{ 
+                      height: '1.5rem',
+                      top: `${Math.max(10, (progress / 100) * 80 + 10)}%`,
+                      transform: 'translateY(-50%)'
+                    }}
+                  ></div>
+                  
                   <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-4 relative z-10">
                     {(() => {
-                      // Calculate precise line count based on actual content elements
+                      // Enhanced precise line counting algorithm
                       const yamlLines = 8; // YAML frontmatter
-                      const tldrLines = 4; // TL;DR section
-                      const contentElements = post.content.split(/<\/p>|<\/h[1-6]>|<\/li>|<\/blockquote>|<\/ul>|<\/ol>/).filter(el => el.trim().length > 0);
-                      const footerLines = 6; // Footer section
-                      const totalLines = yamlLines + tldrLines + contentElements.length + footerLines;
+                      const tldrLines = 5; // TL;DR section with header
                       
-                      return Array.from({ length: totalLines }, (_, i) => (
+                      // Count actual content lines more accurately
+                      let contentLines = 0;
+                      
+                      // Count headings (each heading = 1 line)
+                      const headings = (post.content.match(/<h[1-6]>/g) || []).length;
+                      contentLines += headings;
+                      
+                      // Count paragraphs (estimate 2-3 lines per paragraph based on length)
+                      const paragraphs = post.content.match(/<p>.*?<\/p>/g) || [];
+                      paragraphs.forEach(p => {
+                        const textLength = p.replace(/<[^>]*>/g, '').length;
+                        const estimatedLines = Math.ceil(textLength / 80); // ~80 chars per line
+                        contentLines += Math.max(1, Math.min(4, estimatedLines)); // 1-4 lines per paragraph
+                      });
+                      
+                      // Count list items (each item = 1 line, plus list spacing)
+                      const listItems = (post.content.match(/<li>/g) || []).length;
+                      const lists = (post.content.match(/<ul>|<ol>/g) || []).length;
+                      contentLines += listItems + lists; // items + list containers
+                      
+                      // Count blockquotes
+                      const blockquotes = (post.content.match(/<blockquote>/g) || []).length;
+                      contentLines += blockquotes * 2; // blockquotes typically 2 lines
+                      
+                      // Add spacing between sections
+                      const sections = headings; // sections are defined by headings
+                      contentLines += sections; // spacing between sections
+                      
+                      const footerStatsLines = 4; // Stats grid
+                      const footerGitLines = 8; // Git commit info
+                      
+                      const totalLines = yamlLines + tldrLines + contentLines + footerStatsLines + footerGitLines;
+                      
+                      // Cap at reasonable maximum
+                      const finalLines = Math.min(totalLines, 65);
+                      
+                      return Array.from({ length: finalLines }, (_, i) => (
                         <div 
                           key={i + 1} 
-                          className="text-right min-w-[3rem] hover:text-blue-400 hover:bg-blue-900/20 px-2 py-1 rounded transition-all duration-200 cursor-pointer group"
+                          className="text-right min-w-[3rem] hover:text-blue-400 hover:bg-blue-900/20 px-2 py-1 rounded transition-all duration-200 cursor-pointer group relative"
                           title={`Line ${i + 1}`}
                         >
-                          <span className="group-hover:font-bold">
-                            {String(i + 1).padStart(3, '0')}
+                          <span className="group-hover:font-bold transition-all duration-200">
+                            {String(i + 1).padStart(2, '0')}
                           </span>
+                          {/* Add subtle line indicator */}
+                          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-1 bg-gray-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </div>
                       ));
                     })()}
                   </div>
                   
-                  {/* Scroll indicator */}
-                  <div className="absolute right-1 top-6 bottom-6 w-1 bg-gray-700 rounded-full">
-                    <div className="w-full h-8 bg-blue-500 rounded-full animate-pulse"></div>
+                  {/* Enhanced scroll indicator */}
+                  <div className="absolute right-1 top-6 bottom-6 w-1 bg-gray-700 rounded-full overflow-hidden">
+                    <div 
+                      className="w-full bg-gradient-to-b from-blue-500 via-purple-500 to-green-500 rounded-full transition-all duration-300"
+                      style={{ 
+                        height: `${Math.max(10, progress)}%`,
+                        transform: `translateY(${100 - Math.max(10, progress)}%)`
+                      }}
+                    ></div>
+                    {/* Pulse indicator at current position */}
+                    <div 
+                      className="absolute w-3 h-3 bg-blue-400 rounded-full shadow-lg animate-pulse transform -translate-x-1/2 left-1/2"
+                      style={{ 
+                        top: `${Math.max(5, progress)}%`,
+                        transform: 'translateX(-50%) translateY(-50%)'
+                      }}
+                    ></div>
                   </div>
                 </div>
                 
