@@ -474,12 +474,14 @@ const BlogPost = () => {
                     backgroundSize: '20px 20px'
                   }}></div>
                   
-                  <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-6 relative z-10">
+                  <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-4 relative z-10">
                     {(() => {
-                      // Calculate approximate line count based on content
-                      const contentLines = post.content.split(/<\/p>|<\/h[1-6]>|<\/li>|<\/blockquote>/).length;
-                      const metadataLines = 10; // YAML frontmatter + TL;DR section
-                      const totalLines = Math.max(25, contentLines + metadataLines);
+                      // Calculate precise line count based on actual content elements
+                      const yamlLines = 8; // YAML frontmatter
+                      const tldrLines = 4; // TL;DR section
+                      const contentElements = post.content.split(/<\/p>|<\/h[1-6]>|<\/li>|<\/blockquote>|<\/ul>|<\/ol>/).filter(el => el.trim().length > 0);
+                      const footerLines = 6; // Footer section
+                      const totalLines = yamlLines + tldrLines + contentElements.length + footerLines;
                       
                       return Array.from({ length: totalLines }, (_, i) => (
                         <div 
@@ -574,16 +576,16 @@ const BlogPost = () => {
                       prose-h4:text-2xl prose-h4:text-blue-300 prose-h4:mb-8 prose-h4:mt-16 prose-h4:relative prose-h4:pl-6
                       prose-h5:text-xl prose-h5:text-blue-200 prose-h5:mb-6 prose-h5:mt-12
                       prose-h6:text-lg prose-h6:text-gray-300 prose-h6:mb-4 prose-h6:mt-8
-                      prose-p:text-gray-200 prose-p:leading-relaxed prose-p:mb-10 prose-p:text-lg prose-p:indent-0 prose-p:relative
-                      prose-ul:text-gray-200 prose-ul:text-lg prose-ul:my-10 prose-li:mb-6 prose-li:leading-relaxed prose-li:pl-4 prose-li:relative prose-li:hover:bg-gray-800/30 prose-li:hover:rounded prose-li:transition-all prose-li:p-2 prose-li:border-l-2 prose-li:border-transparent hover:prose-li:border-blue-400/50
-                      prose-ol:text-gray-200 prose-ol:text-lg prose-ol:my-10
+                      prose-p:text-gray-200 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg prose-p:indent-0 prose-p:relative
+                      prose-ul:text-gray-200 prose-ul:text-lg prose-ul:my-6 prose-li:mb-4 prose-li:leading-relaxed prose-li:pl-4 prose-li:relative prose-li:hover:bg-gray-800/30 prose-li:hover:rounded prose-li:transition-all prose-li:p-2 prose-li:border-l-2 prose-li:border-transparent hover:prose-li:border-blue-400/50
+                      prose-ol:text-gray-200 prose-ol:text-lg prose-ol:my-6
                       prose-strong:text-white prose-strong:font-bold prose-strong:bg-gradient-to-r prose-strong:from-blue-600/20 prose-strong:to-purple-600/20 prose-strong:px-2 prose-strong:py-1 prose-strong:rounded prose-strong:border prose-strong:border-blue-500/30
                       prose-em:text-yellow-300 prose-em:not-italic prose-em:font-bold prose-em:bg-yellow-500/20 prose-em:px-1 prose-em:rounded
                       prose-code:bg-gradient-to-r prose-code:from-gray-800 prose-code:to-gray-900 prose-code:text-green-400 prose-code:px-4 prose-code:py-2 prose-code:rounded-lg prose-code:text-base prose-code:border prose-code:border-gray-700 prose-code:shadow-lg prose-code:font-bold
-                      prose-pre:bg-gradient-to-br prose-pre:from-gray-900 prose-pre:via-gray-800 prose-pre:to-gray-900 prose-pre:border prose-pre:border-gray-600 prose-pre:p-8 prose-pre:rounded-xl prose-pre:my-12 prose-pre:shadow-2xl prose-pre:relative
+                      prose-pre:bg-gradient-to-br prose-pre:from-gray-900 prose-pre:via-gray-800 prose-pre:to-gray-900 prose-pre:border prose-pre:border-gray-600 prose-pre:p-8 prose-pre:rounded-xl prose-pre:my-8 prose-pre:shadow-2xl prose-pre:relative
                       prose-a:text-blue-400 prose-a:no-underline hover:prose-a:text-blue-300 prose-a:font-bold prose-a:underline prose-a:underline-offset-4 prose-a:decoration-blue-400/50 hover:prose-a:decoration-blue-300 prose-a:transition-all prose-a:duration-200
-                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-8 prose-blockquote:py-6 prose-blockquote:text-gray-300 prose-blockquote:bg-gradient-to-r prose-blockquote:from-blue-900/20 prose-blockquote:to-purple-900/10 prose-blockquote:rounded-r-xl prose-blockquote:my-10 prose-blockquote:shadow-lg prose-blockquote:relative
-                      prose-img:rounded-xl prose-img:shadow-2xl prose-img:my-12 prose-img:border prose-img:border-gray-700
+                      prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-8 prose-blockquote:py-6 prose-blockquote:text-gray-300 prose-blockquote:bg-gradient-to-r prose-blockquote:from-blue-900/20 prose-blockquote:to-purple-900/10 prose-blockquote:rounded-r-xl prose-blockquote:my-6 prose-blockquote:shadow-lg prose-blockquote:relative
+                      prose-img:rounded-xl prose-img:shadow-2xl prose-img:my-8 prose-img:border prose-img:border-gray-700
                       prose-table:text-gray-200 prose-thead:text-white prose-th:border-gray-600 prose-td:border-gray-700 prose-table:bg-gray-800/50 prose-table:rounded-lg
                       [&>*:first-child]:mt-0
                       [&_h2]:scroll-mt-32
