@@ -6,14 +6,13 @@ import { getBlogPost, getRelatedPosts } from '../data/blogPosts';
 // Function to add markdown indicators to content
 const addMarkdownIndicators = (content) => {
   return content
-    .replace(/<h2>/g, '<h2><span class="text-gray-500 mr-3 font-mono">##</span>')
-    .replace(/<h3>/g, '<h3><span class="text-gray-500 mr-3 font-mono">###</span>')
-    .replace(/<h4>/g, '<h4><span class="text-gray-500 mr-3 font-mono">####</span>')
-    .replace(/<h5>/g, '<h5><span class="text-gray-500 mr-3 font-mono">#####</span>')
-    .replace(/<h6>/g, '<h6><span class="text-gray-500 mr-3 font-mono">######</span>')
-    .replace(/<ul>/g, '<ul class="markdown-list">')
-    .replace(/<li>/g, '<li><span class="text-blue-400 mr-3 font-bold">-</span>')
-    .replace(/<blockquote>/g, '<blockquote><span class="text-blue-400 mr-3 font-bold">></span>');
+    .replace(/<h2>/g, '<h2><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">##</span>')
+    .replace(/<h3>/g, '<h3><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">###</span>')
+    .replace(/<h4>/g, '<h4><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">####</span>')
+    .replace(/<h5>/g, '<h5><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">#####</span>')
+    .replace(/<h6>/g, '<h6><span style="color: rgb(107 114 128); margin-right: 0.75rem; font-family: ui-monospace, monospace;">######</span>')
+    .replace(/<li>/g, '<li><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">-</span>')
+    .replace(/<blockquote>/g, '<blockquote><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">&gt;</span>');
 };
 
 const BlogPost = () => {
@@ -156,11 +155,18 @@ const BlogPost = () => {
                 {/* Line numbers sidebar */}
                 <div className="bg-gray-800 border-r border-gray-700 px-4 py-6 select-none">
                   <div className="text-gray-500 text-sm font-mono leading-relaxed space-y-6">
-                    {Array.from({ length: Math.max(50, Math.ceil(post.content.split('\n').length * 1.5)) }, (_, i) => (
-                      <div key={i + 1} className="text-right min-w-[2rem]">
-                        {String(i + 1).padStart(3, '0')}
-                      </div>
-                    ))}
+                    {(() => {
+                      // Calculate approximate line count based on content
+                      const contentLines = post.content.split(/<\/p>|<\/h[1-6]>|<\/li>|<\/blockquote>/).length;
+                      const metadataLines = 10; // YAML frontmatter + TL;DR section
+                      const totalLines = Math.max(25, contentLines + metadataLines);
+                      
+                      return Array.from({ length: totalLines }, (_, i) => (
+                        <div key={i + 1} className="text-right min-w-[2rem]">
+                          {String(i + 1).padStart(3, '0')}
+                        </div>
+                      ));
+                    })()}
                   </div>
                 </div>
                 
