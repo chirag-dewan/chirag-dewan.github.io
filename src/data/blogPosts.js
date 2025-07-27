@@ -1199,7 +1199,7 @@ export const blogPosts = {
 
   'building-recongpt': {
     title: 'Building ReconGPT: Why I Combined Traditional OSINT with AI (And What I Learned)',
-    date: 'December 8, 2024',
+    date: 'July 27, 2025',
     author: 'Chirag Dewan',
     category: 'AI Security',
     readTime: '12 min read',
@@ -1239,7 +1239,7 @@ export const blogPosts = {
         <p><strong>💡 Pro Tip:</strong> AI augmentation beats AI replacement every time. Don't rebuild what works - enhance it.</p>
       </blockquote>
       
-      <h2>The "Aha" Moment</h2>
+      <h2>The Aha Moment</h2>
       
       <p>The breakthrough came during a particularly frustrating engagement. I had just finished a comprehensive Bbot scan that found 847 subdomains and countless services.</p>
       

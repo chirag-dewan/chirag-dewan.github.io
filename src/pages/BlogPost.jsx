@@ -41,20 +41,31 @@ const generateTableOfContents = (content) => {
 // Function to add markdown indicators and IDs to content
 const addMarkdownIndicators = (content) => {
   return content
-    .replace(/<h2>(.*?)<\/h2>/g, (match, text) => {
+    .replace(/<h2>(.*?)<\/h2>/gs, (match, text) => {
+      const cleanText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h2 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">##</span> ${text}</h2>`;
+      return `<h2 id="${id}" class="flex items-center"><span class="text-gray-500 mr-4 font-mono text-2xl">##</span><span class="flex-1">${cleanText}</span></h2>`;
     })
-    .replace(/<h3>(.*?)<\/h3>/g, (match, text) => {
+    .replace(/<h3>(.*?)<\/h3>/gs, (match, text) => {
+      const cleanText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h3 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">###</span> ${text}</h3>`;
+      return `<h3 id="${id}" class="flex items-center"><span class="text-gray-500 mr-3 font-mono text-xl">###</span><span class="flex-1">${cleanText}</span></h3>`;
     })
-    .replace(/<h4>(.*?)<\/h4>/g, (match, text) => {
+    .replace(/<h4>(.*?)<\/h4>/gs, (match, text) => {
+      const cleanText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return `<h4 id="${id}"><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">####</span> ${text}</h4>`;
+      return `<h4 id="${id}" class="flex items-center"><span class="text-gray-500 mr-3 font-mono text-lg">####</span><span class="flex-1">${cleanText}</span></h4>`;
     })
-    .replace(/<h5>/g, '<h5><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">#####</span> ')
-    .replace(/<h6>/g, '<h6><span style="color: rgb(107 114 128); margin-right: 1rem; font-family: ui-monospace, monospace;">######</span> ')
+    .replace(/<h5>(.*?)<\/h5>/gs, (match, text) => {
+      const cleanText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return `<h5 id="${id}" class="flex items-center"><span class="text-gray-500 mr-2 font-mono">#####</span><span class="flex-1">${cleanText}</span></h5>`;
+    })
+    .replace(/<h6>(.*?)<\/h6>/gs, (match, text) => {
+      const cleanText = text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      const id = text.replace(/<[^>]*>/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return `<h6 id="${id}" class="flex items-center"><span class="text-gray-500 mr-2 font-mono">######</span><span class="flex-1">${cleanText}</span></h6>`;
+    })
     .replace(/<li>/g, '<li><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">-</span> ')
     .replace(/<blockquote>/g, '<blockquote><span style="color: rgb(96 165 250); margin-right: 0.75rem; font-weight: bold;">&gt;</span> ');
 };
@@ -67,8 +78,9 @@ const BlogPost = () => {
   const [showToc, setShowToc] = useState(false);
   const progress = useReadingProgress();
   const { ref, inView } = useInView({
-    threshold: 0.1,
+    threshold: 0,
     triggerOnce: true,
+    initialInView: true,
   });
 
   // Track active heading for TOC
@@ -388,9 +400,7 @@ const BlogPost = () => {
           {/* Post Header */}
           <div 
             ref={ref}
-            className={`max-w-4xl mx-auto mb-12 transition-all duration-500 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
+            className="max-w-4xl mx-auto mb-12 opacity-100 translate-y-0"
           >
             <div className="mb-6">
               <Link 
@@ -424,20 +434,14 @@ const BlogPost = () => {
           
           {/* Featured Image (placeholder) */}
           <div 
-            className={`max-w-4xl mx-auto mb-12 h-64 sm:h-80 md:h-96 bg-gray-800 rounded-lg flex items-center justify-center transition-all duration-500 border border-gray-700 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-            style={{ transitionDelay: '0.2s' }}
+            className="max-w-4xl mx-auto mb-12 h-64 sm:h-80 md:h-96 bg-gray-800 rounded-lg flex items-center justify-center border border-gray-700 opacity-100 translate-y-0"
           >
             <span className="text-9xl">{post.image}</span>
           </div>
           
           {/* Post Content */}
           <div 
-            className={`max-w-6xl mx-auto transition-all duration-500 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-            style={{ transitionDelay: '0.3s' }}
+            className="max-w-6xl mx-auto opacity-100 translate-y-0"
           >
             {/* Enhanced Terminal-style header */}
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 border border-gray-700 rounded-t-lg p-4 flex items-center gap-2 shadow-2xl">
@@ -746,10 +750,7 @@ const BlogPost = () => {
           
           {/* Author Bio */}
           <div 
-            className={`max-w-3xl mx-auto mt-16 p-8 bg-gray-800 border border-gray-700 rounded-lg transition-all duration-500 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-            style={{ transitionDelay: '0.4s' }}
+            className="max-w-3xl mx-auto mt-16 p-8 bg-gray-800 border border-gray-700 rounded-lg opacity-100 translate-y-0"
           >
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="w-20 h-20 rounded-full bg-gray-700 flex items-center justify-center text-gray-300 flex-shrink-0 mx-auto sm:mx-0">
@@ -785,10 +786,7 @@ const BlogPost = () => {
           {/* Related Posts */}
           {relatedPostsList.length > 0 && (
             <div 
-              className={`max-w-4xl mx-auto mt-20 transition-all duration-500 ${
-                inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              style={{ transitionDelay: '0.5s' }}
+              className="max-w-4xl mx-auto mt-20 opacity-100 translate-y-0"
             >
               <h2 className="text-3xl font-bold text-white mb-10 text-center">Related Articles</h2>
               
@@ -832,10 +830,7 @@ const BlogPost = () => {
           
           {/* Back to Blog Button */}
           <div 
-            className={`max-w-4xl mx-auto mt-16 text-center transition-all duration-500 ${
-              inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-            style={{ transitionDelay: '0.6s' }}
+            className="max-w-4xl mx-auto mt-16 text-center opacity-100 translate-y-0"
           >
             <Link to="/blog" className="btn-primary">
               Explore More Articles
