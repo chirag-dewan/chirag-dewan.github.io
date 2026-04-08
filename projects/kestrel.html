@@ -30,24 +30,30 @@
       <p>Baseline normal AI workload behavior, detect deviations. Rolling per-entity z-score analysis catches GPU hijacking, rogue training jobs, and unauthorized model access before they escalate.</p>
 
       <h2>Architecture</h2>
-      <pre><code>Synthetic event generator
+      <pre><code>CloudTrail adapter / Synthetic generator
   → SQLite storage
-  → Rolling z-score baselining engine
-  → Detection modules (GPU hijack, rogue training)
-  → CLI surface + Flask dashboard + Sigma rule export</code></pre>
+  → Rolling z-score baselining engine (Welford's algorithm)
+  → Detection modules:
+      GPUHijackDetector    — GPU utilization, anomalous regions, off-hours
+      RogueTrainingDetector — instance types, duration z-scores, data transfer
+      CloudAPIAbuseDetector — API burst, region fan-out, error rates, off-hours
+  → Findings (MITRE ATLAS tagged) → Sigma rule export → Flask dashboard</code></pre>
 
-      <h2>CLI</h2>
-      <pre><code>kestrel generate   # Synthetic event generation
-kestrel scan       # Run detection pass
-kestrel serve      # Launch Flask dashboard
-kestrel findings   # Export findings
-kestrel version    # Version info</code></pre>
+      <h2>Evaluation</h2>
+      <p>Evaluated against <span style="color: var(--amber);">34,427 real CloudTrail events</span> from Splunk Attack Data (51 datasets, 77 entities, 16 AWS regions).</p>
+      <pre><code>v1: Precision 1.0 | Recall 0.0005 | 1 finding
+    → Impedance mismatch: GPU detectors vs API audit logs
+
+v2: Precision 1.0 | Recall 0.766  | 220 findings
+    → CloudAPIAbuseDetector processes 99.98% of CloudTrail data
+    → 1,532x recall improvement, zero false positives</code></pre>
+      <p>Key detections: daftpunk (off-hours + 100% error rate → HIGH), cloudmapper (burst + 13-region fan-out → HIGH), bhavin_cli (24 findings), okta_ro_role (292 calls, 12 regions → HIGH).</p>
 
       <h2>Relationship to PARALLAX</h2>
-      <p>PARALLAX operates at the application layer — API request patterns, user behavior, content-free metadata. KESTREL operates at the infrastructure layer — GPU utilization, training job profiles, compute resource anomalies. Together they provide full-stack AI platform threat detection.</p>
+      <p>PARALLAX operates at the application layer — API request patterns, user behavior, content-free metadata. KESTREL operates at the infrastructure layer — GPU utilization, training job profiles, API abuse patterns. Together they provide full-stack AI platform threat detection.</p>
 
       <h2>Status</h2>
-      <p>Architecture locked. Twelve specification files produced for implementation. PARALLAX's infrastructure-layer companion.</p>
+      <p>v2 complete. Three detectors, 98% test coverage, real-data evaluation. PARALLAX's infrastructure-layer companion.</p>
 
       <h2>Links</h2>
       <p><a href="https://github.com/chirag-dewan/kestrel">GitHub</a></p>
