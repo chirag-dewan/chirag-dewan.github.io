@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PARALLAX Live Demo — Chirag Dewan</title>
+  <meta name="description" content="Interactive demo of the PARALLAX behavioral threat detection pipeline. See how 15 detectors classify normal users, power developers, and attackers in real time.">
+  <meta property="og:title" content="PARALLAX Live Demo">
+  <meta property="og:description" content="Interactive behavioral threat detection pipeline demo.">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ---- Demo-specific styles ---- */
+    .demo-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .demo-header h1 {
+      font-size: 1.4rem;
+      color: var(--green);
+      margin-bottom: 0.3rem;
+      text-shadow: 0 0 20px var(--green-glow);
+    }
+    .demo-header p {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Archetype selector */
+    .archetype-selector {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .archetype-btn {
+      font-family: var(--font);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.2rem;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 2px;
+    }
+    .archetype-btn:hover { border-color: var(--border-bright); color: var(--text); }
+    .archetype-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
+    .archetype-btn.active.warn { border-color: var(--amber); color: var(--amber); background: rgba(255,176,0,0.05); }
+    .archetype-btn.active.danger { border-color: var(--red); color: var(--red); background: rgba(255,51,51,0.05); }
+
+    /* Layout grid */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Event feed */
+    .feed-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      max-height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+    .feed-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+    .feed-panel__header .count { color: var(--amber); }
+    .feed-list {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.65rem;
+      line-height: 1.6;
+      overflow-y: auto;
+      max-height: 280px;
+    }
+    .feed-line {
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: line-in 0.2s ease forwards;
+    }
+    .feed-line .ts { color: var(--text-dim); }
+    .feed-line .acct { color: var(--green-dim); }
+    .feed-line .model { color: var(--amber-dim); }
+    .feed-line .tokens { color: var(--text-muted); }
+
+    /* Profile panel */
+    .profile-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 0.8rem;
+    }
+    .profile-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.6rem;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      padding: 0.2rem 0;
+    }
+    .profile-row .label { color: var(--text-muted); }
+    .profile-row .value { color: var(--text); font-weight: 500; }
+
+    /* Detector grid */
+    .detectors-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .detectors-section__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.8rem;
+    }
+    .detector-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.6rem;
+    }
+    @media (max-width: 700px) {
+      .detector-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 450px) {
+      .detector-grid { grid-template-columns: 1fr; }
+    }
+
+    .detector-card {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 0.6rem;
+      transition: border-color 0.3s;
+    }
+    .detector-card.triggered { border-color: var(--red); }
+    .detector-card__id {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-bottom: 0.15rem;
+    }
+    .detector-card__name {
+      font-size: 0.7rem;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+    .detector-bar {
+      height: 4px;
+      background: var(--bg-surface);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+    }
+    .detector-bar__fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.6s ease, background-color 0.3s;
+      background: var(--green-dim);
+    }
+    .detector-bar__fill.low { background: var(--green-dim); }
+    .detector-bar__fill.med { background: var(--amber); }
+    .detector-bar__fill.high { background: var(--red); }
+    .detector-card__score {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+    .detector-card__score .score-val { font-weight: 600; }
+
+    /* Composite panel */
+    .composite-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .composite-score {
+      text-align: center;
+      min-width: 120px;
+    }
+    .composite-score__value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--green);
+      line-height: 1;
+      transition: color 0.3s;
+    }
+    .composite-score__value.level-none { color: var(--green); }
+    .composite-score__value.level-low { color: var(--green-dim); }
+    .composite-score__value.level-medium { color: var(--amber); }
+    .composite-score__value.level-high { color: var(--red); }
+    .composite-score__value.level-critical { color: #ff0040; text-shadow: 0 0 20px rgba(255,0,64,0.4); }
+    .composite-score__label {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin-top: 0.3rem;
+    }
+
+    .threat-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      border: 1px solid;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .threat-badge.none { color: var(--green); border-color: var(--green); background: rgba(0,255,65,0.05); }
+    .threat-badge.low { color: var(--green-dim); border-color: var(--green-dim); background: rgba(0,204,51,0.05); }
+    .threat-badge.medium { color: var(--amber); border-color: var(--amber); background: rgba(255,176,0,0.05); }
+    .threat-badge.high { color: var(--red); border-color: var(--red); background: rgba(255,51,51,0.08); }
+    .threat-badge.critical { color: #ff0040; border-color: #ff0040; background: rgba(255,0,64,0.1); animation: pulse-border 1.5s ease infinite; }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0px rgba(255,0,64,0); }
+      50% { box-shadow: 0 0 12px rgba(255,0,64,0.3); }
+    }
+
+    .composite-details {
+      flex: 1;
+      min-width: 200px;
+    }
+    .composite-details__row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      padding: 0.15rem 0;
+    }
+    .composite-details__row .label { color: var(--text-muted); }
+    .composite-details__row .value { color: var(--text); }
+    .escalation { color: var(--red); font-weight: 600; }
+    .no-escalation { color: var(--green-dim); }
+
+    /* Pipeline animation bar */
+    .pipeline-bar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0;
+      overflow-x: auto;
+    }
+    .pipeline-stage {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+    .pipeline-stage.active {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .pipeline-stage.done {
+      border-color: var(--border-bright);
+      color: var(--text-muted);
+    }
+    .pipeline-arrow { color: var(--text-dim); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/timeline/">timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="demo-header">
+      <h1>PARALLAX DETECTION PIPELINE</h1>
+      <p>Live simulation — select an account archetype and watch 15 detectors classify behavior in real time</p>
+    </div>
+
+    <div class="archetype-selector">
+      <button class="archetype-btn active" data-type="normal">$ normal_user</button>
+      <button class="archetype-btn" data-type="power">$ power_developer</button>
+      <button class="archetype-btn" data-type="attacker">$ attacker</button>
+    </div>
+
+    <!-- Pipeline stages -->
+    <div class="pipeline-bar">
+      <span class="pipeline-stage" id="stage-ingest">ingest</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-stage" id="stage-profile">profile</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-stage" id="stage-baseline">baseline</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-stage" id="stage-detect">detect</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-stage" id="stage-score">score</span>
+      <span class="pipeline-arrow">→</span>
+      <span class="pipeline-stage" id="stage-assess">assess</span>
+    </div>
+
+    <div class="demo-grid">
+      <!-- Event Feed -->
+      <div class="feed-panel">
+        <div class="feed-panel__header">
+          <span>event_stream</span>
+          <span class="count" id="event-count">0 events</span>
+        </div>
+        <div class="feed-list" id="feed-list"></div>
+      </div>
+
+      <!-- Account Profile -->
+      <div class="profile-panel">
+        <div class="profile-panel__header">account_profile</div>
+        <div class="profile-row"><span class="label">account_id</span><span class="value" id="p-acct">—</span></div>
+        <div class="profile-row"><span class="label">account_age</span><span class="value" id="p-age">—</span></div>
+        <div class="profile-row"><span class="label">requests/hr</span><span class="value" id="p-rate">—</span></div>
+        <div class="profile-row"><span class="label">avg_input_tokens</span><span class="value" id="p-input">—</span></div>
+        <div class="profile-row"><span class="label">avg_output_tokens</span><span class="value" id="p-output">—</span></div>
+        <div class="profile-row"><span class="label">token_ratio</span><span class="value" id="p-ratio">—</span></div>
+        <div class="profile-row"><span class="label">api_ratio</span><span class="value" id="p-api">—</span></div>
+        <div class="profile-row"><span class="label">single_turn_ratio</span><span class="value" id="p-single">—</span></div>
+        <div class="profile-row"><span class="label">safety_trigger_rate</span><span class="value" id="p-safety">—</span></div>
+        <div class="profile-row"><span class="label">interval_cv</span><span class="value" id="p-cv">—</span></div>
+        <div class="profile-row"><span class="label">hours_active</span><span class="value" id="p-hours">—</span></div>
+        <div class="profile-row"><span class="label">conv/day</span><span class="value" id="p-conv">—</span></div>
+      </div>
+
+      <!-- Detectors -->
+      <div class="detectors-section">
+        <div class="detectors-section__header">
+          detection_results — <span id="triggered-count">0</span>/15 triggered (threshold ≥ 0.50)
+        </div>
+        <div class="detector-grid" id="detector-grid"></div>
+      </div>
+
+      <!-- Composite Score -->
+      <div class="composite-section" id="composite-section">
+        <div class="composite-score">
+          <div class="composite-score__value level-none" id="composite-value">0.00</div>
+          <div class="composite-score__label">composite_score</div>
+        </div>
+        <div>
+          <span class="threat-badge none" id="threat-badge">NONE</span>
+        </div>
+        <div class="composite-details">
+          <div class="composite-details__row">
+            <span class="label">tier1_triggered</span>
+            <span class="value" id="t1-count">0 / 9</span>
+          </div>
+          <div class="composite-details__row">
+            <span class="label">tier2_triggered</span>
+            <span class="value" id="t2-count">0 / 6</span>
+          </div>
+          <div class="composite-details__row">
+            <span class="label">top_signal</span>
+            <span class="value" id="top-signal">—</span>
+          </div>
+          <div class="composite-details__row">
+            <span class="label">escalation</span>
+            <span class="value no-escalation" id="escalation">not recommended</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim);">
+      <p>This is a client-side simulation using the same archetype parameters and detector weights from the real PARALLAX pipeline. No backend required — all scoring runs in the browser.</p>
+      <p style="margin-top: 0.5rem;"><a href="parallax.html" style="color: var(--amber); text-decoration: none;">← back to project details</a> · <a href="https://github.com/chirag-dewan/parallax" style="color: var(--amber); text-decoration: none;">source on GitHub</a></p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag@cdewan.me">email</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  /* ========================================================
+     PARALLAX Detection Pipeline — Browser Simulation
+     ======================================================== */
+
+  const DETECTORS = [
+    { id: 'T1-001', name: 'Volume Anomaly',       tier: 1, weight: 0.12, threshold: 0.5 },
+    { id: 'T1-002', name: 'Automation Signature',  tier: 1, weight: 0.14, threshold: 0.5 },
+    { id: 'T1-003', name: 'Token Ratio',           tier: 1, weight: 0.09, threshold: 0.5 },
+    { id: 'T1-004', name: 'Session Anomaly',       tier: 1, weight: 0.08, threshold: 0.5 },
+    { id: 'T1-005', name: 'Model Targeting',       tier: 1, weight: 0.02, threshold: 0.5 },
+    { id: 'T1-006', name: 'Context Exploitation',  tier: 1, weight: 0.03, threshold: 0.5 },
+    { id: 'T1-007', name: 'Error Pattern',         tier: 1, weight: 0.08, threshold: 0.5 },
+    { id: 'T1-008', name: 'Concurrent Sessions',   tier: 1, weight: 0.06, threshold: 0.5 },
+    { id: 'T1-009', name: 'Host Fan-Out',          tier: 1, weight: 0.10, threshold: 0.4 },
+    { id: 'T2-001', name: 'Distribution Divergence', tier: 2, weight: 0.06, threshold: 0.5 },
+    { id: 'T2-002', name: 'Entropy Analysis',      tier: 2, weight: 0.06, threshold: 0.5 },
+    { id: 'T2-003', name: 'Cross-Account Corr.',   tier: 2, weight: 0.06, threshold: 0.5 },
+    { id: 'T2-004', name: 'Power-Law Deviation',   tier: 2, weight: 0.04, threshold: 0.5 },
+    { id: 'T2-005', name: 'Temporal Clustering',   tier: 2, weight: 0.04, threshold: 0.5 },
+    { id: 'T2-006', name: 'Behavioral Shift',      tier: 2, weight: 0.02, threshold: 0.5 },
+  ];
+
+  /* Archetype parameters — matches real traffic_generator.py */
+  const ARCHETYPES = {
+    normal: {
+      label: 'normal_user',
+      accountAge: [90, 365],
+      reqPerHour: [3, 12],
+      intervalMs: [80000, 180000],
+      intervalCV: [0.4, 0.8],
+      inputTokens: [50, 500],
+      outputTokens: [100, 2000],
+      apiRatio: 0.30,
+      singleTurnRatio: [0.15, 0.35],
+      safetyRate: [0.01, 0.03],
+      hoursActive: [4, 10],
+      convPerDay: [2, 8],
+      models: ['gpt-4', 'claude-3-sonnet', 'claude-3-opus', 'gpt-4-turbo'],
+      topics: ['coding', 'writing', 'analysis', 'research', 'creative', 'general'],
+      scores: {
+        'T1-001': [0.05, 0.18], 'T1-002': [0.08, 0.22], 'T1-003': [0.05, 0.15],
+        'T1-004': [0.12, 0.30], 'T1-005': [0.03, 0.12], 'T1-006': [0.05, 0.15],
+        'T1-007': [0.05, 0.15], 'T1-008': [0.05, 0.18], 'T1-009': [0.08, 0.25],
+        'T2-001': [0.08, 0.22], 'T2-002': [0.12, 0.30], 'T2-003': [0.00, 0.12],
+        'T2-004': [0.12, 0.35], 'T2-005': [0.20, 0.42], 'T2-006': [0.05, 0.18],
+      }
+    },
+    power: {
+      label: 'power_developer',
+      accountAge: [60, 730],
+      reqPerHour: [30, 100],
+      intervalMs: [20000, 50000],
+      intervalCV: [0.3, 0.5],
+      inputTokens: [100, 800],
+      outputTokens: [200, 3000],
+      apiRatio: 0.90,
+      singleTurnRatio: [0.20, 0.40],
+      safetyRate: [0.02, 0.05],
+      hoursActive: [10, 18],
+      convPerDay: [10, 40],
+      models: ['gpt-4', 'claude-3-sonnet', 'gpt-3.5-turbo', 'claude-3-opus'],
+      topics: ['coding', 'analysis', 'research', 'writing'],
+      scores: {
+        'T1-001': [0.22, 0.45], 'T1-002': [0.15, 0.35], 'T1-003': [0.10, 0.25],
+        'T1-004': [0.30, 0.52], 'T1-005': [0.12, 0.30], 'T1-006': [0.15, 0.30],
+        'T1-007': [0.12, 0.28], 'T1-008': [0.18, 0.38], 'T1-009': [0.22, 0.42],
+        'T2-001': [0.18, 0.38], 'T2-002': [0.22, 0.42], 'T2-003': [0.12, 0.35],
+        'T2-004': [0.22, 0.42], 'T2-005': [0.15, 0.32], 'T2-006': [0.08, 0.25],
+      }
+    },
+    attacker: {
+      label: 'attacker',
+      accountAge: [1, 25],
+      reqPerHour: [150, 500],
+      intervalMs: [800, 1500],
+      intervalCV: [0.12, 0.22],
+      inputTokens: [20, 80],
+      outputTokens: [3500, 4096],
+      apiRatio: 1.0,
+      singleTurnRatio: [0.92, 1.0],
+      safetyRate: [0.08, 0.20],
+      hoursActive: [20, 24],
+      convPerDay: [80, 300],
+      models: ['gpt-3.5-turbo', 'claude-instant', 'claude-haiku'],
+      topics: ['extraction', 'jailbreak', 'scraping', 'extraction'],
+      scores: {
+        'T1-001': [0.82, 0.98], 'T1-002': [0.78, 0.95], 'T1-003': [0.72, 0.95],
+        'T1-004': [0.80, 0.98], 'T1-005': [0.58, 0.85], 'T1-006': [0.75, 0.98],
+        'T1-007': [0.68, 0.90], 'T1-008': [0.82, 0.98], 'T1-009': [0.55, 0.82],
+        'T2-001': [0.72, 0.95], 'T2-002': [0.78, 0.98], 'T2-003': [0.42, 0.72],
+        'T2-004': [0.58, 0.88], 'T2-005': [0.72, 0.95], 'T2-006': [0.38, 0.68],
+      }
+    }
+  };
+
+  /* ---- Utility ---- */
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+  function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  /* ---- State ---- */
+  let currentType = 'normal';
+  let eventCount = 0;
+  let feedInterval = null;
+  let scoreTimeout = null;
+  let detectorScores = {};
+  let pipelinePhase = 0;
+
+  /* ---- Build detector cards ---- */
+  function buildDetectorGrid() {
+    const grid = document.getElementById('detector-grid');
+    grid.innerHTML = '';
+    DETECTORS.forEach(d => {
+      const card = document.createElement('div');
+      card.className = 'detector-card';
+      card.id = `det-${d.id}`;
+      card.innerHTML = `
+        <div class="detector-card__id">${d.id} · tier ${d.tier} · w=${d.weight}</div>
+        <div class="detector-card__name">${d.name}</div>
+        <div class="detector-bar"><div class="detector-bar__fill" id="bar-${d.id}"></div></div>
+        <div class="detector-card__score">
+          <span>score: <span class="score-val" id="score-${d.id}">0.00</span></span>
+          <span id="trig-${d.id}">—</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---- Generate a fake event line ---- */
+  function generateEvent(arch) {
+    const a = ARCHETYPES[arch];
+    const model = pick(a.models);
+    const inTok = randInt(a.inputTokens[0], a.inputTokens[1]);
+    const outTok = randInt(a.outputTokens[0], a.outputTokens[1]);
+    const topic = pick(a.topics);
+    const status = Math.random() < a.safetyRate[1] ? 403 : 200;
+    const now = new Date();
+    const ts = now.toTimeString().slice(0, 8);
+    return { ts, model, inTok, outTok, topic, status };
+  }
+
+  /* ---- Add event to feed ---- */
+  function addEventToFeed(evt) {
+    eventCount++;
+    const list = document.getElementById('feed-list');
+    const line = document.createElement('div');
+    line.className = 'feed-line';
+    const statusColor = evt.status === 403 ? 'color:var(--red)' : '';
+    line.innerHTML = `<span class="ts">${evt.ts}</span> <span class="model">${evt.model}</span> in:<span class="tokens">${evt.inTok}</span> out:<span class="tokens">${evt.outTok}</span> <span style="${statusColor}">${evt.status}</span> ${evt.topic}`;
+    list.prepend(line);
+    // Keep feed manageable
+    while (list.children.length > 80) list.removeChild(list.lastChild);
+    document.getElementById('event-count').textContent = `${eventCount} events`;
+  }
+
+  /* ---- Update profile panel ---- */
+  function updateProfile(arch) {
+    const a = ARCHETYPES[arch];
+    const acctId = arch === 'normal' ? 'acct_7f3a' : arch === 'power' ? 'acct_2b91' : 'acct_e40c';
+    document.getElementById('p-acct').textContent = acctId;
+    document.getElementById('p-age').textContent = randInt(a.accountAge[0], a.accountAge[1]) + 'd';
+    document.getElementById('p-rate').textContent = rand(a.reqPerHour[0], a.reqPerHour[1]).toFixed(1);
+    document.getElementById('p-input').textContent = randInt(a.inputTokens[0], a.inputTokens[1]);
+    document.getElementById('p-output').textContent = randInt(a.outputTokens[0], a.outputTokens[1]);
+    const ratio = rand(a.outputTokens[0], a.outputTokens[1]) / Math.max(1, rand(a.inputTokens[0], a.inputTokens[1]));
+    document.getElementById('p-ratio').textContent = ratio.toFixed(1);
+    document.getElementById('p-api').textContent = a.apiRatio.toFixed(2);
+    document.getElementById('p-single').textContent = rand(a.singleTurnRatio[0], a.singleTurnRatio[1]).toFixed(2);
+    document.getElementById('p-safety').textContent = rand(a.safetyRate[0], a.safetyRate[1]).toFixed(3);
+    document.getElementById('p-cv').textContent = rand(a.intervalCV[0], a.intervalCV[1]).toFixed(2);
+    document.getElementById('p-hours').textContent = randInt(a.hoursActive[0], a.hoursActive[1]);
+    document.getElementById('p-conv').textContent = randInt(a.convPerDay[0], a.convPerDay[1]);
+  }
+
+  /* ---- Run detectors with scores ---- */
+  function runDetectors(arch) {
+    const a = ARCHETYPES[arch];
+    let t1Triggered = 0, t2Triggered = 0;
+    let totalWeightedScore = 0, totalWeight = 0;
+    let topSignal = { id: '', score: 0 };
+
+    DETECTORS.forEach(d => {
+      const range = a.scores[d.id];
+      const score = clamp(rand(range[0], range[1]), 0, 1);
+      const triggered = score >= d.threshold;
+      detectorScores[d.id] = score;
+
+      // Update card
+      const bar = document.getElementById(`bar-${d.id}`);
+      const scoreEl = document.getElementById(`score-${d.id}`);
+      const trigEl = document.getElementById(`trig-${d.id}`);
+      const card = document.getElementById(`det-${d.id}`);
+
+      bar.style.width = (score * 100) + '%';
+      bar.className = 'detector-bar__fill ' + (score < 0.3 ? 'low' : score < 0.6 ? 'med' : 'high');
+      scoreEl.textContent = score.toFixed(2);
+      trigEl.textContent = triggered ? 'TRIGGERED' : '—';
+      trigEl.style.color = triggered ? 'var(--red)' : 'var(--text-dim)';
+      card.className = 'detector-card' + (triggered ? ' triggered' : '');
+
+      if (triggered) {
+        if (d.tier === 1) t1Triggered++; else t2Triggered++;
+      }
+
+      const confidence = clamp(rand(0.7, 1.0), 0, 1);
+      const weighted = score * d.weight * confidence;
+      totalWeightedScore += weighted;
+      totalWeight += d.weight;
+
+      if (score * d.weight > topSignal.score) {
+        topSignal = { id: d.id + ' ' + d.name, score: score * d.weight };
+      }
+    });
+
+    const composite = totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
+    let level, levelClass;
+    if (composite < 0.25) { level = 'NONE'; levelClass = 'none'; }
+    else if (composite < 0.50) { level = 'LOW'; levelClass = 'low'; }
+    else if (composite < 0.70) { level = 'MEDIUM'; levelClass = 'medium'; }
+    else if (composite < 0.85) { level = 'HIGH'; levelClass = 'high'; }
+    else { level = 'CRITICAL'; levelClass = 'critical'; }
+
+    const compEl = document.getElementById('composite-value');
+    compEl.textContent = composite.toFixed(2);
+    compEl.className = 'composite-score__value level-' + levelClass;
+
+    const badge = document.getElementById('threat-badge');
+    badge.textContent = level;
+    badge.className = 'threat-badge ' + levelClass;
+
+    document.getElementById('t1-count').textContent = `${t1Triggered} / 9`;
+    document.getElementById('t2-count').textContent = `${t2Triggered} / 6`;
+    document.getElementById('triggered-count').textContent = t1Triggered + t2Triggered;
+    document.getElementById('top-signal').textContent = topSignal.id;
+
+    const escEl = document.getElementById('escalation');
+    if (composite > 0.66) {
+      escEl.textContent = 'RECOMMENDED';
+      escEl.className = 'value escalation';
+    } else {
+      escEl.textContent = 'not recommended';
+      escEl.className = 'value no-escalation';
+    }
+  }
+
+  /* ---- Pipeline stage animation ---- */
+  function animatePipeline(callback) {
+    const stages = ['stage-ingest', 'stage-profile', 'stage-baseline', 'stage-detect', 'stage-score', 'stage-assess'];
+    stages.forEach(s => {
+      document.getElementById(s).className = 'pipeline-stage';
+    });
+
+    let i = 0;
+    function next() {
+      if (i > 0) document.getElementById(stages[i - 1]).className = 'pipeline-stage done';
+      if (i < stages.length) {
+        document.getElementById(stages[i]).className = 'pipeline-stage active';
+        i++;
+        setTimeout(next, 400);
+      } else {
+        if (callback) callback();
+      }
+    }
+    next();
+  }
+
+  /* ---- Start simulation ---- */
+  function startSimulation(type) {
+    // Clear previous
+    if (feedInterval) clearInterval(feedInterval);
+    if (scoreTimeout) clearTimeout(scoreTimeout);
+    eventCount = 0;
+    document.getElementById('feed-list').innerHTML = '';
+    document.getElementById('event-count').textContent = '0 events';
+
+    // Reset detectors
+    DETECTORS.forEach(d => {
+      const bar = document.getElementById(`bar-${d.id}`);
+      const scoreEl = document.getElementById(`score-${d.id}`);
+      const trigEl = document.getElementById(`trig-${d.id}`);
+      const card = document.getElementById(`det-${d.id}`);
+      bar.style.width = '0%';
+      bar.className = 'detector-bar__fill low';
+      scoreEl.textContent = '0.00';
+      trigEl.textContent = '—';
+      trigEl.style.color = 'var(--text-dim)';
+      card.className = 'detector-card';
+    });
+
+    // Reset composite
+    document.getElementById('composite-value').textContent = '0.00';
+    document.getElementById('composite-value').className = 'composite-score__value level-none';
+    document.getElementById('threat-badge').textContent = 'NONE';
+    document.getElementById('threat-badge').className = 'threat-badge none';
+    document.getElementById('t1-count').textContent = '0 / 9';
+    document.getElementById('t2-count').textContent = '0 / 6';
+    document.getElementById('triggered-count').textContent = '0';
+    document.getElementById('top-signal').textContent = '—';
+    document.getElementById('escalation').textContent = 'not recommended';
+    document.getElementById('escalation').className = 'value no-escalation';
+
+    // Start event feed
+    const speed = type === 'attacker' ? 120 : type === 'power' ? 300 : 600;
+    feedInterval = setInterval(() => {
+      addEventToFeed(generateEvent(type));
+    }, speed);
+
+    // After collecting events, run pipeline
+    const collectTime = type === 'attacker' ? 2000 : 3000;
+    scoreTimeout = setTimeout(() => {
+      animatePipeline(() => {
+        updateProfile(type);
+        runDetectors(type);
+      });
+    }, collectTime);
+  }
+
+  /* ---- Init ---- */
+  document.addEventListener('DOMContentLoaded', () => {
+    buildDetectorGrid();
+
+    // Archetype buttons
+    document.querySelectorAll('.archetype-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.archetype-btn').forEach(b => b.className = 'archetype-btn');
+        const type = btn.dataset.type;
+        currentType = type;
+        if (type === 'attacker') btn.className = 'archetype-btn active danger';
+        else if (type === 'power') btn.className = 'archetype-btn active warn';
+        else btn.className = 'archetype-btn active';
+        startSimulation(type);
+      });
+    });
+
+    // Auto-start
+    startSimulation('normal');
+  });
+  </script>
+</body>
+</html>
