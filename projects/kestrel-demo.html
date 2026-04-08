@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KESTREL Live Demo — Chirag Dewan</title>
+  <meta name="description" content="Interactive demo of the KESTREL cloud AI workload anomaly detection pipeline. Watch z-score baselining and GPU hijack detection in real time.">
+  <meta property="og:title" content="KESTREL Live Demo">
+  <meta property="og:description" content="Cloud-native AI workload anomaly detection. 34K real CloudTrail events. Precision 1.0.">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* ---- Demo-specific styles ---- */
+    .demo-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .demo-header h1 {
+      font-size: 1.4rem;
+      color: var(--green);
+      margin-bottom: 0.3rem;
+      text-shadow: 0 0 20px var(--green-glow);
+    }
+    .demo-header p {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Scenario selector */
+    .scenario-selector {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .scenario-btn {
+      font-family: var(--font);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.2rem;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 2px;
+    }
+    .scenario-btn:hover { border-color: var(--border-bright); color: var(--text); }
+    .scenario-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
+    .scenario-btn.active.warn { border-color: var(--amber); color: var(--amber); background: rgba(255,176,0,0.05); }
+    .scenario-btn.active.danger { border-color: var(--red); color: var(--red); background: rgba(255,51,51,0.05); }
+
+    /* Pipeline stages */
+    .pipeline-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0;
+      overflow-x: auto;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .pipeline-stage {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+    .pipeline-stage.active { border-color: var(--green); color: var(--green); }
+    .pipeline-stage.done { border-color: var(--border-bright); color: var(--text-muted); }
+    .pipeline-arrow { color: var(--text-dim); }
+
+    /* Layout grid */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 700px) {
+      .demo-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Event feed */
+    .feed-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      max-height: 340px;
+      overflow: hidden;
+      position: relative;
+    }
+    .feed-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+    .feed-panel__header .count { color: var(--amber); }
+    .feed-list {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.62rem;
+      line-height: 1.6;
+      overflow-y: auto;
+      max-height: 295px;
+    }
+    .feed-line {
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: line-in 0.2s ease forwards;
+    }
+    @keyframes line-in {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feed-line .ts { color: var(--text-dim); }
+    .feed-line .entity { color: var(--green-dim); }
+    .feed-line .region { color: var(--amber-dim); }
+    .feed-line .metric { color: var(--text-muted); }
+
+    /* Entity profile panel */
+    .profile-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 0.8rem;
+    }
+    .profile-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.6rem;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      padding: 0.2rem 0;
+    }
+    .profile-row .label { color: var(--text-muted); }
+    .profile-row .value { color: var(--text); font-weight: 500; }
+
+    /* Z-score baseline panel */
+    .baseline-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .baseline-section__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.8rem;
+    }
+    .zscore-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 0.6rem;
+    }
+    @media (max-width: 700px) {
+      .zscore-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    @media (max-width: 450px) {
+      .zscore-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .zscore-card {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 0.6rem;
+      transition: border-color 0.3s;
+    }
+    .zscore-card.anomaly { border-color: var(--red); }
+    .zscore-card__name {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .zscore-bar {
+      height: 4px;
+      background: var(--bg-surface);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-bottom: 0.25rem;
+      position: relative;
+    }
+    .zscore-bar__center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--text-dim);
+    }
+    .zscore-bar__fill {
+      height: 100%;
+      width: 0%;
+      position: absolute;
+      top: 0;
+      transition: width 0.6s ease, left 0.6s ease, background-color 0.3s;
+      background: var(--green-dim);
+    }
+    .zscore-bar__fill.positive { left: 50%; background: var(--amber); }
+    .zscore-bar__fill.negative { right: 50%; background: var(--green-dim); }
+    .zscore-bar__fill.extreme { background: var(--red); }
+    .zscore-card__values {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+    }
+    .zscore-card__values .z-val { font-weight: 600; }
+    .zscore-card__values .z-val.hot { color: var(--red); }
+    .zscore-card__values .z-val.warm { color: var(--amber); }
+    .zscore-card__values .z-val.cool { color: var(--green-dim); }
+
+    /* Detector panels */
+    .detectors-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .detectors-section__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.8rem;
+    }
+    .detector-panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) {
+      .detector-panels { grid-template-columns: 1fr; }
+    }
+    .detector-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 0.8rem;
+      transition: border-color 0.3s;
+    }
+    .detector-panel.fired { border-color: var(--red); }
+    .detector-panel__title {
+      font-size: 0.8rem;
+      color: var(--text);
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+    .detector-panel__atlas {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+    }
+    .signal-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .signal-row:last-child { border-bottom: none; }
+    .signal-row .signal-name { color: var(--text-muted); }
+    .signal-row .signal-status { font-weight: 600; }
+    .signal-row .signal-status.pass { color: var(--green-dim); }
+    .signal-row .signal-status.fail { color: var(--red); }
+    .signal-row .signal-value {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-left: 0.5rem;
+    }
+    .detector-panel__verdict {
+      margin-top: 0.6rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+    }
+    .verdict-label { color: var(--text-muted); }
+    .verdict-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      border: 1px solid;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .verdict-badge.clear { color: var(--green-dim); border-color: var(--green-dim); background: rgba(0,204,51,0.05); }
+    .verdict-badge.medium { color: var(--amber); border-color: var(--amber); background: rgba(255,176,0,0.05); }
+    .verdict-badge.high { color: var(--red); border-color: var(--red); background: rgba(255,51,51,0.05); }
+    .verdict-badge.critical { color: #ff0040; border-color: #ff0040; background: rgba(255,0,64,0.1); animation: pulse-border 1.5s ease infinite; }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0px rgba(255,0,64,0); }
+      50% { box-shadow: 0 0 12px rgba(255,0,64,0.3); }
+    }
+
+    /* Finding output */
+    .finding-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .finding-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 1rem;
+      font-size: 0.7rem;
+      transition: border-color 0.3s;
+    }
+    .finding-panel.has-finding { border-color: var(--amber); }
+    .finding-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .finding-json {
+      font-size: 0.65rem;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .finding-json .key { color: var(--amber); }
+    .finding-json .str { color: var(--green); }
+    .finding-json .num { color: var(--text); }
+    .finding-json .severity-val { font-weight: 600; }
+    .finding-empty {
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* Sigma export preview */
+    .sigma-section {
+      margin-top: 1.5rem;
+      grid-column: 1 / -1;
+    }
+    .sigma-panel {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 1rem;
+      transition: border-color 0.3s;
+    }
+    .sigma-panel.has-rule { border-color: var(--green-dim); }
+    .sigma-panel__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sigma-yaml {
+      font-size: 0.62rem;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .sigma-yaml .yaml-key { color: var(--amber); }
+    .sigma-yaml .yaml-val { color: var(--green); }
+    .sigma-yaml .yaml-comment { color: var(--text-dim); }
+
+    /* ==== EVALUATION RESULTS SECTION ==== */
+    .eval-section {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 2px solid var(--green);
+    }
+    .eval-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .eval-header h2 {
+      font-size: 1.3rem;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green-glow);
+      margin-bottom: 0.3rem;
+    }
+    .eval-header p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .eval-dataset {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin: 1rem 0 2rem;
+      padding: 0.6rem;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+    }
+    .eval-dataset span { color: var(--amber); font-weight: 500; }
+
+    /* Headline metrics */
+    .eval-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) {
+      .eval-metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+    .eval-metric {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 1rem;
+      text-align: center;
+    }
+    .eval-metric__value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .eval-metric__value.green { color: var(--green); }
+    .eval-metric__value.amber { color: var(--amber); }
+    .eval-metric__value.red { color: var(--red); }
+    .eval-metric__label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+    .eval-metric__delta {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
+
+    /* Ingestion breakdown */
+    .ingest-chart {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+    }
+    .ingest-chart__header {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .ingest-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      font-size: 0.7rem;
+    }
+    .ingest-row__label {
+      color: var(--text);
+      min-width: 10rem;
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) {
+      .ingest-row__label { min-width: 6rem; font-size: 0.6rem; }
+    }
+    .ingest-bar-wrap {
+      flex: 1;
+      height: 14px;
+      background: var(--bg-surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .ingest-bar-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      transition: width 0.8s ease;
+    }
+    .ingest-bar-fill.green { background: var(--green-dim); }
+    .ingest-bar-fill.amber { background: var(--amber); }
+    .ingest-bar-fill.red { background: var(--red); }
+    .ingest-row__count {
+      min-width: 4rem;
+      text-align: right;
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      flex-shrink: 0;
+    }
+
+    /* Impedance mismatch */
+    .mismatch-panel {
+      border: 1px solid var(--amber);
+      background: rgba(255, 176, 0, 0.03);
+      padding: 1.2rem;
+      margin: 2rem 0;
+      font-size: 0.8rem;
+    }
+    .mismatch-panel h3 {
+      color: var(--amber);
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+    .mismatch-panel p {
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.7;
+    }
+    .mismatch-panel strong { color: var(--green); }
+    .mismatch-panel .dim { color: var(--text-muted); }
+
+    .mismatch-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.7rem;
+      margin: 1rem 0;
+    }
+    .mismatch-table th {
+      color: var(--text-dim);
+      font-weight: 500;
+      text-align: left;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .mismatch-table td {
+      padding: 0.35rem 0.6rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .mismatch-table td.expect { color: var(--green); }
+    .mismatch-table td.got { color: var(--red); }
+
+    /* What worked */
+    .worked-panel {
+      border: 1px solid var(--green);
+      background: rgba(0, 255, 65, 0.03);
+      padding: 1.2rem;
+      margin: 2rem 0;
+      font-size: 0.8rem;
+    }
+    .worked-panel h3 {
+      color: var(--green);
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+    .worked-panel p {
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      line-height: 1.7;
+    }
+    .worked-panel strong { color: var(--green); }
+    .worked-panel .dim { color: var(--text-muted); }
+    .worked-item {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .worked-item:last-child { border-bottom: none; }
+    .worked-item strong { color: var(--amber); font-weight: 500; }
+
+    /* Entity table */
+    .entity-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.7rem;
+      margin: 1.5rem 0;
+    }
+    .entity-table th {
+      color: var(--text-dim);
+      font-weight: 500;
+      text-align: left;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .entity-table td {
+      padding: 0.35rem 0.6rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .entity-table tr.detected { background: rgba(0, 255, 65, 0.05); }
+    .entity-table tr.detected td { color: var(--green); }
+    .entity-table tr.missed td { color: var(--text-muted); }
+
+    /* True positive callout */
+    .tp-callout {
+      border: 1px solid var(--green);
+      background: rgba(0, 255, 65, 0.03);
+      padding: 1rem;
+      margin: 2rem 0;
+      font-size: 0.75rem;
+    }
+    .tp-callout__header {
+      color: var(--green);
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .tp-callout .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.2rem 0;
+    }
+    .tp-callout .row .label { color: var(--text-muted); }
+    .tp-callout .row .value { color: var(--text); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/about.html">about</a></li>
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/timeline/">timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="demo-header">
+      <h1>KESTREL DETECTION PIPELINE</h1>
+      <p>Live simulation — select a cloud workload scenario and watch z-score baselining catch anomalies in real time</p>
+    </div>
+
+    <div class="scenario-selector">
+      <button class="scenario-btn active" data-type="normal">$ data_scientist</button>
+      <button class="scenario-btn" data-type="hijack">$ gpu_hijack</button>
+      <button class="scenario-btn" data-type="rogue">$ rogue_training</button>
+    </div>
+
+    <!-- Pipeline stages -->
+    <div class="pipeline-bar">
+      <span class="pipeline-stage" id="stage-ingest">ingest</span>
+      <span class="pipeline-arrow">-></span>
+      <span class="pipeline-stage" id="stage-store">store</span>
+      <span class="pipeline-arrow">-></span>
+      <span class="pipeline-stage" id="stage-baseline">baseline</span>
+      <span class="pipeline-arrow">-></span>
+      <span class="pipeline-stage" id="stage-detect">detect</span>
+      <span class="pipeline-arrow">-></span>
+      <span class="pipeline-stage" id="stage-findings">findings</span>
+      <span class="pipeline-arrow">-></span>
+      <span class="pipeline-stage" id="stage-export">export</span>
+    </div>
+
+    <div class="demo-grid">
+      <!-- Event Feed -->
+      <div class="feed-panel">
+        <div class="feed-panel__header">
+          <span>cloud_telemetry_stream</span>
+          <span class="count" id="event-count">0 events</span>
+        </div>
+        <div class="feed-list" id="feed-list"></div>
+      </div>
+
+      <!-- Entity Profile -->
+      <div class="profile-panel">
+        <div class="profile-panel__header">entity_profile (Welford baseline)</div>
+        <div class="profile-row"><span class="label">entity_id</span><span class="value" id="p-entity">--</span></div>
+        <div class="profile-row"><span class="label">entity_type</span><span class="value" id="p-type">--</span></div>
+        <div class="profile-row"><span class="label">cloud_provider</span><span class="value" id="p-cloud">--</span></div>
+        <div class="profile-row"><span class="label">region</span><span class="value" id="p-region">--</span></div>
+        <div class="profile-row"><span class="label">avg_gpu_util</span><span class="value" id="p-gpu">--</span></div>
+        <div class="profile-row"><span class="label">avg_mem_util</span><span class="value" id="p-mem">--</span></div>
+        <div class="profile-row"><span class="label">avg_power_watts</span><span class="value" id="p-power">--</span></div>
+        <div class="profile-row"><span class="label">api_calls/hr</span><span class="value" id="p-api">--</span></div>
+        <div class="profile-row"><span class="label">active_hours</span><span class="value" id="p-hours">--</span></div>
+        <div class="profile-row"><span class="label">instance_type</span><span class="value" id="p-instance">--</span></div>
+        <div class="profile-row"><span class="label">baseline_events</span><span class="value" id="p-baseline">--</span></div>
+      </div>
+
+      <!-- Z-Score Baseline -->
+      <div class="baseline-section">
+        <div class="baseline-section__header">
+          z_score_baselines — sigma threshold = <span style="color:var(--amber);">2.5</span> | <span id="anomaly-count">0</span> anomalies detected
+        </div>
+        <div class="zscore-grid" id="zscore-grid"></div>
+      </div>
+
+      <!-- Detectors -->
+      <div class="detectors-section">
+        <div class="detectors-section__header">
+          detection_modules — <span id="det-fired">0</span>/2 fired
+        </div>
+        <div class="detector-panels">
+          <!-- GPU Hijack Detector -->
+          <div class="detector-panel" id="det-gpu">
+            <div class="detector-panel__title">GPUHijackDetector</div>
+            <div class="detector-panel__atlas">AML.TA0011 IMPACT / AML.T0048 Denial of ML Service</div>
+            <div class="signal-row">
+              <span class="signal-name">high_gpu_utilization (>=90%)</span>
+              <span><span class="signal-status pass" id="sig-gpu-util">--</span><span class="signal-value" id="sig-gpu-util-v"></span></span>
+            </div>
+            <div class="signal-row">
+              <span class="signal-name">anomalous_region</span>
+              <span><span class="signal-status pass" id="sig-gpu-region">--</span><span class="signal-value" id="sig-gpu-region-v"></span></span>
+            </div>
+            <div class="signal-row">
+              <span class="signal-name">off_hours_gpu_spike (h<6 || h>=22)</span>
+              <span><span class="signal-status pass" id="sig-gpu-hours">--</span><span class="signal-value" id="sig-gpu-hours-v"></span></span>
+            </div>
+            <div class="detector-panel__verdict">
+              <span class="verdict-label">verdict</span>
+              <span class="verdict-badge clear" id="verdict-gpu">CLEAR</span>
+            </div>
+          </div>
+
+          <!-- Rogue Training Detector -->
+          <div class="detector-panel" id="det-rogue">
+            <div class="detector-panel__title">RogueTrainingDetector</div>
+            <div class="detector-panel__atlas">AML.TA0005 EXECUTION / AML.T0020 Train Model</div>
+            <div class="signal-row">
+              <span class="signal-name">unexpected_instance_type</span>
+              <span><span class="signal-status pass" id="sig-rogue-inst">--</span><span class="signal-value" id="sig-rogue-inst-v"></span></span>
+            </div>
+            <div class="signal-row">
+              <span class="signal-name">off_hours_training (h<6 || h>=22)</span>
+              <span><span class="signal-status pass" id="sig-rogue-hours">--</span><span class="signal-value" id="sig-rogue-hours-v"></span></span>
+            </div>
+            <div class="signal-row">
+              <span class="signal-name">abnormal_duration (z>=2.5)</span>
+              <span><span class="signal-status pass" id="sig-rogue-dur">--</span><span class="signal-value" id="sig-rogue-dur-v"></span></span>
+            </div>
+            <div class="signal-row">
+              <span class="signal-name">unusual_data_transfer (z>=2.5)</span>
+              <span><span class="signal-status pass" id="sig-rogue-data">--</span><span class="signal-value" id="sig-rogue-data-v"></span></span>
+            </div>
+            <div class="detector-panel__verdict">
+              <span class="verdict-label">verdict</span>
+              <span class="verdict-badge clear" id="verdict-rogue">CLEAR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Finding Output -->
+      <div class="finding-section">
+        <div class="finding-panel" id="finding-panel">
+          <div class="finding-panel__header">$ kestrel findings --format json</div>
+          <div id="finding-output"><span class="finding-empty">[ ] no findings — all clear</span></div>
+        </div>
+      </div>
+
+      <!-- Sigma Export -->
+      <div class="sigma-section">
+        <div class="sigma-panel" id="sigma-panel">
+          <div class="sigma-panel__header">$ kestrel findings --format sigma</div>
+          <div id="sigma-output"><span class="finding-empty"># no sigma rules generated</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem; font-size: 0.65rem; color: var(--text-dim);">
+      Client-side simulation using entity profiles and detection thresholds from the real pipeline.
+    </div>
+
+    <!-- ============================================================
+         REAL CLOUDTRAIL EVALUATION RESULTS
+         ============================================================ -->
+    <div class="eval-section">
+      <div class="eval-header">
+        <h2>REAL-WORLD EVALUATION</h2>
+        <p>Evaluated against Splunk Attack Data — real CloudTrail logs from AWS attack scenarios mapped to MITRE ATT&CK techniques</p>
+      </div>
+
+      <div class="eval-dataset">
+        Dataset: <span>splunk/attack_data</span> &middot; <span>34,427</span> events &middot; <span>51</span> datasets &middot; <span>77</span> unique entities &middot; <span>16</span> AWS regions &middot; <span>2,167</span> attack-labeled events
+      </div>
+
+      <!-- Headline metrics -->
+      <div class="eval-metrics">
+        <div class="eval-metric">
+          <div class="eval-metric__value green">1.0</div>
+          <div class="eval-metric__label">Precision</div>
+          <div class="eval-metric__delta">0 false positives</div>
+        </div>
+        <div class="eval-metric">
+          <div class="eval-metric__value red">0.0005</div>
+          <div class="eval-metric__label">Recall</div>
+          <div class="eval-metric__delta">1 of 2,167 attack events</div>
+        </div>
+        <div class="eval-metric">
+          <div class="eval-metric__value green">1</div>
+          <div class="eval-metric__label">True Positives</div>
+          <div class="eval-metric__delta">Bedrock off-hours spike</div>
+        </div>
+        <div class="eval-metric">
+          <div class="eval-metric__value amber">76</div>
+          <div class="eval-metric__label">Baselines Built</div>
+          <div class="eval-metric__delta">105 z-score anomalies</div>
+        </div>
+      </div>
+
+      <!-- Ingestion breakdown -->
+      <div class="section-header" style="margin-top: 2rem;"><span>~/eval</span> -- event type breakdown (34,427 events)</div>
+      <div class="ingest-chart">
+        <div class="ingest-chart__header">event_type distribution after CloudTrail adapter mapping</div>
+        <div id="ingest-chart-rows">
+          <div class="ingest-row">
+            <span class="ingest-row__label">api_call</span>
+            <div class="ingest-bar-wrap"><div class="ingest-bar-fill green" id="bar-api" style="width: 0%"></div></div>
+            <span class="ingest-row__count">34,420 (99.98%)</span>
+          </div>
+          <div class="ingest-row">
+            <span class="ingest-row__label">resource_alloc</span>
+            <div class="ingest-bar-wrap"><div class="ingest-bar-fill amber" id="bar-resource" style="width: 0%"></div></div>
+            <span class="ingest-row__count">6 (0.02%)</span>
+          </div>
+          <div class="ingest-row">
+            <span class="ingest-row__label">gpu_metric</span>
+            <div class="ingest-bar-wrap"><div class="ingest-bar-fill amber" id="bar-gpu" style="width: 0%"></div></div>
+            <span class="ingest-row__count">1 (0.003%)</span>
+          </div>
+          <div class="ingest-row">
+            <span class="ingest-row__label">training_job</span>
+            <div class="ingest-bar-wrap"><div class="ingest-bar-fill red" id="bar-training" style="width: 0%"></div></div>
+            <span class="ingest-row__count">0 (0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- The True Positive -->
+      <div class="section-header"><span>~/eval</span> -- the one finding</div>
+      <div class="tp-callout">
+        <div class="tp-callout__header">GPUHijackDetector -- TRUE POSITIVE</div>
+        <div class="row"><span class="label">entity</span><span class="value">AmazonBedrockExecutionRoleForKnowledgeBase_dwrx4</span></div>
+        <div class="row"><span class="label">severity</span><span class="value" style="color:var(--amber);">MEDIUM</span></div>
+        <div class="row"><span class="label">signal</span><span class="value">off_hours_gpu_spike (hour=23)</span></div>
+        <div class="row"><span class="label">atlas_technique</span><span class="value">AML.T0048 (Denial of ML Service)</span></div>
+        <div class="row"><span class="label">source_event</span><span class="value">Bedrock InvokeModel (AccessDenied)</span></div>
+        <div class="row"><span class="label">why it fired</span><span class="value">Adapter classified InvokeModel as gpu_metric; 11 PM triggers off-hours</span></div>
+      </div>
+
+      <!-- Impedance Mismatch -->
+      <div class="mismatch-panel">
+        <h3>$ cat root_cause.txt</h3>
+        <p><strong>The central finding isn't about the code — it's about the data.</strong> CloudTrail is a management-plane audit log. KESTREL's detectors operate on data-plane runtime telemetry. This is an impedance mismatch, not a bug.</p>
+
+        <table class="mismatch-table">
+          <thead>
+            <tr><th>What KESTREL needs</th><th>What CloudTrail provides</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="expect">gpu_utilization: 95%</td><td class="got">nothing (CloudWatch/DCGM domain)</td></tr>
+            <tr><td class="expect">memory_utilization: 88%</td><td class="got">nothing</td></tr>
+            <tr><td class="expect">power_watts: 280</td><td class="got">nothing</td></tr>
+            <tr><td class="expect">duration_hours: 48</td><td class="got">nothing (no SageMaker training events)</td></tr>
+            <tr><td class="expect">instance_type: p4d.24xlarge</td><td class="got">instanceType: t2.2xlarge</td></tr>
+            <tr><td class="expect">event_type: training_job</td><td class="got">ListFoundationModels, DeleteGuardrail</td></tr>
+          </tbody>
+        </table>
+
+        <p class="dim">99.98% of the CloudTrail events mapped to api_call. Zero mapped to training_job. The RogueTrainingDetector never had a chance to run. The GPUHijackDetector fired once — on the single Bedrock InvokeModel event that the adapter could classify as gpu_metric.</p>
+        <p>To properly evaluate KESTREL, you'd need: <strong>CloudWatch GPU metrics</strong>, <strong>SageMaker training logs</strong>, <strong>NVIDIA DCGM telemetry</strong>, or <strong>Bedrock data-plane invocation metrics</strong>. None exist in the splunk/attack_data corpus.</p>
+      </div>
+
+      <!-- What Worked -->
+      <div class="worked-panel">
+        <h3>$ cat what_worked.txt</h3>
+        <div class="worked-item"><strong>CloudTrail adapter:</strong> Successfully parsed 34,427 events from 51 heterogeneous NDJSON/JSON datasets. Identified 77 entities across 16 regions. Correctly classified identity types (user/service_account/ml_pipeline_role).</div>
+        <div class="worked-item"><strong>BaselineEngine:</strong> Built 76 rolling profiles and detected 105 z-score anomalies. Flagged daftpunk at z=+11.7 for late-night Bedrock scanning — that IS suspicious behavior.</div>
+        <div class="worked-item"><strong>GPUHijackDetector:</strong> Correctly fired on the one qualifying event. Bedrock InvokeModel at 11 PM by a knowledge-base role is legitimately suspicious.</div>
+        <div class="worked-item"><strong>Storage layer:</strong> Persisted 34,427 events, 76 baseline profiles, and 1 finding to SQLite without errors.</div>
+      </div>
+
+      <!-- Attack entities table -->
+      <div class="section-header"><span>~/eval</span> -- attack entities in the data</div>
+      <table class="entity-table">
+        <thead>
+          <tr><th>Entity</th><th>Role</th><th>Attack Type</th><th>Detected?</th></tr>
+        </thead>
+        <tbody>
+          <tr class="detected">
+            <td>AmazonBedrockExecution...dwrx4</td>
+            <td>ML pipeline role</td>
+            <td>Off-hours Bedrock invoke</td>
+            <td style="color:var(--green); font-weight:600;">YES</td>
+          </tr>
+          <tr class="missed">
+            <td>daftpunk</td>
+            <td>IAM user (Bedrock)</td>
+            <td>IAM enumeration</td>
+            <td style="color:var(--red);">NO — api_call layer</td>
+          </tr>
+          <tr class="missed">
+            <td>bhavin_cli</td>
+            <td>IAM user</td>
+            <td>Security group abuse</td>
+            <td style="color:var(--red);">NO — api_call layer</td>
+          </tr>
+          <tr class="missed">
+            <td>cloudmapper</td>
+            <td>IAM user</td>
+            <td>Cloud recon (T1526)</td>
+            <td style="color:var(--red);">NO — api_call layer</td>
+          </tr>
+          <tr class="missed">
+            <td>cloudsploit</td>
+            <td>IAM user</td>
+            <td>Cloud recon (T1526)</td>
+            <td style="color:var(--red);">NO — api_call layer</td>
+          </tr>
+          <tr class="missed">
+            <td>rhino_escalate</td>
+            <td>IAM user</td>
+            <td>Privilege escalation</td>
+            <td style="color:var(--red);">NO — api_call layer</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Conclusion -->
+      <div class="mismatch-panel" style="border-color: var(--green); margin-top: 2rem;">
+        <h3 style="color: var(--green);">$ cat conclusion.txt</h3>
+        <p>KESTREL's pipeline is mechanically sound. The adapter, baselining engine, detectors, storage, and Sigma export all function correctly end-to-end on real data. <strong>Precision is perfect.</strong> The near-zero recall is a data-layer mismatch — CloudTrail's API audit logs don't contain the GPU runtime telemetry KESTREL was designed to analyze.</p>
+        <p>The system needs either <span style="color: var(--amber);">(a)</span> real GPU telemetry data to evaluate its existing detectors, or <span style="color: var(--amber);">(b)</span> new detectors that operate on API-call patterns to leverage the CloudTrail data it can already ingest.</p>
+        <p class="dim">Published transparently because honest evaluation is more credible than cherry-picked results.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim);">
+      <p style="margin-top: 0.5rem;"><a href="kestrel.html" style="color: var(--amber); text-decoration: none;">&larr; back to project details</a> &middot; <a href="https://github.com/chirag-dewan/kestrel" style="color: var(--amber); text-decoration: none;">source on GitHub</a></p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag@cdewan.me">email</a>
+      <a href="/chirag_dewan_resume.pdf">resume</a>
+    </div>
+    <p>&copy; 2026 Chirag Dewan</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+  /* ========================================================
+     KESTREL Detection Pipeline — Browser Simulation
+     ======================================================== */
+
+  const ZSCORE_METRICS = [
+    { key: 'gpu_utilization', name: 'gpu_util %' },
+    { key: 'memory_utilization', name: 'mem_util %' },
+    { key: 'power_watts', name: 'power_watts' },
+    { key: 'hour_of_day', name: 'hour_of_day' },
+    { key: 'api_calls_per_hour', name: 'api_calls/hr' },
+  ];
+
+  /* Scenario parameters — from real generator/profiles.py */
+  const SCENARIOS = {
+    normal: {
+      label: 'data_scientist',
+      entityId: 'aws-ds-user-001',
+      entityType: 'user',
+      cloud: 'aws',
+      region: 'us-east-1',
+      instanceType: 'ml.g4dn.xlarge',
+      activeHours: [9, 18],
+      gpu: { mean: 45, std: 15 },
+      mem: { mean: 55, std: 10 },
+      power: { mean: 120, std: 20 },
+      apiPerHr: { mean: 8, std: 3 },
+      trainingDuration: { mean: 2.0, std: 1.0 },
+      dataTransferMB: { mean: 500, std: 200 },
+      eventTypes: ['gpu_metric', 'api_call', 'api_call', 'gpu_metric', 'training_job'],
+      apis: ['sagemaker:DescribeEndpoint', 'ec2:RunInstances', 's3:GetObject', 'cloudwatch:GetMetricData', 'sagemaker:CreateTrainingJob'],
+      baselines: {
+        gpu_utilization: { mean: 45, std: 15 },
+        memory_utilization: { mean: 55, std: 10 },
+        power_watts: { mean: 120, std: 20 },
+        hour_of_day: { mean: 13.5, std: 2.5 },
+        api_calls_per_hour: { mean: 8, std: 3 },
+      },
+      observed: {
+        gpu_utilization: [38, 52],
+        memory_utilization: [48, 62],
+        power_watts: [100, 140],
+        hour_of_day: [10, 17],
+        api_calls_per_hour: [5, 12],
+      },
+      // Detector signals
+      gpuSignals: { highUtil: false, anomRegion: false, offHours: false },
+      rogueSignals: { unexpectedInst: false, offHours: false, abnormalDur: false, unusualData: false },
+    },
+    hijack: {
+      label: 'gpu_hijack_attack',
+      entityId: 'aws-compromised-042',
+      entityType: 'service_account',
+      cloud: 'aws',
+      region: 'ap-southeast-1',
+      instanceType: 'p4d.24xlarge',
+      activeHours: [1, 4],
+      gpu: { mean: 98, std: 1.5 },
+      mem: { mean: 95, std: 2 },
+      power: { mean: 310, std: 15 },
+      apiPerHr: { mean: 2, std: 1 },
+      trainingDuration: null,
+      dataTransferMB: null,
+      eventTypes: ['gpu_metric', 'gpu_metric', 'gpu_metric', 'gpu_metric', 'api_call'],
+      apis: ['ec2:DescribeInstances', 'cloudwatch:PutMetricData'],
+      baselines: {
+        gpu_utilization: { mean: 30, std: 8 },
+        memory_utilization: { mean: 40, std: 5 },
+        power_watts: { mean: 90, std: 10 },
+        hour_of_day: { mean: 14, std: 3 },
+        api_calls_per_hour: { mean: 5, std: 2 },
+      },
+      observed: {
+        gpu_utilization: [95, 100],
+        memory_utilization: [92, 98],
+        power_watts: [290, 340],
+        hour_of_day: [1, 4],
+        api_calls_per_hour: [1, 3],
+      },
+      gpuSignals: { highUtil: true, anomRegion: true, offHours: true },
+      rogueSignals: { unexpectedInst: false, offHours: false, abnormalDur: false, unusualData: false },
+    },
+    rogue: {
+      label: 'rogue_training_job',
+      entityId: 'aws-ml-pipeline-007',
+      entityType: 'ml_pipeline_role',
+      cloud: 'aws',
+      region: 'us-west-2',
+      instanceType: 'p4d.24xlarge',
+      activeHours: [0, 5],
+      gpu: { mean: 92, std: 3 },
+      mem: { mean: 88, std: 4 },
+      power: { mean: 280, std: 20 },
+      apiPerHr: { mean: 4, std: 2 },
+      trainingDuration: { mean: 48, std: 12 },
+      dataTransferMB: { mean: 50000, std: 10000 },
+      eventTypes: ['training_job', 'gpu_metric', 'training_job', 'gpu_metric', 'resource_alloc'],
+      apis: ['sagemaker:CreateTrainingJob', 'sagemaker:DescribeTrainingJob', 's3:GetObject'],
+      baselines: {
+        gpu_utilization: { mean: 70, std: 10 },
+        memory_utilization: { mean: 75, std: 8 },
+        power_watts: { mean: 200, std: 15 },
+        hour_of_day: { mean: 12, std: 4 },
+        api_calls_per_hour: { mean: 6, std: 2 },
+      },
+      observed: {
+        gpu_utilization: [88, 98],
+        memory_utilization: [85, 95],
+        power_watts: [260, 310],
+        hour_of_day: [0, 5],
+        api_calls_per_hour: [2, 6],
+      },
+      gpuSignals: { highUtil: true, anomRegion: false, offHours: true },
+      rogueSignals: { unexpectedInst: true, offHours: true, abnormalDur: true, unusualData: true },
+    }
+  };
+
+  const ANOMALOUS_REGIONS = ['ap-southeast-1', 'sa-east-1', 'af-south-1'];
+  const ALLOWED_INSTANCES = ['ml.p3.2xlarge', 'ml.p3.8xlarge', 'ml.g4dn.xlarge', 'ml.g4dn.2xlarge', 'ml.g5.xlarge', 'ml.g5.2xlarge'];
+
+  /* ---- Utility ---- */
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+  function randInt(min, max) { return Math.floor(rand(min, max + 1)); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function gaussian(mean, std) {
+    // Box-Muller transform
+    const u1 = Math.random();
+    const u2 = Math.random();
+    return mean + std * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+  }
+
+  /* ---- State ---- */
+  let currentType = 'normal';
+  let eventCount = 0;
+  let feedInterval = null;
+  let scoreTimeout = null;
+
+  /* ---- Build z-score cards ---- */
+  function buildZscoreGrid() {
+    const grid = document.getElementById('zscore-grid');
+    grid.innerHTML = '';
+    ZSCORE_METRICS.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'zscore-card';
+      card.id = `zcard-${m.key}`;
+      card.innerHTML = `
+        <div class="zscore-card__name">${m.name}</div>
+        <div class="zscore-bar">
+          <div class="zscore-bar__center"></div>
+          <div class="zscore-bar__fill" id="zbar-${m.key}"></div>
+        </div>
+        <div class="zscore-card__values">
+          <span>z: <span class="z-val cool" id="zval-${m.key}">0.00</span></span>
+          <span id="zraw-${m.key}"></span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---- Generate event line ---- */
+  function generateEvent(scenario) {
+    const s = SCENARIOS[scenario];
+    const evtType = pick(s.eventTypes);
+    const hour = randInt(s.activeHours[0], s.activeHours[1]);
+    const gpuUtil = clamp(gaussian(s.gpu.mean, s.gpu.std), 0, 100).toFixed(1);
+    const memUtil = clamp(gaussian(s.mem.mean, s.mem.std), 0, 100).toFixed(1);
+    const power = clamp(gaussian(s.power.mean, s.power.std), 0, 500).toFixed(0);
+    const now = new Date();
+    const ts = now.toTimeString().slice(0, 8);
+    const api = pick(s.apis);
+
+    if (evtType === 'gpu_metric') {
+      return { ts, type: 'gpu', entity: s.entityId, region: s.region, detail: `gpu:${gpuUtil}% mem:${memUtil}% pwr:${power}W` };
+    } else if (evtType === 'training_job') {
+      const dur = s.trainingDuration ? clamp(gaussian(s.trainingDuration.mean, s.trainingDuration.std), 0.5, 72).toFixed(1) : '0.0';
+      return { ts, type: 'train', entity: s.entityId, region: s.region, detail: `job dur:${dur}h inst:${s.instanceType}` };
+    } else if (evtType === 'resource_alloc') {
+      return { ts, type: 'alloc', entity: s.entityId, region: s.region, detail: `alloc ${s.instanceType} gpu:8` };
+    } else {
+      return { ts, type: 'api', entity: s.entityId, region: s.region, detail: api };
+    }
+  }
+
+  /* ---- Add event to feed ---- */
+  function addEventToFeed(evt) {
+    eventCount++;
+    const list = document.getElementById('feed-list');
+    const line = document.createElement('div');
+    line.className = 'feed-line';
+    const typeColors = { gpu: 'var(--green)', train: 'var(--amber)', api: 'var(--text-muted)', alloc: 'var(--amber)' };
+    line.innerHTML = `<span class="ts">${evt.ts}</span> <span style="color:${typeColors[evt.type]}">[${evt.type.padEnd(5)}]</span> <span class="entity">${evt.entity}</span> <span class="region">${evt.region}</span> ${evt.detail}`;
+    list.prepend(line);
+    while (list.children.length > 80) list.removeChild(list.lastChild);
+    document.getElementById('event-count').textContent = `${eventCount} events`;
+  }
+
+  /* ---- Update profile ---- */
+  function updateProfile(scenario) {
+    const s = SCENARIOS[scenario];
+    document.getElementById('p-entity').textContent = s.entityId;
+    document.getElementById('p-type').textContent = s.entityType;
+    document.getElementById('p-cloud').textContent = s.cloud;
+    document.getElementById('p-region').textContent = s.region;
+    document.getElementById('p-gpu').textContent = clamp(gaussian(s.gpu.mean, s.gpu.std), 0, 100).toFixed(1) + '%';
+    document.getElementById('p-mem').textContent = clamp(gaussian(s.mem.mean, s.mem.std), 0, 100).toFixed(1) + '%';
+    document.getElementById('p-power').textContent = clamp(gaussian(s.power.mean, s.power.std), 50, 500).toFixed(0) + 'W';
+    document.getElementById('p-api').textContent = clamp(gaussian(s.apiPerHr.mean, s.apiPerHr.std), 0, 50).toFixed(1);
+    document.getElementById('p-hours').textContent = s.activeHours[0] + '-' + s.activeHours[1];
+    document.getElementById('p-instance').textContent = s.instanceType;
+    document.getElementById('p-baseline').textContent = randInt(200, 800);
+  }
+
+  /* ---- Run z-score baselines ---- */
+  function runBaselines(scenario) {
+    const s = SCENARIOS[scenario];
+    let anomalyCount = 0;
+
+    ZSCORE_METRICS.forEach(m => {
+      const baseline = s.baselines[m.key];
+      const obsRange = s.observed[m.key];
+      const observed = rand(obsRange[0], obsRange[1]);
+      const z = baseline.std > 0 ? (observed - baseline.mean) / baseline.std : 0;
+      const absZ = Math.abs(z);
+      const isAnomaly = absZ >= 2.5;
+      if (isAnomaly) anomalyCount++;
+
+      const card = document.getElementById(`zcard-${m.key}`);
+      card.className = 'zscore-card' + (isAnomaly ? ' anomaly' : '');
+
+      const bar = document.getElementById(`zbar-${m.key}`);
+      // Map z-score to bar width (max display at z=5)
+      const barPct = Math.min(absZ / 5, 1) * 50;
+      bar.style.width = barPct + '%';
+      if (z >= 0) {
+        bar.style.left = '50%';
+        bar.style.right = 'auto';
+        bar.className = 'zscore-bar__fill positive' + (absZ >= 2.5 ? ' extreme' : '');
+      } else {
+        bar.style.left = 'auto';
+        bar.style.right = '50%';
+        bar.className = 'zscore-bar__fill negative' + (absZ >= 2.5 ? ' extreme' : '');
+      }
+
+      const zEl = document.getElementById(`zval-${m.key}`);
+      zEl.textContent = (z >= 0 ? '+' : '') + z.toFixed(2);
+      zEl.className = 'z-val ' + (absZ >= 2.5 ? 'hot' : absZ >= 1.5 ? 'warm' : 'cool');
+
+      document.getElementById(`zraw-${m.key}`).textContent = observed.toFixed(1);
+    });
+
+    document.getElementById('anomaly-count').textContent = anomalyCount;
+  }
+
+  /* ---- Run detectors ---- */
+  function runDetectors(scenario) {
+    const s = SCENARIOS[scenario];
+    let firedCount = 0;
+
+    // GPU Hijack Detector
+    const gpuSigs = s.gpuSignals;
+    const gpuFiredCount = [gpuSigs.highUtil, gpuSigs.anomRegion, gpuSigs.offHours].filter(Boolean).length;
+    const gpuFired = gpuFiredCount > 0;
+    if (gpuFired) firedCount++;
+
+    // Update GPU signal UI
+    setSignal('sig-gpu-util', gpuSigs.highUtil, gpuSigs.highUtil ? clamp(gaussian(s.gpu.mean, s.gpu.std), 90, 100).toFixed(1) + '%' : clamp(gaussian(s.gpu.mean, s.gpu.std), 0, 89).toFixed(1) + '%');
+    setSignal('sig-gpu-region', gpuSigs.anomRegion, s.region);
+    setSignal('sig-gpu-hours', gpuSigs.offHours, 'h=' + randInt(s.activeHours[0], s.activeHours[1]));
+
+    const gpuPanel = document.getElementById('det-gpu');
+    gpuPanel.className = 'detector-panel' + (gpuFired ? ' fired' : '');
+
+    let gpuSeverity = 'CLEAR';
+    if (gpuFiredCount >= 3) gpuSeverity = 'CRITICAL';
+    else if (gpuFiredCount >= 2) gpuSeverity = 'HIGH';
+    else if (gpuFiredCount >= 1) gpuSeverity = 'MEDIUM';
+
+    const gpuBadge = document.getElementById('verdict-gpu');
+    gpuBadge.textContent = gpuSeverity;
+    gpuBadge.className = 'verdict-badge ' + (gpuSeverity === 'CLEAR' ? 'clear' : gpuSeverity === 'MEDIUM' ? 'medium' : gpuSeverity === 'HIGH' ? 'high' : 'critical');
+
+    // Rogue Training Detector
+    const rogueSigs = s.rogueSignals;
+    const rogueFiredCount = [rogueSigs.unexpectedInst, rogueSigs.offHours, rogueSigs.abnormalDur, rogueSigs.unusualData].filter(Boolean).length;
+    const rogueFired = rogueFiredCount > 0;
+    if (rogueFired) firedCount++;
+
+    setSignal('sig-rogue-inst', rogueSigs.unexpectedInst, s.instanceType);
+    setSignal('sig-rogue-hours', rogueSigs.offHours, 'h=' + randInt(s.activeHours[0], s.activeHours[1]));
+    setSignal('sig-rogue-dur', rogueSigs.abnormalDur, rogueSigs.abnormalDur ? 'z=' + rand(3.0, 5.5).toFixed(2) : 'z=' + rand(0.1, 1.5).toFixed(2));
+    setSignal('sig-rogue-data', rogueSigs.unusualData, rogueSigs.unusualData ? 'z=' + rand(3.5, 6.0).toFixed(2) : 'z=' + rand(0.2, 1.8).toFixed(2));
+
+    const roguePanel = document.getElementById('det-rogue');
+    roguePanel.className = 'detector-panel' + (rogueFired ? ' fired' : '');
+
+    let rogueSeverity = 'CLEAR';
+    if (rogueFiredCount >= 3) rogueSeverity = 'CRITICAL';
+    else if (rogueFiredCount >= 2) rogueSeverity = 'HIGH';
+    else if (rogueFiredCount >= 1) rogueSeverity = 'MEDIUM';
+
+    const rogueBadge = document.getElementById('verdict-rogue');
+    rogueBadge.textContent = rogueSeverity;
+    rogueBadge.className = 'verdict-badge ' + (rogueSeverity === 'CLEAR' ? 'clear' : rogueSeverity === 'MEDIUM' ? 'medium' : rogueSeverity === 'HIGH' ? 'high' : 'critical');
+
+    document.getElementById('det-fired').textContent = firedCount;
+
+    // Finding output
+    generateFinding(scenario, gpuFired, gpuSeverity, gpuFiredCount, rogueFired, rogueSeverity, rogueFiredCount);
+  }
+
+  function setSignal(id, triggered, value) {
+    const el = document.getElementById(id);
+    el.textContent = triggered ? 'FIRED' : 'PASS';
+    el.className = 'signal-status ' + (triggered ? 'fail' : 'pass');
+    const valEl = document.getElementById(id + '-v');
+    if (valEl) valEl.textContent = value ? ` (${value})` : '';
+  }
+
+  /* ---- Generate finding JSON + Sigma ---- */
+  function generateFinding(scenario, gpuFired, gpuSev, gpuCount, rogueFired, rogueSev, rogueCount) {
+    const s = SCENARIOS[scenario];
+    const findingPanel = document.getElementById('finding-panel');
+    const sigmaPanel = document.getElementById('sigma-panel');
+    const findingOut = document.getElementById('finding-output');
+    const sigmaOut = document.getElementById('sigma-output');
+
+    if (!gpuFired && !rogueFired) {
+      findingPanel.className = 'finding-panel';
+      sigmaPanel.className = 'sigma-panel';
+      findingOut.innerHTML = '<span class="finding-empty">[ ] no findings -- all clear</span>';
+      sigmaOut.innerHTML = '<span class="finding-empty"># no sigma rules generated</span>';
+      return;
+    }
+
+    findingPanel.className = 'finding-panel has-finding';
+    sigmaPanel.className = 'sigma-panel has-rule';
+
+    let findings = [];
+    if (gpuFired) {
+      const evidence = {};
+      if (s.gpuSignals.highUtil) evidence.high_gpu_utilization = parseFloat(clamp(gaussian(s.gpu.mean, s.gpu.std), 90, 100).toFixed(1));
+      if (s.gpuSignals.anomRegion) evidence.anomalous_region = 1.0;
+      if (s.gpuSignals.offHours) evidence.off_hours_gpu_spike = parseFloat(randInt(s.activeHours[0], s.activeHours[1]));
+      findings.push({
+        detector: 'GPUHijackDetector',
+        severity: gpuSev,
+        entity: s.entityId,
+        atlas_tactic: 'AML.TA0011 (IMPACT)',
+        atlas_technique: 'AML.T0048',
+        evidence: evidence,
+        signals: gpuCount + '/3',
+      });
+    }
+    if (rogueFired) {
+      const evidence = {};
+      if (s.rogueSignals.unexpectedInst) evidence.unexpected_instance_type = 1.0;
+      if (s.rogueSignals.offHours) evidence.off_hours_training = parseFloat(randInt(s.activeHours[0], s.activeHours[1]));
+      if (s.rogueSignals.abnormalDur) evidence.abnormal_duration_zscore = parseFloat(rand(3.0, 5.5).toFixed(2));
+      if (s.rogueSignals.unusualData) evidence.unusual_data_access_zscore = parseFloat(rand(3.5, 6.0).toFixed(2));
+      findings.push({
+        detector: 'RogueTrainingDetector',
+        severity: rogueSev,
+        entity: s.entityId,
+        atlas_tactic: 'AML.TA0005 (EXECUTION)',
+        atlas_technique: 'AML.T0020',
+        evidence: evidence,
+        signals: rogueCount + '/4',
+      });
+    }
+
+    // Render finding JSON
+    const jsonStr = findings.map(f => {
+      const evidenceStr = Object.entries(f.evidence).map(([k, v]) => `    <span class="key">"${k}"</span>: <span class="num">${v}</span>`).join(',\n');
+      const sevColor = f.severity === 'CRITICAL' ? '#ff0040' : f.severity === 'HIGH' ? 'var(--red)' : 'var(--amber)';
+      return `{
+  <span class="key">"detector"</span>: <span class="str">"${f.detector}"</span>,
+  <span class="key">"severity"</span>: <span class="severity-val" style="color:${sevColor}">"${f.severity}"</span>,
+  <span class="key">"entity_id"</span>: <span class="str">"${f.entity}"</span>,
+  <span class="key">"atlas_tactic"</span>: <span class="str">"${f.atlas_tactic}"</span>,
+  <span class="key">"atlas_technique"</span>: <span class="str">"${f.atlas_technique}"</span>,
+  <span class="key">"signals"</span>: <span class="str">"${f.signals}"</span>,
+  <span class="key">"evidence"</span>: {
+${evidenceStr}
+  }
+}`;
+    }).join(',\n');
+
+    findingOut.innerHTML = `<div class="finding-json">[${jsonStr}]</div>`;
+
+    // Render Sigma YAML
+    const sigmaStr = findings.map(f => {
+      const tacticName = f.atlas_tactic.includes('IMPACT') ? 'impact' : 'execution';
+      const logsource = f.detector === 'GPUHijackDetector' ? 'cloud.gpu_telemetry' : 'cloud.ml_training';
+      const evidenceYaml = Object.entries(f.evidence).map(([k, v]) => `      <span class="yaml-key">${k}</span>: <span class="yaml-val">${v}</span>`).join('\n');
+      return `<span class="yaml-comment">---</span>
+<span class="yaml-key">title</span>: <span class="yaml-val">"KESTREL: ${f.detector} -- ${f.entity}"</span>
+<span class="yaml-key">status</span>: <span class="yaml-val">experimental</span>
+<span class="yaml-key">description</span>: <span class="yaml-val">"${f.signals} signals fired"</span>
+<span class="yaml-key">author</span>: <span class="yaml-val">KESTREL Automated Detection</span>
+<span class="yaml-key">tags</span>:
+  - <span class="yaml-val">attack.${tacticName}</span>
+  - <span class="yaml-val">attack.${f.atlas_technique.toLowerCase().replace('.', '_')}</span>
+  - <span class="yaml-val">kestrel</span>
+<span class="yaml-key">logsource</span>:
+  <span class="yaml-key">category</span>: <span class="yaml-val">${logsource}</span>
+  <span class="yaml-key">product</span>: <span class="yaml-val">cloud</span>
+<span class="yaml-key">detection</span>:
+  <span class="yaml-key">selection</span>:
+    <span class="yaml-key">entity_id</span>: <span class="yaml-val">${f.entity}</span>
+${evidenceYaml}
+  <span class="yaml-key">condition</span>: <span class="yaml-val">selection</span>
+<span class="yaml-key">level</span>: <span class="yaml-val">${f.severity.toLowerCase()}</span>`;
+    }).join('\n\n');
+
+    sigmaOut.innerHTML = `<div class="sigma-yaml">${sigmaStr}</div>`;
+  }
+
+  /* ---- Pipeline animation ---- */
+  function animatePipeline(callback) {
+    const stages = ['stage-ingest', 'stage-store', 'stage-baseline', 'stage-detect', 'stage-findings', 'stage-export'];
+    stages.forEach(s => {
+      document.getElementById(s).className = 'pipeline-stage';
+    });
+
+    let i = 0;
+    function next() {
+      if (i > 0) document.getElementById(stages[i - 1]).className = 'pipeline-stage done';
+      if (i < stages.length) {
+        document.getElementById(stages[i]).className = 'pipeline-stage active';
+        i++;
+        setTimeout(next, 350);
+      } else {
+        if (callback) callback();
+      }
+    }
+    next();
+  }
+
+  /* ---- Start simulation ---- */
+  function startSimulation(type) {
+    if (feedInterval) clearInterval(feedInterval);
+    if (scoreTimeout) clearTimeout(scoreTimeout);
+    eventCount = 0;
+    document.getElementById('feed-list').innerHTML = '';
+    document.getElementById('event-count').textContent = '0 events';
+
+    // Reset z-scores
+    ZSCORE_METRICS.forEach(m => {
+      const bar = document.getElementById(`zbar-${m.key}`);
+      bar.style.width = '0%';
+      bar.className = 'zscore-bar__fill positive';
+      document.getElementById(`zval-${m.key}`).textContent = '0.00';
+      document.getElementById(`zval-${m.key}`).className = 'z-val cool';
+      document.getElementById(`zraw-${m.key}`).textContent = '';
+      document.getElementById(`zcard-${m.key}`).className = 'zscore-card';
+    });
+    document.getElementById('anomaly-count').textContent = '0';
+
+    // Reset detectors
+    ['det-gpu', 'det-rogue'].forEach(id => {
+      document.getElementById(id).className = 'detector-panel';
+    });
+    ['sig-gpu-util', 'sig-gpu-region', 'sig-gpu-hours', 'sig-rogue-inst', 'sig-rogue-hours', 'sig-rogue-dur', 'sig-rogue-data'].forEach(id => {
+      document.getElementById(id).textContent = '--';
+      document.getElementById(id).className = 'signal-status pass';
+      const vEl = document.getElementById(id + '-v');
+      if (vEl) vEl.textContent = '';
+    });
+    document.getElementById('verdict-gpu').textContent = 'CLEAR';
+    document.getElementById('verdict-gpu').className = 'verdict-badge clear';
+    document.getElementById('verdict-rogue').textContent = 'CLEAR';
+    document.getElementById('verdict-rogue').className = 'verdict-badge clear';
+    document.getElementById('det-fired').textContent = '0';
+
+    // Reset findings
+    document.getElementById('finding-panel').className = 'finding-panel';
+    document.getElementById('finding-output').innerHTML = '<span class="finding-empty">[ ] no findings -- all clear</span>';
+    document.getElementById('sigma-panel').className = 'sigma-panel';
+    document.getElementById('sigma-output').innerHTML = '<span class="finding-empty"># no sigma rules generated</span>';
+
+    // Reset profile
+    ['p-entity','p-type','p-cloud','p-region','p-gpu','p-mem','p-power','p-api','p-hours','p-instance','p-baseline'].forEach(id => {
+      document.getElementById(id).textContent = '--';
+    });
+
+    // Start event feed
+    const speed = type === 'normal' ? 500 : type === 'hijack' ? 150 : 250;
+    feedInterval = setInterval(() => {
+      addEventToFeed(generateEvent(type));
+    }, speed);
+
+    // After collecting events, run pipeline
+    const collectTime = type === 'normal' ? 3000 : 2000;
+    scoreTimeout = setTimeout(() => {
+      animatePipeline(() => {
+        updateProfile(type);
+        runBaselines(type);
+        runDetectors(type);
+      });
+    }, collectTime);
+  }
+
+  /* ---- Init ---- */
+  document.addEventListener('DOMContentLoaded', () => {
+    buildZscoreGrid();
+
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.scenario-btn').forEach(b => b.className = 'scenario-btn');
+        const type = btn.dataset.type;
+        currentType = type;
+        if (type === 'hijack') btn.className = 'scenario-btn active danger';
+        else if (type === 'rogue') btn.className = 'scenario-btn active warn';
+        else btn.className = 'scenario-btn active';
+        startSimulation(type);
+      });
+    });
+
+    startSimulation('normal');
+
+    // Eval section: animate ingestion bars on scroll
+    const ingestObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(() => { document.getElementById('bar-api').style.width = '100%'; }, 200);
+          setTimeout(() => { document.getElementById('bar-resource').style.width = '1.5%'; }, 400);
+          setTimeout(() => { document.getElementById('bar-gpu').style.width = '1%'; }, 600);
+          // bar-training stays at 0%
+          ingestObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    const ingestSection = document.getElementById('ingest-chart-rows');
+    if (ingestSection) ingestObserver.observe(ingestSection);
+  });
+  </script>
+</body>
+</html>
