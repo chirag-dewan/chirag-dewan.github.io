@@ -4,7 +4,138 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KESTREL — Chirag Dewan</title>
+  <meta name="description" content="Cloud-native AI workload anomaly detection. 34K real CloudTrail events. Recall 0.766, precision 1.0. The failure in v1 is what makes v2 credible.">
+  <meta property="og:title" content="KESTREL — Cloud AI Anomaly Detection">
+  <meta property="og:description" content="3 detectors, 34K real events, 220 findings. Diagnosed the impedance mismatch, then fixed it.">
   <link rel="stylesheet" href="../css/main.css">
+  <style>
+    .story-section {
+      margin-bottom: 3rem;
+    }
+    .story-section h2 {
+      color: var(--green);
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    .story-section h2::before {
+      content: '▸ ';
+      color: var(--amber);
+    }
+    .story-section p {
+      color: var(--text);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin-bottom: 0.8rem;
+    }
+    .story-section .accent { color: var(--green); }
+    .story-section .amber { color: var(--amber); }
+    .story-section .red { color: var(--red); font-weight: 500; }
+    .story-section .dim { color: var(--text-muted); }
+
+    .metric-strip {
+      display: flex;
+      gap: 0;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border);
+    }
+    .metric-strip__item {
+      flex: 1;
+      padding: 0.8rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      background: var(--bg-raised);
+    }
+    .metric-strip__item:last-child { border-right: none; }
+    .metric-strip__value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.2rem;
+    }
+    .metric-strip__label {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+    }
+    @media (max-width: 500px) {
+      .metric-strip { flex-wrap: wrap; }
+      .metric-strip__item { flex: 1 1 45%; border-bottom: 1px solid var(--border); }
+    }
+
+    .detector-list {
+      font-size: 0.75rem;
+      margin: 1rem 0;
+    }
+    .detector-list code {
+      background: var(--bg-surface);
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      color: var(--green);
+      font-size: 0.7rem;
+    }
+    .detector-list li {
+      margin-bottom: 0.3rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .arc-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin: 2rem 0;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      overflow-x: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .arc-flow span {
+      white-space: nowrap;
+    }
+    .arc-flow .arc-step {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border-bright);
+    }
+    .arc-flow .arc-step.current {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .arc-flow .arc-step.fail {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .arc-arrow { color: var(--text-dim); }
+
+    .finding-item {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .finding-item:last-child { border-bottom: none; }
+    .finding-item strong { color: var(--amber); font-weight: 500; }
+
+    .cta-links {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .cta-links a {
+      font-size: 0.8rem;
+      color: var(--amber);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--amber);
+      transition: all 0.2s;
+    }
+    .cta-links a:hover {
+      background: rgba(255, 176, 0, 0.08);
+    }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -20,49 +151,173 @@
   </nav>
 
   <div class="container">
-    <div class="section-header"><span>~/projects/kestrel</span> — cat README.md</div>
+    <div class="section-header"><span>~/projects/kestrel</span></div>
 
     <h1 class="post-title">KESTREL</h1>
     <p class="post-meta">Cloud-native AI workload anomaly detection</p>
 
+    <!-- Arc flow -->
+    <div class="arc-flow">
+      <span class="arc-step">origin</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">thesis</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">build</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step fail">v1 failure</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">diagnosis</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">v2 fix</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step current">results</span>
+    </div>
+
     <div class="post-content">
-      <h2>Thesis</h2>
-      <p>Baseline normal AI workload behavior, detect deviations. Rolling per-entity z-score analysis catches GPU hijacking, rogue training jobs, and unauthorized model access before they escalate.</p>
 
-      <h2>Architecture</h2>
-      <pre><code>CloudTrail adapter / Synthetic generator
-  → SQLite storage
-  → Rolling z-score baselining engine (Welford's algorithm)
-  → Detection modules:
-      GPUHijackDetector    — GPU utilization, anomalous regions, off-hours
-      RogueTrainingDetector — instance types, duration z-scores, data transfer
-      CloudAPIAbuseDetector — API burst, region fan-out, error rates, off-hours
-  → Findings (MITRE ATLAS tagged) → Sigma rule export → Flask dashboard</code></pre>
+      <!-- ORIGIN -->
+      <div class="story-section">
+        <h2>The Origin</h2>
+        <p>PARALLAX watches the application layer — API request patterns, user behavior, metadata. But what about the infrastructure underneath? Someone hijacks a GPU cluster for crypto mining. A rogue training job burns through compute for 48 hours on a stolen service account. A recon tool enumerates every IAM role across 13 AWS regions at 2 AM.</p>
+        <p>These attacks don't show up in API behavior. They show up in <span class="accent">cloud telemetry</span> — GPU utilization spikes, anomalous instance types, burst API patterns, off-hours activity.</p>
+        <p class="dim">PARALLAX needed an infrastructure-layer companion. That's KESTREL.</p>
+      </div>
 
-      <h2>Evaluation</h2>
-      <p>Evaluated against <span style="color: var(--amber);">34,427 real CloudTrail events</span> from Splunk Attack Data (51 datasets, 77 entities, 16 AWS regions).</p>
-      <pre><code>v1: Precision 1.0 | Recall 0.0005 | 1 finding
-    → Impedance mismatch: GPU detectors vs API audit logs
+      <!-- THESIS -->
+      <div class="story-section">
+        <h2>The Thesis</h2>
+        <p><span class="accent">Baseline normal, detect deviations.</span> Build rolling per-entity behavioral profiles using Welford's online algorithm. When an entity's GPU utilization, API call frequency, or access patterns deviate beyond 2.5 standard deviations from their own baseline — that's the signal. No static thresholds. No training data requirements. Each entity is its own reference point.</p>
+      </div>
 
-v2: Precision 1.0 | Recall 0.766  | 220 findings
-    → CloudAPIAbuseDetector processes 99.98% of CloudTrail data
-    → 1,532x recall improvement, zero false positives</code></pre>
-      <p>Key detections: daftpunk (off-hours + 100% error rate → HIGH), cloudmapper (burst + 13-region fan-out → HIGH), bhavin_cli (24 findings), okta_ro_role (292 calls, 12 regions → HIGH).</p>
+      <!-- BUILD -->
+      <div class="story-section">
+        <h2>The Build</h2>
+        <p>Three detectors, each targeting a different attack surface. 92 tests, 98% coverage. Built in Python 3.11+ with Pydantic v2, Click CLI, SQLite persistence, and Sigma rule export.</p>
 
-      <h2>Relationship to PARALLAX</h2>
-      <p>PARALLAX operates at the application layer — API request patterns, user behavior, content-free metadata. KESTREL operates at the infrastructure layer — GPU utilization, training job profiles, API abuse patterns. Together they provide full-stack AI platform threat detection.</p>
+        <ul class="detector-list">
+          <li><code>GPUHijackDetector</code> — 3 signals: GPU utilization ≥90%, anomalous regions (ap-southeast-1, sa-east-1, af-south-1), off-hours activity (h&lt;6 or h≥22). Severity scales with signal count. ATLAS: AML.T0048 Denial of ML Service.</li>
+          <li><code>RogueTrainingDetector</code> — 4 signals: unexpected instance type, off-hours training, abnormal duration (z≥2.5σ), unusual data transfer (z≥2.5σ). Baseline-driven z-score checks. ATLAS: AML.T0020 Train Model.</li>
+          <li><code>CloudAPIAbuseDetector</code> — 4 signals in 5-minute sliding windows: API burst (≥50 calls/5m or z≥2.5), region fan-out (&gt;5 regions), off-hours spike, excessive error rate (≥30% AccessDenied). ATLAS: T1526 Cloud Service Discovery.</li>
+        </ul>
 
-      <h2>Status</h2>
-      <p>v2 complete. Three detectors, 98% test coverage, real-data evaluation. PARALLAX's infrastructure-layer companion.</p>
+        <pre><code>kestrel generate   # Synthetic events (80/20 normal/attack)
+kestrel scan       # Ingest → baseline → detect → findings
+kestrel findings   # Export as JSON or Sigma YAML
+kestrel serve      # Flask dashboard</code></pre>
 
-      <h2>Links</h2>
-      <p><a href="https://github.com/chirag-dewan/kestrel">GitHub</a></p>
+        <p class="dim">Every finding is tagged with MITRE ATLAS tactics and techniques. Every finding exports to Sigma rules that plug into existing SIEM pipelines. <a href="https://github.com/chirag-dewan/kestrel" style="color: var(--text-dim); text-decoration: underline; text-underline-offset: 3px;">Full source on GitHub.</a></p>
+      </div>
+
+      <!-- V1 FAILURE -->
+      <div class="story-section">
+        <h2>The v1 Reality Check</h2>
+
+        <p>Ran KESTREL against <span class="accent">34,427 real CloudTrail events</span> from Splunk's attack_data repository. 51 datasets covering MITRE ATT&CK techniques — IAM enumeration, privilege escalation, security group abuse, KMS manipulation. 77 unique entities across 16 AWS regions.</p>
+
+        <div class="metric-strip">
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">1.0</div>
+            <div class="metric-strip__label">Precision (v1)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">0.0005</div>
+            <div class="metric-strip__label">Recall (v1)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">1</div>
+            <div class="metric-strip__label">findings</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">5 / 6</div>
+            <div class="metric-strip__label">entities missed</div>
+          </div>
+        </div>
+
+        <p><span class="red">One finding out of 2,167 attack events.</span> The GPUHijackDetector fired once — on a Bedrock InvokeModel at 11 PM. That was a true positive. But daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role — all missed. The RogueTrainingDetector never fired at all.</p>
+        <p class="dim">Perfect precision. Near-zero recall. The pipeline worked. It was aimed at the wrong layer.</p>
+      </div>
+
+      <!-- DIAGNOSIS -->
+      <div class="story-section">
+        <h2>The Diagnosis</h2>
+
+        <p><span class="amber">Impedance mismatch.</span> CloudTrail is a management-plane audit log — it records who called what AWS API, when, from where. KESTREL's original detectors look for data-plane GPU telemetry — utilization %, memory %, power watts, training job durations.</p>
+
+        <p>99.98% of the CloudTrail events mapped to <code>api_call</code>. Zero mapped to <code>training_job</code>. One mapped to <code>gpu_metric</code>. The GPUHijackDetector and RogueTrainingDetector were built for CloudWatch metrics and NVIDIA DCGM telemetry — data that CloudTrail doesn't carry. The attacks in the dataset were real (IAM enumeration, recon scanning, privilege escalation), but they lived at the API call layer, not the GPU layer.</p>
+
+        <p class="dim">The baselining engine DID detect 105 z-score anomalies on time-of-day patterns. It flagged daftpunk at z=+11.7 for late-night Bedrock scanning. The signal was there — nothing was consuming it.</p>
+      </div>
+
+      <!-- V2 FIX -->
+      <div class="story-section">
+        <h2>The Fix</h2>
+
+        <p><span class="accent">CloudAPIAbuseDetector.</span> Built to process the 34,420 api_call events that v1 ignored. Four signals in 5-minute sliding windows:</p>
+
+        <div class="finding-item"><strong>api_burst_frequency:</strong> ≥50 API calls per 5-minute window, or z-score ≥2.5 against rolling baseline. Caught cloudmapper at 130 calls/window, okta_ro_role at 292.</div>
+        <div class="finding-item"><strong>region_fanout:</strong> Entity touching &gt;5 distinct AWS regions in one window. Caught cloudmapper scanning 13 regions, cloudsploit across 12. Recon tools enumerate everything — the destination diversity is the signature.</div>
+        <div class="finding-item"><strong>off_hours_api_spike:</strong> Significant API activity outside business hours. Caught daftpunk's 11 PM Bedrock guardrail scanning.</div>
+        <div class="finding-item"><strong>excessive_error_rate:</strong> ≥30% AccessDenied/Forbidden responses. Caught daftpunk at 100% error rate — every single call denied. A bruteforce signature.</div>
+
+        <p style="margin-top: 1rem;">Multi-signal combinations drive severity escalation: daftpunk (off-hours + 100% errors) → <span class="amber">HIGH</span>. cloudmapper (burst + 13-region fan-out) → <span class="amber">HIGH</span>. okta_ro_role (292 calls + 12 regions) → <span class="amber">HIGH</span>. bhavin_cli generated 24 findings across multiple time windows.</p>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="story-section">
+        <h2>The Results</h2>
+
+        <div class="metric-strip">
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">1.0</div>
+            <div class="metric-strip__label">Precision (v2)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">0.766</div>
+            <div class="metric-strip__label">Recall (v2)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">220</div>
+            <div class="metric-strip__label">findings</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">1,532×</div>
+            <div class="metric-strip__label">recall improvement</div>
+          </div>
+        </div>
+
+        <p><span class="accent">Recall: 0.0005 → 0.766. Precision held at 1.0. Zero false positives.</span></p>
+
+        <p>220 findings across 3 detectors. Severity distribution: 2 CRITICAL, 14 HIGH, 98 MEDIUM, 106 LOW (baseline anomalies). The entities that v1 missed — daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role — v2 catches them all.</p>
+
+        <p>The fix wasn't more sophisticated ML. It was <span class="accent">meeting the data where it lives</span>. CloudTrail provides API call patterns. CloudAPIAbuseDetector processes API call patterns. 99.98% of the dataset went from ignored to analyzed.</p>
+
+        <p class="dim">The approach that worked: diagnose the mismatch, build the detector that fits the data, keep the existing detectors for when the right telemetry arrives. Subtraction (understanding what's missing) came before addition (building what's needed).</p>
+      </div>
+
+      <!-- RELATIONSHIP -->
+      <div class="story-section">
+        <h2>Full-Stack Detection</h2>
+        <p>PARALLAX operates at the <span class="amber">application layer</span> — API request patterns, user behavior, content-free metadata. 15 detectors, 0.68 AUC on real LANL data. KESTREL operates at the <span class="amber">infrastructure layer</span> — GPU utilization, training job profiles, API abuse patterns. 3 detectors, 0.766 recall on real CloudTrail data.</p>
+        <p>Together they provide full-stack AI platform threat detection. PARALLAX catches distillation and account takeover through behavioral shifts. KESTREL catches GPU hijacking, rogue training, and infrastructure recon through z-score anomalies. Different layers, same principle: <span class="accent">the attack lives in the pattern, not the content.</span></p>
+      </div>
+
+      <!-- WHERE IT STANDS -->
+      <div class="story-section">
+        <h2>Where It Stands</h2>
+        <p>v2 complete. 3 detectors, 92 tests, 98% coverage. Real-data evaluation on 34K CloudTrail events. Open source. Clear paths forward:</p>
+        <ul class="detector-list">
+          <li>Privilege escalation detector for CreateAccessKey/AttachPolicy chains</li>
+          <li>Cross-entity correlation for coordinated scanning patterns</li>
+          <li>Real GPU telemetry evaluation (CloudWatch/DCGM) for existing detectors</li>
+          <li>Time-windowed severity decay for sustained vs burst activity</li>
+        </ul>
+      </div>
     </div>
 
     <!-- CTAs -->
-    <div class="cta-links" style="display:flex;gap:1rem;margin:1.5rem 0;flex-wrap:wrap;">
-      <a href="kestrel-demo.html" style="font-size:0.8rem;color:var(--amber);text-decoration:none;padding:0.5rem 1rem;border:1px solid var(--amber);transition:all 0.2s;">→ live demo</a>
-      <a href="https://github.com/chirag-dewan/kestrel" style="font-size:0.8rem;color:var(--amber);text-decoration:none;padding:0.5rem 1rem;border:1px solid var(--amber);transition:all 0.2s;">→ source</a>
+    <div class="cta-links">
+      <a href="kestrel-demo.html">→ live demo</a>
+      <a href="https://github.com/chirag-dewan/kestrel">→ source</a>
     </div>
 
     <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
