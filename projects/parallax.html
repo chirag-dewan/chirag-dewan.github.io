@@ -193,29 +193,7 @@
       <!-- BUILD -->
       <div class="story-section">
         <h2>The Build</h2>
-        <p>14 detectors across two tiers, built in roughly a week. 92 tests, 94% coverage.</p>
-
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tier 1 — Account-Level (72% weight)</p>
-        <ul class="detector-list">
-          <li><code>T1-001</code> Request velocity — burst detection and sustained rate</li>
-          <li><code>T1-002</code> Automation signature — timing regularity (coefficient of variation)</li>
-          <li><code>T1-003</code> Token ratio — input/output asymmetry (extraction fingerprint)</li>
-          <li><code>T1-004</code> Session anomaly — single-turn ratio, conversations per day</li>
-          <li><code>T1-005</code> Model targeting — cheap model selection patterns</li>
-          <li><code>T1-006</code> Context exploitation — max context window usage</li>
-          <li><code>T1-007</code> Error pattern — safety triggers, mechanical retry cadence</li>
-          <li><code>T1-008</code> Concurrent sessions — parallel access patterns</li>
-        </ul>
-
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tier 2 — Population-Level (28% weight)</p>
-        <ul class="detector-list">
-          <li><code>T2-001</code> Distribution divergence — KL-divergence from population baseline</li>
-          <li><code>T2-002</code> Entropy analysis — Shannon entropy of request patterns</li>
-          <li><code>T2-003</code> Cross-account correlation — DBSCAN behavioral clustering</li>
-          <li><code>T2-004</code> Power-law deviation — Zipf fitness of topic distribution</li>
-          <li><code>T2-005</code> Temporal clustering — Fano factor of request timing</li>
-          <li><code>T2-006</code> Behavioral shift — sudden change in usage profile</li>
-        </ul>
+        <p>14 detectors across two tiers, built in roughly a week. 92 tests, 94% coverage. Request velocity, token ratios, timing regularity, session structure, model targeting, entropy analysis, cross-account clustering — the full behavioral surface. <span class="dim"><a href="https://github.com/chirag-dewan/parallax" style="color: var(--text-dim); text-decoration: underline; text-underline-offset: 3px;">Full detector list on GitHub.</a></span></p>
 
         <pre><code>composite = Σ(score × weight × confidence) / Σ(weight)
 threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code></pre>
