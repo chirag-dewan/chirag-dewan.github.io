@@ -4,7 +4,138 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PARALLAX — Chirag Dewan</title>
+  <meta name="description" content="Privacy-preserving behavioral threat detection for AI platforms. 0.68 AUC on real LANL data. See the pattern, not the content.">
+  <meta property="og:title" content="PARALLAX — Behavioral Threat Detection">
+  <meta property="og:description" content="14 detectors, 17M real events, 0.68 AUC. The failure in the middle is what makes it believable.">
   <link rel="stylesheet" href="../css/main.css">
+  <style>
+    .story-section {
+      margin-bottom: 3rem;
+    }
+    .story-section h2 {
+      color: var(--green);
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    .story-section h2::before {
+      content: '▸ ';
+      color: var(--amber);
+    }
+    .story-section p {
+      color: var(--text);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin-bottom: 0.8rem;
+    }
+    .story-section .accent { color: var(--green); }
+    .story-section .amber { color: var(--amber); }
+    .story-section .red { color: var(--red); font-weight: 500; }
+    .story-section .dim { color: var(--text-muted); }
+
+    .metric-strip {
+      display: flex;
+      gap: 0;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border);
+    }
+    .metric-strip__item {
+      flex: 1;
+      padding: 0.8rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      background: var(--bg-raised);
+    }
+    .metric-strip__item:last-child { border-right: none; }
+    .metric-strip__value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 0.2rem;
+    }
+    .metric-strip__label {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+    }
+    @media (max-width: 500px) {
+      .metric-strip { flex-wrap: wrap; }
+      .metric-strip__item { flex: 1 1 45%; border-bottom: 1px solid var(--border); }
+    }
+
+    .detector-list {
+      font-size: 0.75rem;
+      margin: 1rem 0;
+    }
+    .detector-list code {
+      background: var(--bg-surface);
+      padding: 0.1rem 0.4rem;
+      border-radius: 2px;
+      color: var(--green);
+      font-size: 0.7rem;
+    }
+    .detector-list li {
+      margin-bottom: 0.3rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .arc-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin: 2rem 0;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      overflow-x: auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .arc-flow span {
+      white-space: nowrap;
+    }
+    .arc-flow .arc-step {
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border-bright);
+    }
+    .arc-flow .arc-step.current {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .arc-flow .arc-step.fail {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .arc-arrow { color: var(--text-dim); }
+
+    .evasion-item {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .evasion-item:last-child { border-bottom: none; }
+    .evasion-item strong { color: var(--amber); font-weight: 500; }
+
+    .cta-links {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .cta-links a {
+      font-size: 0.8rem;
+      color: var(--amber);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--amber);
+      transition: all 0.2s;
+    }
+    .cta-links a:hover {
+      background: rgba(255, 176, 0, 0.08);
+    }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -19,75 +150,181 @@
   </nav>
 
   <div class="container">
-    <div class="section-header"><span>~/projects/parallax</span> — cat README.md</div>
+    <div class="section-header"><span>~/projects/parallax</span></div>
 
     <h1 class="post-title">PARALLAX</h1>
     <p class="post-meta">Privacy-preserving behavioral threat detection for AI platforms</p>
 
-    <div class="post-content">
-      <h2>Thesis</h2>
-      <p>See the pattern, not the content. Detect AI platform abuse — prompt injection, model extraction, data exfiltration, automated exploitation — through behavioral metadata analysis without ever inspecting user content. Privacy by architecture, not by policy.</p>
-
-      <h2>Architecture</h2>
-      <p>Three-tier detection pipeline operating on API event metadata:</p>
-
-      <pre><code>JSONL events
-  → DetectionPipeline.load_traffic()
-  → Pydantic APIEvent parsing
-  → Per-account AccountProfile construction
-  → PopulationBaseline (cross-account stats)
-  → 14 independent detectors (8 Tier 1, 6 Tier 2)
-  → Weighted composite scoring
-  → ThreatAssessment</code></pre>
-
-      <h3>Tier 1 — Account-Level Signals (72% weight)</h3>
-      <p>Eight detectors analyzing individual account behavior against expected patterns:</p>
-      <ul>
-        <li><code>T1-001</code> Request velocity — burst detection and sustained rate analysis</li>
-        <li><code>T1-002</code> Temporal concentration — entropy-based session clustering</li>
-        <li><code>T1-003</code> Token ratio — input/output asymmetry (extraction signature)</li>
-        <li><code>T1-004</code> Error rate exploitation — systematic probing patterns</li>
-        <li><code>T1-005</code> Model targeting — enumeration and capability mapping</li>
-        <li><code>T1-006</code> Context window exploitation — boundary-pushing behavior</li>
-        <li><code>T1-007</code> Endpoint diversity — API surface coverage anomalies</li>
-        <li><code>T1-008</code> Session pattern — behavioral consistency over time</li>
-      </ul>
-
-      <h3>Tier 2 — Population-Level Signals (28% weight)</h3>
-      <p>Six detectors comparing account behavior against population baselines using z-score analysis:</p>
-      <ul>
-        <li><code>T2-001</code> Statistical outlier — multi-dimensional deviation scoring</li>
-        <li><code>T2-002</code> Usage pattern anomaly — behavioral clustering distance</li>
-        <li><code>T2-003</code> Rate deviation — population-relative velocity analysis</li>
-        <li><code>T2-004</code> Resource consumption — compute/token budget anomalies</li>
-        <li><code>T2-005</code> Behavioral consistency — profile stability over time</li>
-        <li><code>T2-006</code> Cross-account correlation — coordinated behavior detection</li>
-      </ul>
-
-      <h3>Composite Scoring</h3>
-      <pre><code>composite = Σ(score × weight × confidence) / Σ(weight)
-
-Threat levels:
-  NONE     < 0.25
-  LOW      0.25 – 0.49
-  MEDIUM   0.50 – 0.69
-  HIGH     0.70 – 0.84
-  CRITICAL ≥ 0.85</code></pre>
-
-      <h2>Tech Stack</h2>
-      <p>Python 3.11+ · Pydantic models · Statistical anomaly detection · Flask API · pytest (92 tests, 94% coverage)</p>
-
-      <h2>Validation</h2>
-      <p>Evaluated against LANL Unified Host and Network Dataset (real authentication logs from Los Alamos National Laboratory). Adversarial test suite covers four evasion scenarios: blended behavior, low-and-slow extraction, single-signal ablation, and threshold sensitivity.</p>
-
-      <h2>Status</h2>
-      <p>Active development. 14 detectors implemented and tested. Pipeline operational. Working toward windowed scoring and signal correlation for next phase.</p>
-
-      <h2>Links</h2>
-      <p><a href="https://github.com/chirag-dewan/parallax">GitHub</a> · <a href="parallax-demo.html">Live Demo</a></p>
+    <!-- Arc flow -->
+    <div class="arc-flow">
+      <span class="arc-step">origin</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">thesis</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">build</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step fail">failure</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">fix</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">findings</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step">why now</span>
+      <span class="arc-arrow">→</span>
+      <span class="arc-step current">what's next</span>
     </div>
 
-    <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+    <div class="post-content">
+
+      <!-- ORIGIN -->
+      <div class="story-section">
+        <h2>The Origin</h2>
+        <p>AI platforms can't tell when someone is systematically extracting model behavior through the API. Distillation attacks don't trip content filters because there's nothing malicious in any single query. The abuse lives in the pattern, not the content.</p>
+        <p>Short input, max output. Thousands of single-turn conversations. Mechanical timing. Cheap models only. Every request is benign. The aggregate is theft.</p>
+        <p class="dim">So the question: what if you could detect the extraction without ever reading the prompts?</p>
+      </div>
+
+      <!-- THESIS -->
+      <div class="story-section">
+        <h2>The Thesis</h2>
+        <p><span class="accent">See the pattern, not the content.</span> Build behavioral detection that operates entirely on metadata — request velocity, token ratios, session cadence, model targeting patterns. Privacy-preserving by architecture, not policy. You never need to see what someone asked. You need to see <em>how</em> they asked it.</p>
+      </div>
+
+      <!-- BUILD -->
+      <div class="story-section">
+        <h2>The Build</h2>
+        <p>14 detectors across two tiers, built in roughly a week. 92 tests, 94% coverage.</p>
+
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tier 1 — Account-Level (72% weight)</p>
+        <ul class="detector-list">
+          <li><code>T1-001</code> Request velocity — burst detection and sustained rate</li>
+          <li><code>T1-002</code> Automation signature — timing regularity (coefficient of variation)</li>
+          <li><code>T1-003</code> Token ratio — input/output asymmetry (extraction fingerprint)</li>
+          <li><code>T1-004</code> Session anomaly — single-turn ratio, conversations per day</li>
+          <li><code>T1-005</code> Model targeting — cheap model selection patterns</li>
+          <li><code>T1-006</code> Context exploitation — max context window usage</li>
+          <li><code>T1-007</code> Error pattern — safety triggers, mechanical retry cadence</li>
+          <li><code>T1-008</code> Concurrent sessions — parallel access patterns</li>
+        </ul>
+
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tier 2 — Population-Level (28% weight)</p>
+        <ul class="detector-list">
+          <li><code>T2-001</code> Distribution divergence — KL-divergence from population baseline</li>
+          <li><code>T2-002</code> Entropy analysis — Shannon entropy of request patterns</li>
+          <li><code>T2-003</code> Cross-account correlation — DBSCAN behavioral clustering</li>
+          <li><code>T2-004</code> Power-law deviation — Zipf fitness of topic distribution</li>
+          <li><code>T2-005</code> Temporal clustering — Fano factor of request timing</li>
+          <li><code>T2-006</code> Behavioral shift — sudden change in usage profile</li>
+        </ul>
+
+        <pre><code>composite = Σ(score × weight × confidence) / Σ(weight)
+threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code></pre>
+
+        <p>Synthetic archetypes showed clean separation. Perfect class boundary at threshold 0.40 on generated data. Zero false positives, zero false negatives. <span class="dim">It looked great on paper.</span></p>
+      </div>
+
+      <!-- FAILURE -->
+      <div class="story-section">
+        <h2>The Reality Check</h2>
+
+        <p>Ran it against the <span class="accent">LANL Cyber1 dataset</span>. 16.9 million real authentication events from Los Alamos National Laboratory. 500 users. 87 labeled compromised. 187K sessions.</p>
+
+        <div class="metric-strip">
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">0.45</div>
+            <div class="metric-strip__label">AUC (v1)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">0.00</div>
+            <div class="metric-strip__label">F1 (v1)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">7 / 14</div>
+            <div class="metric-strip__label">anti-correlated</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--red);">inverted</div>
+            <div class="metric-strip__label">score direction</div>
+          </div>
+        </div>
+
+        <p><span class="red">Worse than a coin flip.</span> The detectors tuned on synthetic data were actively anti-correlated on real data. Seven of fourteen detectors were hurting, not helping. Normal users scored higher than compromised users. The engine was penalizing the wrong group.</p>
+
+        <p class="dim">The detectors designed for AI platform abuse — volume anomaly, temporal clustering, entropy analysis, distribution divergence — all pointed the wrong way on authentication data. They measured "how unusual is this user" and the most unusual users were the legitimate power users, not the attackers.</p>
+      </div>
+
+      <!-- FIX -->
+      <div class="story-section">
+        <h2>The Fix</h2>
+
+        <p>Diagnosed root causes in one session. Three iterations.</p>
+
+        <p><span class="amber">v2:</span> Built <code>T1-009</code> Host Fan-Out detector for lateral movement. Added 4-hour sliding window scoring instead of whole-profile aggregation. Zeroed three dead-weight detectors. <span class="dim">AUC: 0.48. Still below random — anti-correlated detectors drowning the signal.</span></p>
+
+        <p><span class="amber">v3:</span> Zeroed all 10 non-contributing detectors. Redistributed weight to the 5 correctly-oriented signals, proportional to their measured separation delta.</p>
+
+        <div class="metric-strip">
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">0.68</div>
+            <div class="metric-strip__label">AUC (v3)</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--green);">0.49</div>
+            <div class="metric-strip__label">Best F1</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--amber);">48.8%</div>
+            <div class="metric-strip__label">Precision</div>
+          </div>
+          <div class="metric-strip__item">
+            <div class="metric-strip__value" style="color: var(--amber);">48.3%</div>
+            <div class="metric-strip__label">Recall</div>
+          </div>
+        </div>
+
+        <p>The key finding: <span class="accent">pattern-matching detectors don't transfer across domains, but behavioral shift detection does.</span> That one signal — "this user's behavior just changed" — worked everywhere.</p>
+
+        <p><code>T2-006</code> Behavioral Shift: compromised mean 0.71 vs normal 0.43. Delta +0.29. Drives most of the separation. Weight: 0.30.</p>
+        <p><code>T1-009</code> Host Fan-Out: compromised mean 0.79 vs normal 0.66. Delta +0.13. Lateral movement leaves a destination diversity signature. Weight: 0.25.</p>
+        <p class="dim">The approach that worked: diagnose which signals are noise, silence them, amplify what remains. Subtraction beat addition.</p>
+      </div>
+
+      <!-- EVASION FINDINGS -->
+      <div class="story-section">
+        <h2>The Evasion Findings</h2>
+        <p>Adversarial testing surfaced three gaps:</p>
+        <div class="evasion-item"><strong>Single-signal normalization:</strong> Normalizing token ratio alone drops an attacker below the escalation threshold. Individual detectors can be gamed.</div>
+        <div class="evasion-item"><strong>Blended behavior:</strong> A 90/10 mix of legitimate and attack traffic is indistinguishable from a power developer. The signal drowns in normal activity.</div>
+        <div class="evasion-item"><strong>Low-and-slow extraction:</strong> Distillation at normal request rates scores 0.41 — below the 0.66 escalation threshold. Patient attackers evade.</div>
+        <p style="margin-top: 0.8rem;" class="dim">Published openly because honesty about failure modes is more credible than claiming perfect detection.</p>
+      </div>
+
+      <!-- WHY NOW -->
+      <div class="story-section">
+        <h2>Why It Matters Now</h2>
+        <p>Anthropic announced that Mythos-class models can autonomously discover thousands of zero-day vulnerabilities. The attack surface for AI platforms is about to explode.</p>
+        <p>Before a Mythos-class model gets weaponized, someone needs <em>access</em> to it — and that access creates behavioral patterns. PARALLAX detects the precursor. Distillation, credential fraud, resource abuse at scale. <span class="accent">The first gate in the kill chain.</span></p>
+      </div>
+
+      <!-- WHERE IT STANDS -->
+      <div class="story-section">
+        <h2>Where It Stands</h2>
+        <p>0.68 AUC on real data. Honest about limitations. Open source. Three clear paths to improvement:</p>
+        <ul class="detector-list">
+          <li>Signal correlation bonuses to resist single-signal evasion</li>
+          <li>Windowed session-level scoring to catch blended behavior attacks</li>
+          <li>Auth-failure-sequence detector for credential spraying patterns</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- CTAs -->
+    <div class="cta-links">
+      <a href="parallax-demo.html">→ live demo</a>
+      <a href="https://github.com/chirag-dewan/parallax">→ source</a>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
       <a href="/projects/" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← back to projects</a>
     </div>
   </div>
