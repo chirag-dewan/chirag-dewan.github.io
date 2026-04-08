@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KESTREL — Chirag Dewan</title>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/timeline/">timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="section-header"><span>~/projects/kestrel</span> — cat README.md</div>
+
+    <h1 class="post-title">KESTREL</h1>
+    <p class="post-meta">Cloud-native AI workload anomaly detection</p>
+
+    <div class="post-content">
+      <h2>Thesis</h2>
+      <p>Baseline normal AI workload behavior, detect deviations. Rolling per-entity z-score analysis catches GPU hijacking, rogue training jobs, and unauthorized model access before they escalate.</p>
+
+      <h2>Architecture</h2>
+      <pre><code>Synthetic event generator
+  → SQLite storage
+  → Rolling z-score baselining engine
+  → Detection modules (GPU hijack, rogue training)
+  → CLI surface + Flask dashboard + Sigma rule export</code></pre>
+
+      <h2>CLI</h2>
+      <pre><code>kestrel generate   # Synthetic event generation
+kestrel scan       # Run detection pass
+kestrel serve      # Launch Flask dashboard
+kestrel findings   # Export findings
+kestrel version    # Version info</code></pre>
+
+      <h2>Relationship to PARALLAX</h2>
+      <p>PARALLAX operates at the application layer — API request patterns, user behavior, content-free metadata. KESTREL operates at the infrastructure layer — GPU utilization, training job profiles, compute resource anomalies. Together they provide full-stack AI platform threat detection.</p>
+
+      <h2>Status</h2>
+      <p>Architecture locked. Twelve specification files produced for implementation. PARALLAX's infrastructure-layer companion.</p>
+
+      <h2>Links</h2>
+      <p><a href="https://github.com/chirag-dewan">GitHub</a></p>
+    </div>
+
+    <div style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+      <a href="/projects/" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← back to projects</a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag@cdewan.me">email</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

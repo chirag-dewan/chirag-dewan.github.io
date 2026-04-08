@@ -1,53 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chirag Dewan | Software Engineer II</title>
-    <meta name="description" content="Portfolio of Chirag Dewan, a Software Engineer focused on security solutions and cutting-edge technology." />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://chirag-dewan.github.io/" />
-    <meta property="og:title" content="Chirag Dewan | Cyber Research Scientist" />
-    <meta property="og:description" content="Portfolio of Chirag Dewan, a Software Engineer focused on security solutions and cutting-edge technology." />
-    <meta property="og:image" content="https://chirag-dewan.github.io/og-image.jpg" />
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://chirag-dewan.github.io/" />
-    <meta property="twitter:title" content="Chirag Dewan | Cyber Research Scientist" />
-    <meta property="twitter:description" content="Portfolio of Chirag Dewan, a Software Engineer focused on security solutions and cutting-edge technology." />
-    <meta property="twitter:image" content="https://chirag-dewan.github.io/og-image.jpg" />
-    
-    <!-- Apple-specific meta tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Chirag Dewan" />
-    
-    <!-- GitHub Pages SPA redirect script -->
-    <script type="text/javascript">
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
-          window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
-          );
-        }
-      }(window.location))
-    </script>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chirag Dewan</title>
+  <meta name="description" content="Security engineer building at the intersection of offensive security and AI. OSCP candidate. Builder of PARALLAX and KESTREL.">
+  <meta property="og:title" content="Chirag Dewan">
+  <meta property="og:description" content="Security engineer building at the intersection of offensive security and AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chirag-dewan.github.io">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Chirag Dewan">
+  <meta name="twitter:description" content="Security engineer building at the intersection of offensive security and AI.">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/timeline/">timeline</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero__prompt">
+        <span class="type-text" data-text="$ whoami">$ whoami</span>
+      </div>
+      <h1 class="hero__name">Chirag Dewan</h1>
+      <p class="hero__title">Security Engineer · AI Security Researcher · OSCP Candidate</p>
+      <p class="hero__bio">
+        Building detection systems that see behavioral patterns without seeing content.
+        Background in <span class="accent">offensive security research</span> and
+        <span class="accent">vulnerability engineering</span>.
+        Currently shipping <span class="amber">PARALLAX</span> and <span class="amber">KESTREL</span>
+        — and hunting for the next hard problem at the intersection of security and AI.
+      </p>
+      <div class="hero__prompt" style="margin-top: 2rem;">
+        <span style="color: var(--text-dim);">$ cat /etc/motd</span>
+      </div>
+      <p class="hero__bio" style="color: var(--text-dim); font-size: 0.8rem; margin-top: 0.5rem;">
+        Based in Texas. Targeting Boston by late 2026.<br>
+        Interested in hard travel, cold places, and building things that matter.
+      </p>
+    </section>
+
+    <div class="section-header"><span>~/</span>now</div>
+
+    <div class="now-section">
+      <div class="now-item">
+        <span class="now-label">building</span>
+        <span class="now-value"><a href="/projects/parallax.html">PARALLAX</a> — privacy-preserving behavioral threat detection for AI platforms</span>
+      </div>
+      <div class="now-item">
+        <span class="now-label">building</span>
+        <span class="now-value"><a href="/projects/kestrel.html">KESTREL</a> — cloud-native AI workload anomaly detection</span>
+      </div>
+      <div class="now-item">
+        <span class="now-label">studying</span>
+        <span class="now-value">OSCP — PWK labs, HTB boxes, targeting December 2026</span>
+      </div>
+      <div class="now-item">
+        <span class="now-label">working</span>
+        <span class="now-value">SWE II at GM Financial — detection engineering, Azure/Terraform pipelines</span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag@cdewan.me">email</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
 </html>
