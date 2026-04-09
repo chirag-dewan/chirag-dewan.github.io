@@ -561,6 +561,11 @@ body { animation: crt-flicker 8s infinite; }
   font-style: italic;
 }
 .footer:hover .footer__tagline { opacity: 1; }
+.footer__push {
+  color: var(--text-dim);
+  font-size: 0.6rem;
+  margin-top: 0.4rem;
+}
 
 /* ---- Now Section (index) ---- */
 .now-section {

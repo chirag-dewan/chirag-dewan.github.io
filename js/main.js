@@ -123,4 +123,22 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     tagline.textContent = '> ' + lines[Math.floor(Math.random() * lines.length)];
   }
+
+  // Footer last-push counter from GitHub public events API
+  const pushEl = document.querySelector('.footer__push');
+  if (pushEl) {
+    fetch('https://api.github.com/users/chirag-dewan/events/public')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(events => {
+        const push = events.find(e => e.type === 'PushEvent');
+        if (!push) return;
+        const ms = Date.now() - new Date(push.created_at).getTime();
+        const m = Math.floor(ms / 60000);
+        const h = Math.floor(m / 60);
+        const d = Math.floor(h / 24);
+        const ago = d > 0 ? d + 'd ago' : h > 0 ? h + 'h ago' : m + 'm ago';
+        pushEl.textContent = 'last push: ' + ago;
+      })
+      .catch(() => {});
+  }
 });
