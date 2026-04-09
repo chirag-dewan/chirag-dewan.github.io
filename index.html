@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chirag Dewan | AI Security Engineer</title>
-  <meta name="description" content="Building behavioral threat detection for AI platforms and cloud infrastructure. PARALLAX: 0.68 AUC on 17M real events. KESTREL: 0.766 recall on 34K real CloudTrail events.">
+  <meta name="description" content="Security engineer. Offensive background, detection focus. PARALLAX: 0.68 AUC on 17M real events. KESTREL: 0.766 recall on 34K CloudTrail events. ReconAI: AI-powered offensive reconnaissance.">
   <link rel="canonical" href="https://chirag-dewan.github.io/">
   <meta property="og:title" content="Chirag Dewan | AI Security Engineer">
-  <meta property="og:description" content="Building behavioral threat detection for AI platforms and cloud infrastructure.">
+  <meta property="og:description" content="Security engineer. Offensive background, detection focus. Building behavioral threat detection for AI platforms and cloud infrastructure.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chirag-dewan.github.io/">
   <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
@@ -15,82 +15,73 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Chirag Dewan | AI Security Engineer">
-  <meta name="twitter:description" content="Building behavioral threat detection for AI platforms and cloud infrastructure.">
+  <meta name="twitter:description" content="Security engineer. Offensive background, detection focus. Building behavioral threat detection for AI platforms and cloud infrastructure.">
   <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/main.css">
   <style>
     .home-hero {
-      padding: 6rem 0 3rem;
+      padding: 5rem 0 2rem;
     }
     .home-hero__name {
       font-size: 2.4rem;
       font-weight: 700;
       color: var(--green);
       line-height: 1.2;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5rem;
       text-shadow: 0 0 30px var(--green-glow), 0 0 60px rgba(0, 255, 65, 0.06);
     }
     .home-hero__line {
       font-size: 0.9rem;
       color: var(--text);
-      max-width: 520px;
       line-height: 1.6;
     }
 
-    .home-projects {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin: 3rem 0;
+    .home-cards {
+      margin: 2.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
     }
-    @media (max-width: 550px) {
-      .home-projects { grid-template-columns: 1fr; }
-    }
-
     .home-card {
       border: 1px solid var(--border);
       background: var(--bg-raised);
-      padding: 1.5rem;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      transition: border-color 0.3s;
     }
-    .home-card:hover {
-      border-color: var(--green-dim);
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.05), inset 0 0 20px rgba(0, 255, 65, 0.02);
-      transform: translateY(-2px);
-    }
+    .home-card:hover { border-color: var(--green-dim); }
     .home-card__name {
-      font-size: 1rem;
       font-weight: 600;
       color: var(--green);
-      margin-bottom: 0.3rem;
-      transition: text-shadow 0.3s;
-    }
-    .home-card:hover .home-card__name {
-      text-shadow: 0 0 12px var(--green-glow);
+      font-size: 0.9rem;
+      flex-shrink: 0;
     }
     .home-card__name::before {
-      content: '▸ ';
+      content: '→ ';
       color: var(--amber);
-    }
-    .home-card__stat {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--amber);
-      margin: 0.6rem 0;
-      line-height: 1.2;
     }
     .home-card__desc {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 0.8rem;
+      flex: 1;
+      min-width: 200px;
+    }
+    .home-card__metric {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--amber);
+      flex-shrink: 0;
     }
     .home-card__links {
       display: flex;
-      gap: 1rem;
-      font-size: 0.75rem;
+      gap: 0.8rem;
+      font-size: 0.7rem;
+      flex-shrink: 0;
     }
     .home-card__links a {
       color: var(--text-dim);
@@ -99,22 +90,16 @@
     }
     .home-card__links a:hover { color: var(--green); }
 
-    .home-links {
-      display: flex;
-      gap: 1.5rem;
-      font-size: 0.8rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border);
-      flex-wrap: wrap;
+    @media (max-width: 600px) {
+      .home-hero { padding: 3rem 0 1.5rem; }
+      .home-hero__name { font-size: 1.8rem; }
+      .home-card {
+        flex-direction: column;
+        gap: 0.3rem;
+        padding: 1rem;
+      }
+      .home-card__desc { min-width: auto; }
     }
-    .home-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .home-links a:hover { color: var(--green); }
-    .home-links a.accent { color: var(--amber); }
-    .home-links a.accent:hover { color: var(--green); }
   </style>
 </head>
 <body>
@@ -134,36 +119,29 @@
   <div class="container">
     <section class="home-hero">
       <h1 class="home-hero__name">Chirag Dewan</h1>
-      <p class="home-hero__line">Building behavioral threat detection for AI platforms and cloud infrastructure.</p>
+      <p class="home-hero__line">Security engineer. Offensive background, detection focus.</p>
     </section>
 
-    <div class="home-projects">
+    <div class="home-cards">
       <div class="home-card">
-        <div class="home-card__name">PARALLAX</div>
-        <div class="home-card__stat">0.68 AUC on 17M real events</div>
-        <div class="home-card__desc">Privacy-preserving behavioral threat detection for AI platforms. 14 detectors, validated against LANL Cyber1. See the pattern, not the content.</div>
-        <div class="home-card__links">
-          <a href="/projects/parallax.html">→ project</a>
-          <a href="/projects/parallax-demo.html">→ demo</a>
-        </div>
+        <span class="home-card__name">PARALLAX</span>
+        <span class="home-card__desc">Behavioral threat detection for AI platforms.</span>
+        <span class="home-card__metric">0.68 AUC on 17M real events</span>
+        <span class="home-card__links"><a href="/projects/parallax.html">details</a> <a href="/projects/parallax-demo.html">demo</a></span>
       </div>
 
       <div class="home-card">
-        <div class="home-card__name">KESTREL</div>
-        <div class="home-card__stat">0.766 recall on 34K real events</div>
-        <div class="home-card__desc">Cloud-native AI workload anomaly detection. 3 detectors, validated against real CloudTrail data. Baseline normal, detect deviations.</div>
-        <div class="home-card__links">
-          <a href="/projects/kestrel.html">→ project</a>
-          <a href="/projects/kestrel-demo.html">→ demo</a>
-        </div>
+        <span class="home-card__name">KESTREL</span>
+        <span class="home-card__desc">Cloud workload anomaly detection.</span>
+        <span class="home-card__metric">0.766 recall on 34K real events</span>
+        <span class="home-card__links"><a href="/projects/kestrel.html">details</a> <a href="/projects/kestrel-demo.html">demo</a></span>
       </div>
-    </div>
 
-    <div class="home-links">
-      <a href="https://github.com/chirag-dewan">github</a>
-      <a href="https://linkedin.com/in/cdewan">linkedin</a>
-      <a href="mailto:chirag0728@gmail.com">email</a>
-      <a href="/Chirag_Dewan_Resume.pdf" class="accent">resume</a>
+      <div class="home-card">
+        <span class="home-card__name">ReconAI</span>
+        <span class="home-card__desc">AI-powered offensive reconnaissance and target prioritization.</span>
+        <span class="home-card__links"><a href="https://github.com/chirag-dewan">github</a></span>
+      </div>
     </div>
   </div>
   </main>
