@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="css/main.css">
   <style>
     .home-hero {
-      padding: 5rem 0 2rem;
+      padding: 5rem 0 0.8rem;
     }
     .home-hero__name {
       font-size: 2.4rem;
@@ -37,9 +37,22 @@
       color: var(--text);
       line-height: 1.6;
     }
+    .home-hero__sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 0.3rem;
+    }
+
+    .home-quote {
+      font-size: 0.7rem;
+      color: var(--green-dim);
+      font-style: italic;
+      opacity: 0.6;
+      margin: 1.2rem 0;
+    }
 
     .home-cards {
-      margin: 2.5rem 0;
       display: flex;
       flex-direction: column;
       gap: 0.8rem;
@@ -53,8 +66,9 @@
       gap: 0.6rem;
       flex-wrap: wrap;
       transition: border-color 0.3s;
+      text-decoration: none;
+      cursor: pointer;
     }
-    .home-card { text-decoration: none; cursor: pointer; }
     .home-card:hover { border-color: var(--green-dim); }
     .home-card__name {
       font-weight: 600;
@@ -78,8 +92,21 @@
       color: var(--amber);
       flex-shrink: 0;
     }
+
+    .home-about {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+    }
+    .home-about a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .home-about a:hover { color: var(--green); }
+    .home-about .cmd { color: var(--green); }
+
     @media (max-width: 600px) {
-      .home-hero { padding: 3rem 0 1.5rem; }
+      .home-hero { padding: 3rem 0 0.6rem; }
       .home-hero__name { font-size: 1.8rem; }
       .home-card {
         flex-direction: column;
@@ -107,7 +134,10 @@
     <section class="home-hero">
       <h1 class="home-hero__name">Chirag Dewan</h1>
       <p class="home-hero__line">Security engineer. Offensive background, detection focus.</p>
+      <p class="home-hero__sub">I build systems that detect abuse through behavioral patterns — not content inspection.</p>
     </section>
+
+    <p class="home-quote footer__tagline">> see the pattern, not the content.</p>
 
     <div class="home-cards">
       <a href="/projects/parallax.html" class="home-card">
@@ -127,6 +157,8 @@
         <span class="home-card__desc">AI-powered offensive reconnaissance and target prioritization.</span>
       </a>
     </div>
+
+    <p class="home-about"><a href="/about.html"><span class="cmd">$</span> cat about.txt →</a></p>
   </div>
   </main>
 
@@ -138,7 +170,6 @@
       <a href="/Chirag_Dewan_Resume.pdf">resume</a>
     </div>
     <p>© 2026 Chirag Dewan</p>
-    <p class="footer__tagline">> see the pattern, not the content.</p>
     <p class="footer__push"></p>
   </footer>
 
