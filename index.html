@@ -4,15 +4,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chirag Dewan</title>
-  <meta name="description" content="Security engineer building at the intersection of offensive security and AI. OSCP candidate. Builder of PARALLAX and KESTREL.">
+  <meta name="description" content="Building behavioral threat detection for AI platforms and cloud infrastructure. PARALLAX: 0.68 AUC on 17M real events. KESTREL: 0.766 recall on 34K real CloudTrail events.">
   <meta property="og:title" content="Chirag Dewan">
-  <meta property="og:description" content="Security engineer building at the intersection of offensive security and AI.">
+  <meta property="og:description" content="Building behavioral threat detection for AI platforms and cloud infrastructure.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chirag-dewan.github.io">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Chirag Dewan">
-  <meta name="twitter:description" content="Security engineer building at the intersection of offensive security and AI.">
+  <meta name="twitter:description" content="Building behavioral threat detection for AI platforms and cloud infrastructure.">
   <link rel="stylesheet" href="css/main.css">
+  <style>
+    .home-hero {
+      padding: 6rem 0 3rem;
+    }
+    .home-hero__name {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--green);
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+      text-shadow: 0 0 30px var(--green-glow), 0 0 60px rgba(0, 255, 65, 0.06);
+    }
+    .home-hero__line {
+      font-size: 0.9rem;
+      color: var(--text);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .home-projects {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 3rem 0;
+    }
+    @media (max-width: 550px) {
+      .home-projects { grid-template-columns: 1fr; }
+    }
+
+    .home-card {
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      padding: 1.5rem;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    }
+    .home-card:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.05), inset 0 0 20px rgba(0, 255, 65, 0.02);
+      transform: translateY(-2px);
+    }
+    .home-card__name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 0.3rem;
+      transition: text-shadow 0.3s;
+    }
+    .home-card:hover .home-card__name {
+      text-shadow: 0 0 12px var(--green-glow);
+    }
+    .home-card__name::before {
+      content: '▸ ';
+      color: var(--amber);
+    }
+    .home-card__stat {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--amber);
+      margin: 0.6rem 0;
+      line-height: 1.2;
+    }
+    .home-card__desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+    .home-card__links {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+    }
+    .home-card__links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .home-card__links a:hover { color: var(--green); }
+
+    .home-links {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.8rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .home-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .home-links a:hover { color: var(--green); }
+    .home-links a.accent { color: var(--amber); }
+    .home-links a.accent:hover { color: var(--green); }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -28,47 +124,38 @@
   </nav>
 
   <div class="container">
-    <section class="hero">
-      <div class="hero__prompt">
-        <span class="type-text" data-text="$ whoami">$ whoami</span>
-      </div>
-      <h1 class="hero__name">Chirag Dewan</h1>
-      <p class="hero__title">Security Engineer · AI Security Researcher · OSCP Candidate</p>
-      <p class="hero__bio">
-        Building detection systems that see behavioral patterns without seeing content.
-        Background in <span class="accent">offensive security research</span> and
-        <span class="accent">vulnerability engineering</span>.
-        Currently shipping <span class="amber">PARALLAX</span> and <span class="amber">KESTREL</span>
-        — and hunting for the next hard problem at the intersection of security and AI.
-      </p>
-      <div class="hero__prompt" style="margin-top: 2rem;">
-        <span style="color: var(--text-dim);">$ cat /etc/motd</span>
-      </div>
-      <p class="hero__bio" style="color: var(--text-dim); font-size: 0.8rem; margin-top: 0.5rem;">
-        Based in Texas. Targeting Boston by late 2026.<br>
-        Interested in hard travel, cold places, and building things that matter.
-      </p>
+    <section class="home-hero">
+      <h1 class="home-hero__name">Chirag Dewan</h1>
+      <p class="home-hero__line">Building behavioral threat detection for AI platforms and cloud infrastructure.</p>
     </section>
 
-    <div class="section-header"><span>~/</span>now</div>
+    <div class="home-projects">
+      <div class="home-card">
+        <div class="home-card__name">PARALLAX</div>
+        <div class="home-card__stat">0.68 AUC on 17M real events</div>
+        <div class="home-card__desc">Privacy-preserving behavioral threat detection for AI platforms. 14 detectors, validated against LANL Cyber1. See the pattern, not the content.</div>
+        <div class="home-card__links">
+          <a href="/projects/parallax.html">→ project</a>
+          <a href="/projects/parallax-demo.html">→ demo</a>
+        </div>
+      </div>
 
-    <div class="now-section">
-      <div class="now-item">
-        <span class="now-label">building</span>
-        <span class="now-value"><a href="/projects/parallax.html">PARALLAX</a> — privacy-preserving behavioral threat detection for AI platforms</span>
+      <div class="home-card">
+        <div class="home-card__name">KESTREL</div>
+        <div class="home-card__stat">0.766 recall on 34K real events</div>
+        <div class="home-card__desc">Cloud-native AI workload anomaly detection. 3 detectors, validated against real CloudTrail data. Baseline normal, detect deviations.</div>
+        <div class="home-card__links">
+          <a href="/projects/kestrel.html">→ project</a>
+          <a href="/projects/kestrel-demo.html">→ demo</a>
+        </div>
       </div>
-      <div class="now-item">
-        <span class="now-label">building</span>
-        <span class="now-value"><a href="/projects/kestrel.html">KESTREL</a> — cloud-native AI workload anomaly detection</span>
-      </div>
-      <div class="now-item">
-        <span class="now-label">studying</span>
-        <span class="now-value">OSCP — PWK labs, HTB boxes, targeting December 2026</span>
-      </div>
-      <div class="now-item">
-        <span class="now-label">working</span>
-        <span class="now-value">SWE II at GM Financial — ML fraud detection, zero-trust cloud architecture, detection engineering</span>
-      </div>
+    </div>
+
+    <div class="home-links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag@cdewan.me">email</a>
+      <a href="/Chirag_Dewan_Resume.pdf" class="accent">resume</a>
     </div>
   </div>
 
