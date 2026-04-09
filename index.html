@@ -105,6 +105,91 @@
     .home-about a:hover { color: var(--green); }
     .home-about .cmd { color: var(--green); }
 
+    /* ---- Activity Panel ---- */
+    .activity {
+      margin-top: 2rem;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg-raised);
+      display: none; /* shown by JS */
+    }
+    .activity.loaded { display: block; }
+    .activity__cmd {
+      font-size: 0.7rem;
+      color: var(--green);
+      margin-bottom: 0.8rem;
+    }
+
+    /* Sparkline */
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 32px;
+      margin-bottom: 0.6rem;
+    }
+    .spark-bar {
+      flex: 1;
+      min-width: 3px;
+      max-width: 8px;
+      border-radius: 1px 1px 0 0;
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: transform 0.4s ease;
+    }
+    .spark-bar.animate { transform: scaleY(1); }
+
+    /* Heatmap */
+    .heatmap-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+    .heatmap-labels {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      font-size: 0.5rem;
+      color: var(--text-dim);
+      padding-top: 1px;
+    }
+    .heatmap-labels span {
+      height: 7px;
+      line-height: 7px;
+    }
+    .heatmap {
+      display: grid;
+      grid-template-rows: repeat(7, 7px);
+      grid-auto-columns: 7px;
+      grid-auto-flow: column;
+      gap: 1px;
+    }
+    .hm-cell {
+      width: 7px;
+      height: 7px;
+      border-radius: 1px;
+      background: var(--bg-surface);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hm-cell.l1 { background: #003d10; }
+    .hm-cell.l2 { background: #006d1a; }
+    .hm-cell.l3 { background: #00aa2a; }
+    .hm-cell.l4 { background: var(--green); box-shadow: 0 0 4px var(--green-glow); }
+
+    /* Stats row */
+    .activity__stats {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+    }
+    .activity__stats .val {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
     @media (max-width: 600px) {
       .home-hero { padding: 3rem 0 0.6rem; }
       .home-hero__name { font-size: 1.8rem; }
@@ -156,6 +241,18 @@
         <span class="home-card__name">ReconAI</span>
         <span class="home-card__desc">AI-powered offensive reconnaissance and target prioritization.</span>
       </a>
+    </div>
+
+    <div class="activity" id="activity">
+      <p class="activity__cmd">$ git log --activity</p>
+      <div class="sparkline" id="sparkline"></div>
+      <div class="heatmap-wrap">
+        <div class="heatmap-labels">
+          <span></span><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span>
+        </div>
+        <div class="heatmap" id="heatmap"></div>
+      </div>
+      <div class="activity__stats" id="activity-stats"></div>
     </div>
 
     <p class="home-about"><a href="/about.html"><span class="cmd">$</span> cat about.txt →</a></p>
