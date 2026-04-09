@@ -4,119 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects — Chirag Dewan | AI Security Engineer</title>
-  <meta name="description" content="Two tools, two layers, one thesis. PARALLAX: behavioral threat detection for AI platforms (0.68 AUC on 17M events). KESTREL: cloud-native anomaly detection (0.766 recall on real CloudTrail data).">
+  <meta name="description" content="Three tools. Offense, application defense, infrastructure defense. PARALLAX: 0.68 AUC on 17M events. KESTREL: 0.766 recall on real CloudTrail data. ReconAI: AI-powered offensive reconnaissance.">
   <link rel="canonical" href="https://chirag-dewan.github.io/projects/">
   <meta property="og:title" content="Projects — Chirag Dewan">
-  <meta property="og:description" content="PARALLAX and KESTREL — two layers of behavioral threat detection, validated on real data.">
+  <meta property="og:description" content="Three tools. Offense, application defense, infrastructure defense. The attack lives in the pattern, not the content.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chirag-dewan.github.io/projects/">
   <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Projects — Chirag Dewan">
-  <meta name="twitter:description" content="PARALLAX and KESTREL — two layers of behavioral threat detection, validated on real data.">
+  <meta name="twitter:description" content="Three tools. Offense, application defense, infrastructure defense. The attack lives in the pattern, not the content.">
   <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="../css/main.css">
-  <style>
-    .proj-thesis {
-      font-size: 1.05rem;
-      color: var(--text);
-      line-height: 1.7;
-      max-width: 540px;
-      margin-bottom: 2.5rem;
-    }
-    .proj-thesis .accent { color: var(--green); }
-
-    .proj-diagram {
-      font-size: 0.75rem;
-      line-height: 1.9;
-      padding: 1.2rem 1.5rem;
-      border: 1px solid var(--border);
-      background: var(--bg-raised);
-      margin-bottom: 2.5rem;
-      overflow-x: auto;
-      white-space: pre;
-      color: var(--text-dim);
-    }
-    .proj-diagram .layer { color: var(--text-muted); }
-    .proj-diagram .tool { color: var(--green); font-weight: 600; }
-    .proj-diagram .output { color: var(--amber); }
-    .proj-diagram .pipe { color: var(--text-dim); }
-
-    .proj-halves {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 600px) {
-      .proj-halves { grid-template-columns: 1fr; }
-    }
-
-    .proj-half {
-      border: 1px solid var(--border);
-      background: var(--bg-raised);
-      padding: 1.5rem;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-    }
-    .proj-half:hover {
-      border-color: var(--green-dim);
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.05), inset 0 0 20px rgba(0, 255, 65, 0.02);
-      transform: translateY(-2px);
-    }
-    .proj-half__layer {
-      font-size: 0.6rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.4rem;
-    }
-    .proj-half__name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--green);
-      margin-bottom: 0.4rem;
-      transition: text-shadow 0.3s;
-    }
-    .proj-half:hover .proj-half__name {
-      text-shadow: 0 0 12px var(--green-glow);
-    }
-    .proj-half__name::before {
-      content: '▸ ';
-      color: var(--amber);
-    }
-    .proj-half__metric {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--amber);
-      margin: 0.5rem 0;
-      line-height: 1.2;
-    }
-    .proj-half__desc {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 0.6rem;
-    }
-    .proj-half__status {
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      margin-bottom: 0.8rem;
-    }
-    .proj-half__status span { color: var(--amber); }
-    .proj-half__links {
-      display: flex;
-      gap: 1rem;
-      font-size: 0.75rem;
-    }
-    .proj-half__links a {
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .proj-half__links a:hover { color: var(--green); }
-  </style>
 </head>
 <body>
   <nav class="nav">
@@ -135,35 +36,47 @@
   <div class="container">
     <h1 class="section-header"><span>~/projects</span></h1>
 
-    <p class="proj-thesis">Two tools. Two layers. One thesis: <span class="accent">the attack lives in the pattern, not the content.</span></p>
+    <p style="font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 580px; margin-bottom: 2.5rem;">Three tools. Offense, application defense, infrastructure defense. <span style="color: var(--green);">The attack lives in the pattern, not the content.</span></p>
 
-    <div class="proj-diagram" role="img" aria-label="Architecture diagram showing PARALLAX processing API traffic into behavioral threats and KESTREL processing cloud telemetry into infrastructure threats"><span class="layer">API Traffic</span>       <span class="pipe">→</span>  <span class="tool">[PARALLAX]</span>  <span class="pipe">→</span>  <span class="output">Behavioral Threats</span>
-<span class="layer">Cloud Telemetry</span>  <span class="pipe">→</span>  <span class="tool">[KESTREL]</span>   <span class="pipe">→</span>  <span class="output">Infrastructure Threats</span></div>
-
-    <div class="proj-halves">
-      <div class="proj-half">
-        <div class="proj-half__layer">Application Layer</div>
-        <div class="proj-half__name">PARALLAX</div>
-        <div class="proj-half__metric">0.68 AUC on 17M real events</div>
-        <div class="proj-half__desc">Privacy-preserving behavioral threat detection for AI platforms. 14 detectors across two tiers, validated against LANL Cyber1. Iterated from 0.45 to 0.68 AUC in three versions.</div>
-        <div class="proj-half__status">Status: <span>Active Development</span></div>
-        <div class="proj-half__links">
-          <a href="parallax.html">→ project</a>
-          <a href="parallax-demo.html">→ live demo</a>
-        </div>
+    <div class="project-card line-in animate-in">
+      <div class="project-card__name">PARALLAX</div>
+      <div class="project-card__thesis">Privacy-preserving behavioral threat detection for AI platforms.</div>
+      <div class="project-card__stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">Behavioral Analytics</span>
+        <span class="stack-tag">Metadata-Only</span>
       </div>
+      <div class="project-card__status">Status: <span class="active">v2 — Real Data Validated</span></div>
+      <a href="parallax.html" class="project-card__link">→ details</a>
+      <a href="parallax-demo.html" class="project-card__link" style="margin-left: 1rem;">→ live demo</a>
+    </div>
 
-      <div class="proj-half">
-        <div class="proj-half__layer">Infrastructure Layer</div>
-        <div class="proj-half__name">KESTREL</div>
-        <div class="proj-half__metric">0.766 recall on 34K real events</div>
-        <div class="proj-half__desc">Cloud-native AI workload anomaly detection. 3 detectors with z-score baselining, validated against real AWS CloudTrail data. 220 findings, precision 1.0.</div>
-        <div class="proj-half__status">Status: <span>v2 Complete — Real Data Validated</span></div>
-        <div class="proj-half__links">
-          <a href="kestrel.html">→ project</a>
-          <a href="kestrel-demo.html">→ live demo</a>
-        </div>
+    <div class="project-card line-in animate-in">
+      <div class="project-card__name">KESTREL</div>
+      <div class="project-card__thesis">Cloud-native AI workload anomaly detection.</div>
+      <div class="project-card__stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">SQLite</span>
+        <span class="stack-tag">Flask</span>
+        <span class="stack-tag">Sigma Export</span>
+        <span class="stack-tag">CLI</span>
       </div>
+      <div class="project-card__status">Status: <span class="active">v2 — Real Data Validated</span></div>
+      <a href="kestrel.html" class="project-card__link">→ details</a>
+      <a href="kestrel-demo.html" class="project-card__link" style="margin-left: 1rem;">→ live demo</a>
+    </div>
+
+    <div class="project-card line-in animate-in">
+      <div class="project-card__name">ReconAI</div>
+      <div class="project-card__thesis">AI-powered offensive reconnaissance with GPT-4 analysis and target prioritization.</div>
+      <div class="project-card__stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">GPT-4</span>
+        <span class="stack-tag">Bbot</span>
+        <span class="stack-tag">OSINT</span>
+      </div>
+      <div class="project-card__status">Status: <span class="active">Active</span></div>
+      <a href="https://github.com/chirag-dewan" class="project-card__link">→ github</a>
     </div>
   </div>
   </main>
