@@ -552,6 +552,15 @@ body { animation: crt-flicker 8s infinite; }
   gap: 1.5rem;
   margin-bottom: 0.8rem;
 }
+.footer__tagline {
+  color: var(--green-dim);
+  font-size: 0.65rem;
+  margin-top: 0.6rem;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+  font-style: italic;
+}
+.footer:hover .footer__tagline { opacity: 1; }
 
 /* ---- Now Section (index) ---- */
 .now-section {

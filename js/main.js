@@ -107,4 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (postTitle) {
     postTitle.classList.add('glow-green');
   }
+
+  // Footer tagline — rotate on each visit
+  const tagline = document.querySelector('.footer__tagline');
+  if (tagline) {
+    const lines = [
+      'see the pattern, not the content.',
+      'subtraction before addition.',
+      'the attack lives in the pattern.',
+      'privacy by architecture, not policy.',
+      'honest about failure modes.',
+      'the failure in the middle is what makes it believable.',
+      'baseline normal, detect deviations.',
+      'every system has a story to tell.',
+    ];
+    tagline.textContent = '> ' + lines[Math.floor(Math.random() * lines.length)];
+  }
 });
