@@ -714,7 +714,14 @@
     </div>
   </nav>
 
+  <main>
   <div class="container">
+    <noscript>
+      <div style="border: 1px solid var(--amber); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.8rem; color: var(--amber);">
+        This interactive demo requires JavaScript. <a href="kestrel.html" style="color: var(--green);">View the project page</a> for static results, or <a href="https://github.com/chirag-dewan/kestrel" style="color: var(--green);">view the source on GitHub</a>.
+      </div>
+    </noscript>
+
     <div class="demo-header">
       <h1>KESTREL DETECTION PIPELINE</h1>
       <p>Live simulation — select a cloud workload scenario and watch z-score baselining catch anomalies in real time</p>
@@ -1063,6 +1070,7 @@
       <p style="margin-top: 0.5rem;"><a href="kestrel.html" style="color: var(--amber); text-decoration: none;">&larr; back to project details</a> &middot; <a href="https://github.com/chirag-dewan/kestrel" style="color: var(--amber); text-decoration: none;">source on GitHub</a></p>
     </div>
   </div>
+  </main>
 
   <footer class="footer">
     <div class="footer__links">
@@ -1074,7 +1082,7 @@
     <p>&copy; 2026 Chirag Dewan</p>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js" defer></script>
   <script>
   /* ========================================================
      KESTREL Detection Pipeline — Browser Simulation

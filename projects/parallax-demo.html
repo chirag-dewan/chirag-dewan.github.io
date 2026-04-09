@@ -606,7 +606,14 @@
     </div>
   </nav>
 
+  <main>
   <div class="container">
+    <noscript>
+      <div style="border: 1px solid var(--amber); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.8rem; color: var(--amber);">
+        This interactive demo requires JavaScript. <a href="parallax.html" style="color: var(--green);">View the project page</a> for static results, or <a href="https://github.com/chirag-dewan/parallax" style="color: var(--green);">view the source on GitHub</a>.
+      </div>
+    </noscript>
+
     <div class="demo-header">
       <h1>PARALLAX DETECTION PIPELINE</h1>
       <p>Live simulation — select an account archetype and watch 15 detectors classify behavior in real time</p>
@@ -775,7 +782,7 @@
       <div class="dist-section">
         <div class="dist-section__header">score_distributions — compromised vs normal (v3, n=500)</div>
         <div class="dist-canvas-wrap">
-          <canvas id="dist-canvas"></canvas>
+          <canvas id="dist-canvas" role="img" aria-label="Score distribution histogram: compromised users (mean 0.60) vs normal users (mean 0.48) with threshold at 0.77">Score distribution: compromised mean=0.60, normal mean=0.48, threshold=0.77</canvas>
         </div>
         <div class="dist-legend">
           <div class="dist-legend__item">
@@ -839,6 +846,7 @@
       <p style="margin-top: 0.5rem;"><a href="parallax.html" style="color: var(--amber); text-decoration: none;">← back to project details</a> · <a href="https://github.com/chirag-dewan/parallax" style="color: var(--amber); text-decoration: none;">source on GitHub</a></p>
     </div>
   </div>
+  </main>
 
   <footer class="footer">
     <div class="footer__links">
@@ -850,7 +858,7 @@
     <p>© 2026 Chirag Dewan</p>
   </footer>
 
-  <script src="../js/main.js"></script>
+  <script src="../js/main.js" defer></script>
   <script>
   /* ========================================================
      PARALLAX Detection Pipeline — Browser Simulation
