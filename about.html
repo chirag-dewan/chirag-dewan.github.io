@@ -18,6 +18,69 @@
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/main.css">
+  <style>
+    .cmd { color: var(--green); font-size: 0.8rem; margin-top: 2rem; margin-bottom: 0.6rem; }
+    .cmd:first-of-type { margin-top: 1.5rem; }
+
+    .proj-line {
+      font-size: 0.8rem;
+      line-height: 1.7;
+      margin-bottom: 0.15rem;
+    }
+    .proj-line a { color: var(--amber); text-decoration: none; }
+    .proj-line a:hover { text-decoration: underline; }
+    .proj-line .desc { color: var(--text-muted); }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      gap: 0.1rem 1rem;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+    @media (max-width: 500px) {
+      .history-grid { grid-template-columns: 1fr; gap: 0; }
+      .history-grid .year { margin-top: 0.6rem; }
+    }
+    .year {
+      color: var(--text-dim);
+      white-space: nowrap;
+      padding-top: 0.15rem;
+    }
+    .role-block { padding-bottom: 0.5rem; }
+    .role-title {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .role-org { color: var(--green-dim); }
+    .role-detail {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+    }
+    .role-note {
+      color: var(--amber-dim);
+      font-size: 0.7rem;
+      font-style: italic;
+    }
+
+    .certs-line {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .contact-block {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .contact-block p {
+      font-size: 0.85rem;
+      margin-bottom: 0.1rem;
+    }
+    .contact-block a { color: var(--green); text-decoration: none; }
+    .contact-block a.dl { color: var(--amber); }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -27,7 +90,6 @@
       <ul class="nav__links">
         <li><a href="/about.html">about</a></li>
         <li><a href="/projects/">projects</a></li>
-        <li><a href="/timeline/">timeline</a></li>
       </ul>
     </div>
   </nav>
@@ -40,23 +102,66 @@
 
     <div class="post-content">
       <p>Security engineer. Offensive background, detection focus.</p>
-
-      <p>3+ years across zero-day research (RTX/DoD), cloud security, and detection engineering. Currently SWE II at GM Financial.</p>
-
       <p>I build systems that detect abuse through behavioral patterns — not content inspection.</p>
 
-      <p style="margin-top: 1.5rem;">
-        <a href="/projects/parallax.html" style="color: var(--amber); text-decoration: none;">→ PARALLAX</a> — behavioral threat detection for AI platforms. 0.68 AUC on 17M real events.<br>
-        <a href="/projects/kestrel.html" style="color: var(--amber); text-decoration: none;">→ KESTREL</a> — cloud workload anomaly detection. 0.766 recall on 34K real CloudTrail events.<br>
-        <span style="color: var(--amber);">→ ReconAI</span> — AI-powered offensive reconnaissance and target prioritization.
-      </p>
+      <p class="cmd">$ ls projects/</p>
+      <div class="proj-line"><a href="/projects/parallax.html">→ PARALLAX</a> <span class="desc">— behavioral threat detection for AI platforms. 0.68 AUC on 17M real events.</span></div>
+      <div class="proj-line"><a href="/projects/kestrel.html">→ KESTREL</a> <span class="desc">— cloud workload anomaly detection. 0.766 recall on 34K real CloudTrail events.</span></div>
+      <div class="proj-line"><span style="color: var(--amber);">→ ReconAI</span> <span class="desc">— AI-powered offensive reconnaissance and target prioritization.</span></div>
 
-      <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem;">$ cat contact.txt</p>
-        <p style="font-size: 0.85rem;"><a href="mailto:chirag0728@gmail.com" style="color: var(--green); text-decoration: none;">chirag0728@gmail.com</a></p>
-        <p style="font-size: 0.85rem;"><a href="https://linkedin.com/in/cdewan" style="color: var(--green); text-decoration: none;">linkedin.com/in/cdewan</a></p>
-        <p style="font-size: 0.85rem;"><a href="https://github.com/chirag-dewan" style="color: var(--green); text-decoration: none;">github.com/chirag-dewan</a></p>
-        <p style="font-size: 0.85rem; margin-top: 0.6rem;"><a href="/Chirag_Dewan_Resume.pdf" style="color: var(--amber); text-decoration: none;">↓ resume.pdf</a></p>
+      <p class="cmd">$ history --career</p>
+      <div class="history-grid">
+        <span class="year">2025—now</span>
+        <div class="role-block">
+          <div><span class="role-title">SWE II, Vulnerability &amp; Detection Engineering</span> — <span class="role-org">GM Financial</span></div>
+          <div class="role-detail">ML fraud detection · zero-trust architecture · Terraform/Azure · team mentorship</div>
+        </div>
+
+        <span class="year">2023—2025</span>
+        <div class="role-block">
+          <div><span class="role-title">Offensive Security Researcher</span> — <span class="role-org">RTX/RTX BBN</span></div>
+          <div class="role-detail">8 zero-days · DoD briefings · firmware RE · ICS protocol fuzzing</div>
+          <div class="role-note">↑ converted from intern</div>
+        </div>
+
+        <span class="year">2022</span>
+        <div class="role-block">
+          <div><span class="role-title">Senior Cybersecurity Intern</span> — <span class="role-org">RTX</span></div>
+        </div>
+
+        <span class="year">2021</span>
+        <div class="role-block">
+          <div><span class="role-title">Information Security Intern</span> — <span class="role-org">Reata Pharmaceuticals</span></div>
+          <div class="role-detail">IR during active breach · stood up centralized logging</div>
+        </div>
+
+        <span class="year">2019—2023</span>
+        <div class="role-block">
+          <div><span class="role-title">B.S. Computer Science</span> — <span class="role-org">Arizona State University</span></div>
+        </div>
+      </div>
+
+      <p class="cmd">$ history --research</p>
+      <div class="history-grid">
+        <span class="year">2026</span>
+        <div class="role-block"><span class="role-title">PARALLAX</span> <span class="role-detail">— 15 detectors, tested on 17M real LANL events</span></div>
+
+        <span class="year">2026</span>
+        <div class="role-block"><span class="role-title">KESTREL</span> <span class="role-detail">— 3 detectors, tested on 34K real CloudTrail events</span></div>
+
+        <span class="year">2026</span>
+        <div class="role-block"><span class="role-title">ReconAI</span> <span class="role-detail">— AI-powered offensive recon with GPT-4</span></div>
+      </div>
+
+      <p class="cmd">$ cat certs.txt</p>
+      <p class="certs-line">AWS Security Specialty · CRTO · CySA+ · Security+ · AWS SA Associate · Terraform Associate · Splunk Cybersecurity Defense Analyst · SecAI+</p>
+
+      <div class="contact-block">
+        <p class="cmd" style="margin-top: 0;">$ cat contact.txt</p>
+        <p><a href="mailto:chirag0728@gmail.com">chirag0728@gmail.com</a></p>
+        <p><a href="https://linkedin.com/in/cdewan">linkedin.com/in/cdewan</a></p>
+        <p><a href="https://github.com/chirag-dewan">github.com/chirag-dewan</a></p>
+        <p style="margin-top: 0.5rem;"><a href="/Chirag_Dewan_Resume.pdf" class="dl">↓ resume.pdf</a></p>
       </div>
     </div>
   </article>
