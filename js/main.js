@@ -47,61 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     revealObserver.observe(el);
   });
 
-  // Typing effect for hero prompt
-  const prompt = document.querySelector('.hero__prompt .type-text');
-  if (prompt) {
-    const text = prompt.dataset.text;
-    prompt.textContent = '';
-    let i = 0;
-    const type = () => {
-      if (i < text.length) {
-        prompt.textContent += text[i];
-        i++;
-        setTimeout(type, 40 + Math.random() * 30);
-      } else {
-        prompt.classList.add('cursor');
-      }
-    };
-    setTimeout(type, 300);
-  }
-
-  // Hero name decode effect — characters scramble then resolve
-  const heroName = document.querySelector('.hero__name');
-  if (heroName && !heroName.querySelector('.char')) {
-    const originalText = heroName.textContent;
-    const glyphs = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`0123456789';
-    heroName.textContent = '';
-    heroName.setAttribute('aria-label', originalText);
-
-    [...originalText].forEach((char, i) => {
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.style.animationDelay = (i * 0.04) + 's';
-
-      if (char === ' ') {
-        span.innerHTML = '&nbsp;';
-        span.style.animationDelay = '0s';
-        span.style.opacity = '1';
-      } else {
-        // Scramble before resolving
-        let scrambleCount = 0;
-        const maxScrambles = 3 + Math.floor(Math.random() * 4);
-        const scramble = () => {
-          if (scrambleCount < maxScrambles) {
-            span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-            scrambleCount++;
-            setTimeout(scramble, 30 + Math.random() * 20);
-          } else {
-            span.textContent = char;
-          }
-        };
-        setTimeout(scramble, i * 40 + 400);
-        span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-      }
-      heroName.appendChild(span);
-    });
-  }
-
   // Post title subtle glow pulse
   const postTitle = document.querySelector('.post-title');
   if (postTitle) {

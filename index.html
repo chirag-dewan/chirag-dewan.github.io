@@ -54,6 +54,7 @@
       flex-wrap: wrap;
       transition: border-color 0.3s;
     }
+    .home-card { text-decoration: none; cursor: pointer; }
     .home-card:hover { border-color: var(--green-dim); }
     .home-card__name {
       font-weight: 600;
@@ -77,19 +78,6 @@
       color: var(--amber);
       flex-shrink: 0;
     }
-    .home-card__links {
-      display: flex;
-      gap: 0.8rem;
-      font-size: 0.7rem;
-      flex-shrink: 0;
-    }
-    .home-card__links a {
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .home-card__links a:hover { color: var(--green); }
-
     @media (max-width: 600px) {
       .home-hero { padding: 3rem 0 1.5rem; }
       .home-hero__name { font-size: 1.8rem; }
@@ -122,25 +110,22 @@
     </section>
 
     <div class="home-cards">
-      <div class="home-card">
+      <a href="/projects/parallax.html" class="home-card">
         <span class="home-card__name">PARALLAX</span>
         <span class="home-card__desc">Behavioral threat detection for AI platforms.</span>
         <span class="home-card__metric">0.68 AUC on 17M real events</span>
-        <span class="home-card__links"><a href="/projects/parallax.html">details</a> <a href="/projects/parallax-demo.html">demo</a></span>
-      </div>
+      </a>
 
-      <div class="home-card">
+      <a href="/projects/kestrel.html" class="home-card">
         <span class="home-card__name">KESTREL</span>
         <span class="home-card__desc">Cloud workload anomaly detection.</span>
         <span class="home-card__metric">0.766 recall on 34K real events</span>
-        <span class="home-card__links"><a href="/projects/kestrel.html">details</a> <a href="/projects/kestrel-demo.html">demo</a></span>
-      </div>
+      </a>
 
-      <div class="home-card">
+      <a href="https://github.com/chirag-dewan" class="home-card">
         <span class="home-card__name">ReconAI</span>
         <span class="home-card__desc">AI-powered offensive reconnaissance and target prioritization.</span>
-        <span class="home-card__links"><a href="https://github.com/chirag-dewan">github</a></span>
-      </div>
+      </a>
     </div>
   </div>
   </main>
