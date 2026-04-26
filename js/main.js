@@ -305,9 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          const link = card.querySelector('.project-card__link');
-          if (link) {
-            link.click();
+          const primaryLink = card.querySelector('.project-card__link, a[href]');
+          if (primaryLink && primaryLink.href) {
+            window.location.href = primaryLink.href;
           }
         }
       });
@@ -346,30 +346,49 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.removeProperty('--mouse-y');
       });
 
-      // Add ripple effect on click
+      // Add ripple effect on click and handle navigation
       card.addEventListener('click', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        // Don't interfere with actual links
+        if (e.target.tagName === 'A' || e.target.closest('a')) {
+          return;
+        }
 
-        const ripple = document.createElement('div');
-        ripple.style.cssText = `
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(0, 255, 65, 0.3);
-          transform: scale(0);
-          animation: ripple 0.6s linear;
-          left: ${x - 50}px;
-          top: ${y - 50}px;
-          width: 100px;
-          height: 100px;
-          pointer-events: none;
-        `;
+        // Find the primary link in the card
+        const primaryLink = card.querySelector('.project-card__link, a[href]');
 
-        card.style.position = 'relative';
-        card.appendChild(ripple);
+        if (primaryLink) {
+          // Add ripple effect
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-        setTimeout(() => ripple.remove(), 600);
+          const ripple = document.createElement('div');
+          ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 255, 65, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            left: ${x - 50}px;
+            top: ${y - 50}px;
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+            z-index: 1;
+          `;
+
+          card.style.position = 'relative';
+          card.appendChild(ripple);
+
+          // Navigate after ripple animation starts
+          setTimeout(() => {
+            if (primaryLink.href) {
+              window.location.href = primaryLink.href;
+            }
+          }, 100);
+
+          setTimeout(() => ripple.remove(), 600);
+        }
       });
     });
 
@@ -429,21 +448,22 @@ document.addEventListener('DOMContentLoaded', () => {
   function enhanceScrollEffects() {
     let ticking = false;
 
-    function updateParallax() {
+    function updateScrollEffects() {
       const scrollY = window.pageYOffset;
-      const cards = document.querySelectorAll('.project-card');
 
-      cards.forEach((card, index) => {
-        const rate = scrollY * -0.02 * (index + 1);
-        card.style.transform = `translateY(${rate}px)`;
-      });
+      // Subtle header background opacity based on scroll
+      const nav = document.querySelector('.nav');
+      if (nav) {
+        const opacity = Math.min(scrollY / 100, 0.95);
+        nav.style.background = `rgba(10, 10, 10, ${opacity})`;
+      }
 
       ticking = false;
     }
 
     window.addEventListener('scroll', () => {
       if (!ticking) {
-        requestAnimationFrame(updateParallax);
+        requestAnimationFrame(updateScrollEffects);
         ticking = true;
       }
     });
