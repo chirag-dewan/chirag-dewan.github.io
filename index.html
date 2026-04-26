@@ -217,20 +217,49 @@
   <main>
   <div class="container">
     <section class="home-hero">
-      <h1 class="home-hero__name">Chirag Dewan</h1>
+      <h1 class="home-hero__name" data-glitch="Chirag Dewan">Chirag Dewan</h1>
       <p class="home-hero__line">Security engineer. Offensive background, detection focus.</p>
       <p class="home-hero__sub">I build systems that detect abuse through behavioral patterns — not content inspection.</p>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; font-size: 0.7rem; color: var(--text-dim);">
+        <span style="color: var(--green); font-weight: 600;">$ status</span>
+        <span style="color: var(--amber);">● ACTIVE</span>
+        <span>|</span>
+        <span>17M events analyzed</span>
+        <span>|</span>
+        <span>8 zero-days</span>
+        <span>|</span>
+        <span>7 CTF levels completed</span>
+      </div>
     </section>
 
     <p class="home-quote footer__tagline">> see the pattern, not the content.</p>
 
-    <div class="ascii-art">
- ┌─────────────────────────────────────┐
- │  behavioral detection • ai security  │
- │  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  │
- │  █████████████████████████████████  │
- │  system.status = OPERATIONAL        │
- └─────────────────────────────────────┘
+    <div class="ascii-art" style="margin: 2rem 0; font-size: 0.65rem; line-height: 1; color: var(--green-dim);">
+    ╭────────────────────────────────────────╮
+    │ ◆ BEHAVIORAL DETECTION • AI SECURITY ◆ │
+    │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
+    │ ████████████████████████████████████ │
+    │ ⚡ system.status = <span style="color: var(--amber);">OPERATIONAL</span> ⚡     │
+    │ 🔍 threat.detection = <span style="color: var(--green);">ACTIVE</span>       │
+    ╰────────────────────────────────────────╯
+    </div>
+
+    <div style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--border); background: linear-gradient(135deg, var(--bg-raised), rgba(0, 255, 65, 0.01)); border-radius: 8px;">
+      <div style="font-size: 0.8rem; color: var(--green); margin-bottom: 0.8rem; font-weight: 600;">
+        $ cat recent_achievements.log
+      </div>
+      <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;">
+        <div style="margin-bottom: 0.4rem;">
+          <span style="color: var(--amber);">[2026-04]</span> PARALLAX detection system → 0.68 AUC on 17M LANL events
+        </div>
+        <div style="margin-bottom: 0.4rem;">
+          <span style="color: var(--amber);">[2026-03]</span> KESTREL cloud anomaly detection → 0.766 recall
+        </div>
+        <div>
+          <span style="color: var(--amber);">[2026-02]</span> Gandalf L2-L7 progression → Advanced social engineering techniques
+        </div>
+      </div>
     </div>
 
     <div class="home-cards">

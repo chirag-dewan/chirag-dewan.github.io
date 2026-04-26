@@ -48,20 +48,35 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---- CRT Scanlines ---- */
+/* ---- Enhanced CRT Effects ---- */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 255, 65, 0.01) 1px,
+      rgba(0, 255, 65, 0.01) 3px
+    );
   pointer-events: none;
   z-index: 9999;
+  opacity: 0.6;
+  animation: scanline-drift 8s infinite ease-in-out;
+}
+
+@keyframes scanline-drift {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.4; }
 }
 
 /* ---- CRT Vignette ---- */
@@ -315,28 +330,94 @@ body { animation: crt-flicker 8s infinite; }
   text-shadow: 0 0 20px var(--green-glow);
 }
 
-/* ---- Projects ---- */
+/* ---- Enhanced Project Cards ---- */
 .project-card {
   border: 1px solid var(--border);
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   background: var(--bg-raised);
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 65, 0.03),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 255, 65, 0.02) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 .project-card:hover {
   border-color: var(--green-dim);
-  box-shadow: 0 0 20px rgba(0, 255, 65, 0.05), inset 0 0 20px rgba(0, 255, 65, 0.02);
-  transform: translateY(-2px);
+  box-shadow:
+    0 0 30px rgba(0, 255, 65, 0.1),
+    0 0 60px rgba(0, 255, 65, 0.05),
+    inset 0 0 30px rgba(0, 255, 65, 0.02);
+  transform: translateY(-4px) scale(1.02);
+  background: linear-gradient(135deg, var(--bg-raised), rgba(0, 255, 65, 0.01));
+}
+
+.project-card:hover::before {
+  left: 100%;
+}
+
+.project-card:hover::after {
+  opacity: 1;
 }
 .project-card__name {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--green);
   margin-bottom: 0.3rem;
-  transition: text-shadow 0.3s;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  position: relative;
 }
+
+.project-card__name::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--amber));
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .project-card:hover .project-card__name {
-  text-shadow: 0 0 12px var(--green-glow);
+  text-shadow:
+    0 0 15px var(--green-glow),
+    0 0 30px rgba(0, 255, 65, 0.2);
+  transform: translateX(3px);
+}
+
+.project-card:hover .project-card__name::after {
+  width: 60%;
 }
 .project-card__name::before {
   content: '▸ ';
@@ -989,11 +1070,196 @@ body { animation: crt-flicker 8s infinite; }
   }
 }
 
+/* ---- Floating Particles Effect ---- */
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--green);
+  border-radius: 50%;
+  opacity: 0;
+  animation: float-up 8s infinite linear;
+}
+
+.particle:nth-child(odd) {
+  background: var(--amber);
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh) translateX(0) scale(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(90vh) translateX(10px) scale(1);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(10vh) translateX(-10px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(0) translateX(0) scale(0);
+  }
+}
+
+/* ---- Enhanced Navigation ---- */
+.nav {
+  border-bottom: 1px solid var(--border);
+  padding: 1.2rem 0;
+  margin-bottom: 3rem;
+  backdrop-filter: blur(10px);
+  background: rgba(10, 10, 10, 0.95);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav__home {
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav__home::before {
+  content: '~/';
+  color: var(--text-muted);
+  transition: color 0.3s;
+}
+
+.nav__home:hover {
+  text-shadow:
+    0 0 15px var(--green-glow),
+    0 0 30px rgba(0, 255, 65, 0.3);
+  transform: scale(1.05);
+}
+
+.nav__home:hover::before {
+  color: var(--amber);
+  text-shadow: 0 0 10px var(--amber-glow);
+}
+
+/* ---- Enhanced Section Headers ---- */
+.section-header {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.section-header::before {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--green);
+  animation: section-line-expand 2s ease forwards;
+}
+
+@keyframes section-line-expand {
+  to { width: 100px; }
+}
+
+.section-header span {
+  color: var(--green);
+  font-weight: 600;
+  text-shadow: 0 0 10px var(--green-glow);
+}
+
+/* ---- Enhanced Code Styling ---- */
+.ctf-results {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin: 1rem 0;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  color: var(--text);
+  overflow-x: auto;
+  position: relative;
+  line-height: 1.6;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.ctf-results::before {
+  content: '$ cat gandalf-results.txt';
+  position: absolute;
+  top: -0.8rem;
+  left: 1rem;
+  background: var(--bg);
+  color: var(--green);
+  font-size: 0.7rem;
+  padding: 0 0.5rem;
+}
+
+/* ---- Skill Tag Enhancements ---- */
+.skill-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--bg-surface), var(--bg-raised));
+  border: 1px solid var(--border);
+  color: var(--green-dim);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  margin: 0.3rem 0.2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.skill-tag::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, var(--green-glow), transparent);
+  transition: all 0.4s;
+  transform: translate(-50%, -50%);
+}
+
+.skill-tag:hover {
+  border-color: var(--green);
+  color: var(--green);
+  text-shadow: 0 0 8px var(--green-glow);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 255, 65, 0.2);
+}
+
+.skill-tag:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
 /* ---- Print Styles ---- */
 @media print {
   body::after,
   body::before,
-  .matrix-bg {
+  .matrix-bg,
+  .particles-container {
     display: none !important;
   }
 

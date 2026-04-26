@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Mouse tracking for subtle effects
+      // Sophisticated mouse tracking for 3D effects
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -321,14 +321,171 @@ document.addEventListener('DOMContentLoaded', () => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
 
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (centerX - x) / 10;
+        const rotateX = (y - centerY) / 15;
+        const rotateY = (centerX - x) / 15;
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px) scale(1.01)`;
+        // Set CSS custom properties for the mouse position
+        const mouseX = (x / rect.width) * 100;
+        const mouseY = (y / rect.height) * 100;
+
+        card.style.setProperty('--mouse-x', mouseX + '%');
+        card.style.setProperty('--mouse-y', mouseY + '%');
+
+        card.style.transform = `
+          perspective(1000px)
+          rotateX(${rotateX}deg)
+          rotateY(${rotateY}deg)
+          translateY(-4px)
+          scale(1.02)
+        `;
       });
 
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
+        card.style.removeProperty('--mouse-x');
+        card.style.removeProperty('--mouse-y');
+      });
+
+      // Add ripple effect on click
+      card.addEventListener('click', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(0, 255, 65, 0.3);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          left: ${x - 50}px;
+          top: ${y - 50}px;
+          width: 100px;
+          height: 100px;
+          pointer-events: none;
+        `;
+
+        card.style.position = 'relative';
+        card.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // Add ripple animation
+    if (!document.querySelector('#ripple-style')) {
+      const style = document.createElement('style');
+      style.id = 'ripple-style';
+      style.textContent = `
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
+  // ---- Floating Particles System ----
+  function createFloatingParticles() {
+    if (window.innerWidth < 768) return; // Skip on mobile for performance
+
+    const container = document.createElement('div');
+    container.className = 'particles-container';
+    document.body.appendChild(container);
+
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+
+      // Random starting position
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDuration = (Math.random() * 3 + 5) + 's';
+      particle.style.animationDelay = Math.random() * 2 + 's';
+
+      container.appendChild(particle);
+
+      // Remove particle after animation
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.remove();
+        }
+      }, 8000);
+    }
+
+    // Create particles periodically
+    setInterval(createParticle, 2000);
+
+    // Create initial batch
+    for (let i = 0; i < 5; i++) {
+      setTimeout(createParticle, i * 400);
+    }
+  }
+
+  // ---- Enhanced Scroll Effects ----
+  function enhanceScrollEffects() {
+    let ticking = false;
+
+    function updateParallax() {
+      const scrollY = window.pageYOffset;
+      const cards = document.querySelectorAll('.project-card');
+
+      cards.forEach((card, index) => {
+        const rate = scrollY * -0.02 * (index + 1);
+        card.style.transform = `translateY(${rate}px)`;
+      });
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+  }
+
+  // ---- Typewriter Effect ----
+  function addTypewriterEffect(element, text, speed = 50) {
+    element.textContent = '';
+    element.style.borderRight = '2px solid var(--green)';
+
+    let i = 0;
+    function typeChar() {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeChar, speed);
+      } else {
+        // Blinking cursor
+        setInterval(() => {
+          element.style.borderRight = element.style.borderRight === 'none'
+            ? '2px solid var(--green)'
+            : 'none';
+        }, 530);
+      }
+    }
+    typeChar();
+  }
+
+  // ---- Advanced Terminal Effects ----
+  function enhanceTerminalEffects() {
+    // Add terminal boot sequence on page load
+    const hero = document.querySelector('.home-hero__name');
+    if (hero && !hero.dataset.typed) {
+      hero.dataset.typed = 'true';
+      const originalText = hero.textContent;
+      addTypewriterEffect(hero, originalText, 80);
+    }
+
+    // Enhanced CRT flicker on specific elements
+    document.querySelectorAll('.ctf-results, .section-header span').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        el.style.animation = 'crt-flicker 0.1s 3';
       });
     });
   }
@@ -487,6 +644,11 @@ document.addEventListener('DOMContentLoaded', () => {
   animateASCII();
   initTimelineAnimations();
   enhanceFocusManagement();
+  enhanceTerminalEffects();
+  enhanceScrollEffects();
+
+  // Create visual effects
+  createFloatingParticles();
 
   // Create matrix effect only on larger screens
   if (window.innerWidth > 1024) {
@@ -498,15 +660,77 @@ document.addEventListener('DOMContentLoaded', () => {
     addGlitchEffect(el, el.dataset.glitch);
   });
 
-  // Performance monitoring (subtle)
+  // Enhanced performance monitoring with visual feedback
   if ('performance' in window) {
     window.addEventListener('load', () => {
       setTimeout(() => {
         const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        if (loadTime > 3000) {
-          console.log('⚡ Site loaded in ' + (loadTime / 1000).toFixed(1) + 's');
+        if (loadTime < 2000) {
+          console.log('⚡ Blazing fast load: ' + (loadTime / 1000).toFixed(1) + 's');
+          // Add subtle success indicator
+          document.body.style.setProperty('--load-success', '1');
+        } else if (loadTime > 3000) {
+          console.log('🐌 Slow load detected: ' + (loadTime / 1000).toFixed(1) + 's');
         }
       }, 0);
     });
+  }
+
+  // Add smooth scrolling enhancement
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+  // Add subtle easter egg
+  let konamiCode = [];
+  const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+
+  document.addEventListener('keydown', (e) => {
+    konamiCode.push(e.keyCode);
+    if (konamiCode.length > 10) konamiCode.shift();
+
+    if (konamiCode.join(',') === konamiSequence.join(',')) {
+      document.body.style.setProperty('--easter-egg', '1');
+      const msg = document.createElement('div');
+      msg.textContent = '🚀 PARALLAX ACTIVATED';
+      msg.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--green);
+        color: var(--bg);
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: var(--font);
+        font-weight: 600;
+        z-index: 10000;
+        animation: slideIn 0.5s ease;
+      `;
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 3000);
+      konamiCode = [];
+    }
+  });
+
+  // Add slideIn animation for easter egg
+  if (!document.querySelector('#easter-style')) {
+    const style = document.createElement('style');
+    style.id = 'easter-style';
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
   }
 });
