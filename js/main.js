@@ -935,10 +935,21 @@ document.addEventListener('DOMContentLoaded', () => {
     addTerminalLine('Type "help" for available commands.', 'info');
   }
 
-  // ---- Advanced 3D Card Effects ----
+  // ---- Elegant Interactive Effects ----
   function enhance3DEffects() {
     document.querySelectorAll('.metric-card, .detector-item, .story-section').forEach(card => {
-      card.style.transformStyle = 'preserve-3d';
+      card.addEventListener('mouseenter', (e) => {
+        // Subtle lift and glow on hover
+        card.style.transform = 'translateY(-8px) scale(1.02)';
+        card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+        // Enhanced glow effect
+        card.style.boxShadow = `
+          0 20px 40px rgba(0, 255, 65, 0.15),
+          0 8px 25px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `;
+      });
 
       card.addEventListener('mousemove', (e) => {
         const rect = card.getBoundingClientRect();
@@ -948,24 +959,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const mouseX = e.clientX - centerX;
         const mouseY = e.clientY - centerY;
 
-        const rotateX = (mouseY / rect.height) * 15;
-        const rotateY = (mouseX / rect.width) * 15;
+        // Very subtle tilt (much less aggressive)
+        const rotateX = (mouseY / rect.height) * 2;
+        const rotateY = (mouseX / rect.width) * 2;
 
         card.style.transform = `
+          translateY(-8px) scale(1.02)
           perspective(1000px)
           rotateX(${-rotateX}deg)
           rotateY(${rotateY}deg)
-          translateZ(10px)
         `;
 
-        // Add subtle glow effect based on mouse position
-        const intensity = Math.min(Math.sqrt(mouseX * mouseX + mouseY * mouseY) / 200, 1);
-        card.style.boxShadow = `0 ${10 + intensity * 20}px ${30 + intensity * 40}px rgba(0, 255, 65, ${intensity * 0.2})`;
+        // Dynamic glow based on mouse position
+        const distance = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+        const intensity = Math.min(distance / 150, 1);
+        const glowIntensity = 0.1 + (intensity * 0.1);
+
+        card.style.boxShadow = `
+          0 ${20 + intensity * 10}px ${40 + intensity * 20}px rgba(0, 255, 65, ${glowIntensity}),
+          0 8px 25px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1)
+        `;
       });
 
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
         card.style.boxShadow = '';
+        card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
       });
     });
   }
@@ -1278,10 +1298,83 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(voiceButton);
   }
 
+  // ---- Magnetic Cursor Effect ----
+  function initMagneticCursor() {
+    document.querySelectorAll('.project-card, .metric-card, .detector-item, .cta-link').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const deltaX = (x - centerX) / centerX;
+        const deltaY = (y - centerY) / centerY;
+
+        const moveX = deltaX * 5; // Reduced from 10 for subtlety
+        const moveY = deltaY * 5;
+
+        el.style.transform = `translate(${moveX}px, ${moveY}px) translateY(-8px) scale(1.02)`;
+      });
+
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = '';
+      });
+    });
+  }
+
+  // ---- Smooth Page Transitions ----
+  function initPageTransitions() {
+    document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (e.ctrlKey || e.metaKey || link.target === '_blank') return;
+
+        e.preventDefault();
+        const href = link.href;
+
+        // Fade out current page
+        document.body.style.transition = 'opacity 0.3s ease';
+        document.body.style.opacity = '0.7';
+
+        setTimeout(() => {
+          window.location.href = href;
+        }, 300);
+      });
+    });
+  }
+
+  // ---- Enhanced Scroll Reveal ----
+  function initEnhancedScrollReveal() {
+    const revealElements = document.querySelectorAll('.story-section, .metric-card, .detector-item');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    revealElements.forEach((el, index) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+      observer.observe(el);
+    });
+  }
+
   // ---- Initialize Next-Level Features ----
   animateCounters();
   initParallaxScrolling();
   enhance3DEffects();
+  initMagneticCursor();
+  initPageTransitions();
+  initEnhancedScrollReveal();
   createAdvancedParticles();
 
   // Add special features only to PARALLAX pages
