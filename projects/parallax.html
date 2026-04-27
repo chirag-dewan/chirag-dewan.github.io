@@ -4,146 +4,398 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PARALLAX — Behavioral Threat Detection for AI Platforms</title>
-  <meta name="description" content="Privacy-preserving detection engine. 0.68 AUC on 17M real LANL events.">
+  <meta name="description" content="Privacy-preserving behavioral threat detection system for AI platforms.">
   <link rel="canonical" href="https://chirag-dewan.github.io/projects/parallax.html">
   <meta property="og:title" content="PARALLAX — Behavioral Threat Detection for AI Platforms">
-  <meta property="og:description" content="Privacy-preserving detection engine. 0.68 AUC on 17M real LANL events.">
+  <meta property="og:description" content="Privacy-preserving behavioral threat detection system for AI platforms.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chirag-dewan.github.io/projects/parallax.html">
   <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PARALLAX — Behavioral Threat Detection for AI Platforms">
-  <meta name="twitter:description" content="14 detectors, 17M real events, 0.68 AUC. The failure in the middle is what makes it believable.">
+  <meta name="twitter:title" content="PARALLAX — Behavioral Threat Detection">
+  <meta name="twitter:description" content="Advanced behavioral analytics for AI platform security.">
   <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="../css/main.css">
   <style>
-    .story-section {
-      margin-bottom: 3rem;
+    /* ---- PARALLAX Enhanced Styling ---- */
+    .parallax-hero {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-raised) 100%);
+      padding: 3rem 0 2rem;
+      margin: -2rem -1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
     }
+
+    .parallax-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 176, 0, 0.02) 0%, transparent 50%);
+      animation: float 8s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.02); }
+    }
+
+    .parallax-hero__content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .parallax-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+      text-shadow:
+        0 0 20px var(--green-glow),
+        0 0 40px rgba(0, 255, 65, 0.2);
+      letter-spacing: -1px;
+      line-height: 0.9;
+    }
+
+    .parallax-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-weight: 300;
+      max-width: 600px;
+    }
+
+    .parallax-ascii {
+      font-family: var(--font);
+      font-size: 0.6rem;
+      color: var(--green-dim);
+      line-height: 1;
+      text-align: center;
+      margin: 2rem 0;
+      opacity: 0.8;
+    }
+
+    .story-section {
+      margin-bottom: 4rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(0, 255, 65, 0.01) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .story-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--green), var(--amber));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .story-section:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 10px 40px rgba(0, 255, 65, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .story-section:hover::before {
+      opacity: 1;
+    }
+
     .story-section h2 {
       color: var(--green);
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-      font-weight: 600;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      position: relative;
     }
+
     .story-section h2::before {
-      content: '▸ ';
+      content: '◆ ';
       color: var(--amber);
+      text-shadow: 0 0 10px var(--amber-glow);
     }
+
+    .story-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), transparent);
+    }
+
     .story-section p {
       color: var(--text);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       line-height: 1.8;
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
     }
-    .story-section .accent { color: var(--green); }
-    .story-section .amber { color: var(--amber); }
-    .story-section .red { color: var(--red); font-weight: 500; }
-    .story-section .dim { color: var(--text-muted); }
 
-    .metric-strip {
-      display: flex;
-      gap: 0;
-      margin: 1.5rem 0;
+    .story-section .accent {
+      color: var(--green);
+      font-weight: 600;
+      text-shadow: 0 0 5px var(--green-glow);
+    }
+    .story-section .amber {
+      color: var(--amber);
+      font-weight: 600;
+    }
+    .story-section .red {
+      color: var(--red);
+      font-weight: 600;
+    }
+    .story-section .dim {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .metric-card {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%);
       border: 1px solid var(--border);
-    }
-    .metric-strip__item {
-      flex: 1;
-      padding: 0.8rem;
+      border-radius: 8px;
+      padding: 1.5rem;
       text-align: center;
-      border-right: 1px solid var(--border);
-      background: var(--bg-raised);
-    }
-    .metric-strip__item:last-child { border-right: none; }
-    .metric-strip__value {
-      font-size: 1.4rem;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 0.2rem;
-    }
-    .metric-strip__label {
-      font-size: 0.6rem;
-      color: var(--text-dim);
-    }
-    @media (max-width: 500px) {
-      .metric-strip { flex-wrap: wrap; }
-      .metric-strip__item { flex: 1 1 45%; border-bottom: 1px solid var(--border); }
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .detector-list {
-      font-size: 0.75rem;
-      margin: 1rem 0;
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--amber));
+      transform: scaleX(0);
+      transition: transform 0.5s ease;
     }
-    .detector-list code {
-      background: var(--bg-surface);
-      padding: 0.1rem 0.4rem;
-      border-radius: 2px;
+
+    .metric-card:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 8px 30px rgba(0, 255, 65, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .metric-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 15px var(--green-glow);
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .arc-timeline {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      position: relative;
+    }
+
+    .arc-timeline::before {
+      content: 'DEVELOPMENT ARC';
+      position: absolute;
+      top: -0.6rem;
+      left: 2rem;
+      background: var(--bg);
       color: var(--green);
       font-size: 0.7rem;
-    }
-    .detector-list li {
-      margin-bottom: 0.3rem;
-      color: var(--text);
-      line-height: 1.6;
+      font-weight: 600;
+      padding: 0 0.8rem;
+      letter-spacing: 2px;
     }
 
     .arc-flow {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      margin: 2rem 0;
-      padding: 0.8rem;
-      border: 1px solid var(--border);
-      background: var(--bg-raised);
-      overflow-x: auto;
-      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.8rem;
       justify-content: center;
+      flex-wrap: wrap;
     }
-    .arc-flow span {
-      white-space: nowrap;
+
+    .arc-step {
+      padding: 0.8rem 1.2rem;
+      border: 2px solid var(--border);
+      border-radius: 25px;
+      background: var(--bg-surface);
+      transition: all 0.3s ease;
+      position: relative;
+      color: var(--text-muted);
+      font-weight: 500;
     }
-    .arc-flow .arc-step {
-      padding: 0.3rem 0.6rem;
-      border: 1px solid var(--border-bright);
-    }
-    .arc-flow .arc-step.current {
+
+    .arc-step.current {
       border-color: var(--green);
       color: var(--green);
+      background: rgba(0, 255, 65, 0.05);
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
     }
-    .arc-flow .arc-step.fail {
+
+    .arc-step.fail {
       border-color: var(--red);
       color: var(--red);
+      background: rgba(255, 51, 51, 0.05);
     }
-    .arc-arrow { color: var(--text-dim); }
 
-    .evasion-item {
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.8rem;
+    .arc-step.complete {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: rgba(255, 176, 0, 0.05);
     }
-    .evasion-item:last-child { border-bottom: none; }
-    .evasion-item strong { color: var(--amber); font-weight: 500; }
+
+    .arc-arrow {
+      color: var(--green-dim);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .detector-showcase {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .detector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .detector-item {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .detector-item:hover {
+      border-color: var(--green-dim);
+      box-shadow: 0 5px 15px rgba(0, 255, 65, 0.1);
+    }
+
+    .detector-name {
+      color: var(--green);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .detector-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(255, 176, 0, 0.02) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
 
     .cta-links {
       display: flex;
-      gap: 1rem;
-      margin: 1.5rem 0;
+      gap: 1.5rem;
+      justify-content: center;
       flex-wrap: wrap;
+      margin-top: 2rem;
     }
-    .cta-links a {
-      font-size: 0.8rem;
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border: 2px solid var(--amber);
       color: var(--amber);
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--amber);
-      transition: all 0.2s;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .cta-links a:hover {
+
+    .cta-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 176, 0, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cta-link:hover {
       background: rgba(255, 176, 0, 0.08);
+      box-shadow: 0 5px 20px rgba(255, 176, 0, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .cta-link:hover::before {
+      left: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .parallax-title {
+        font-size: 2rem;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .story-section {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -161,28 +413,43 @@
 
   <main>
   <article class="container">
-    <div class="section-header"><span>~/projects/parallax</span></div>
+    <!-- Hero Section -->
+    <section class="parallax-hero">
+      <div class="parallax-hero__content">
+        <h1 class="parallax-title">PARALLAX</h1>
+        <p class="parallax-subtitle">Privacy-preserving behavioral threat detection for AI platforms</p>
 
-    <h1 class="post-title">PARALLAX</h1>
-    <p class="post-meta">Privacy-preserving behavioral threat detection for AI platforms</p>
+        <div class="parallax-ascii">
+    ╭─────────────────────────────────────────╮
+    │  ◆ BEHAVIORAL THREAT DETECTION SYSTEM ◆ │
+    │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
+    │ █████████████████████████████████████ │
+    │ ⚡ patterns.visible = <span style="color: var(--green);">TRUE</span>         │
+    │ 🔍 content.inspection = <span style="color: var(--red);">DISABLED</span>    │
+    ╰─────────────────────────────────────────╯
+        </div>
+      </div>
+    </section>
 
-    <!-- Arc flow -->
-    <div class="arc-flow">
-      <span class="arc-step">origin</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">thesis</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">build</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step fail">failure</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">fix</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">findings</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">why now</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step current">what's next</span>
+    <!-- Development Arc Timeline -->
+    <div class="arc-timeline">
+      <div class="arc-flow">
+        <span class="arc-step complete">origin</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">thesis</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">build</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step fail">failure</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">fix</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">findings</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">why now</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step current">what's next</span>
+      </div>
     </div>
 
     <div class="post-content">
@@ -218,22 +485,22 @@ threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code>
 
         <p>Ran it against the <span class="accent">LANL Cyber1 dataset</span>. 16.9 million real authentication events from Los Alamos National Laboratory. 500 users. 87 labeled compromised. 187K sessions.</p>
 
-        <div class="metric-strip">
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">0.45</div>
-            <div class="metric-strip__label">AUC (v1)</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">0.45</div>
+            <div class="metric-label">AUC (v1)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">0.00</div>
-            <div class="metric-strip__label">F1 (v1)</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">0.00</div>
+            <div class="metric-label">F1 (v1)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">7 / 14</div>
-            <div class="metric-strip__label">anti-correlated</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">7 / 14</div>
+            <div class="metric-label">anti-correlated</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">inverted</div>
-            <div class="metric-strip__label">score direction</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">inverted</div>
+            <div class="metric-label">score direction</div>
           </div>
         </div>
 
@@ -252,22 +519,22 @@ threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code>
 
         <p><span class="amber">v3:</span> Zeroed all 10 non-contributing detectors. Redistributed weight to the 5 correctly-oriented signals, proportional to their measured separation delta.</p>
 
-        <div class="metric-strip">
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">0.68</div>
-            <div class="metric-strip__label">AUC (v3)</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">0.68</div>
+            <div class="metric-label">AUC (v3)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">0.49</div>
-            <div class="metric-strip__label">Best F1</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">0.49</div>
+            <div class="metric-label">Best F1</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--amber);">48.8%</div>
-            <div class="metric-strip__label">Precision</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--amber);">48.8%</div>
+            <div class="metric-label">Precision</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--amber);">48.3%</div>
-            <div class="metric-strip__label">Recall</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--amber);">48.3%</div>
+            <div class="metric-label">Recall</div>
           </div>
         </div>
 
@@ -281,10 +548,23 @@ threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code>
       <!-- EVASION FINDINGS -->
       <div class="story-section">
         <h2>The Evasion Findings</h2>
-        <p>Adversarial testing surfaced three gaps:</p>
-        <div class="evasion-item"><strong>Single-signal normalization:</strong> Normalizing token ratio alone drops an attacker below the escalation threshold. Individual detectors can be gamed.</div>
-        <div class="evasion-item"><strong>Blended behavior:</strong> A 90/10 mix of legitimate and attack traffic is indistinguishable from a power developer. The signal drowns in normal activity.</div>
-        <div class="evasion-item"><strong>Low-and-slow extraction:</strong> Distillation at normal request rates scores 0.41 — below the 0.66 escalation threshold. Patient attackers evade.</div>
+        <p>Adversarial testing surfaced three critical gaps:</p>
+
+        <div class="detector-grid" style="margin: 1.5rem 0;">
+          <div class="detector-item" style="border-left: 3px solid var(--red);">
+            <div class="detector-name" style="color: var(--red);">Single-Signal Normalization</div>
+            <div class="detector-desc">Normalizing token ratio alone drops an attacker below the escalation threshold. Individual detectors can be gamed.</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--red);">
+            <div class="detector-name" style="color: var(--red);">Blended Behavior</div>
+            <div class="detector-desc">A 90/10 mix of legitimate and attack traffic is indistinguishable from a power developer. The signal drowns in normal activity.</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--red);">
+            <div class="detector-name" style="color: var(--red);">Low-and-Slow Extraction</div>
+            <div class="detector-desc">Distillation at normal request rates scores 0.41 — below the 0.66 escalation threshold. Patient attackers evade.</div>
+          </div>
+        </div>
+
         <p style="margin-top: 0.8rem;" class="dim">Published openly because honesty about failure modes is more credible than claiming perfect detection.</p>
       </div>
 
@@ -299,18 +579,70 @@ threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code>
       <div class="story-section">
         <h2>Where It Stands</h2>
         <p>0.68 AUC on real data. Honest about limitations. Open source. Three clear paths to improvement:</p>
-        <ul class="detector-list">
-          <li>Signal correlation bonuses to resist single-signal evasion</li>
-          <li>Windowed session-level scoring to catch blended behavior attacks</li>
-          <li>Auth-failure-sequence detector for credential spraying patterns</li>
-        </ul>
+
+        <div class="detector-grid" style="margin: 1.5rem 0;">
+          <div class="detector-item" style="border-left: 3px solid var(--amber);">
+            <div class="detector-name" style="color: var(--amber);">Signal Correlation Bonuses</div>
+            <div class="detector-desc">Multi-signal validation to resist single-detector evasion techniques</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--amber);">
+            <div class="detector-name" style="color: var(--amber);">Windowed Session Scoring</div>
+            <div class="detector-desc">Time-segmented analysis to catch blended behavior attack patterns</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--amber);">
+            <div class="detector-name" style="color: var(--amber);">Auth-Failure Sequences</div>
+            <div class="detector-desc">Pattern detection for credential spraying and brute force attempts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detector Showcase -->
+    <div class="detector-showcase">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Active Detection Matrix</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Core behavioral signals contributing to the v3 threat scoring engine:</p>
+
+      <div class="detector-grid">
+        <div class="detector-item">
+          <div class="detector-name">T2-006 Behavioral Shift</div>
+          <div class="detector-desc">Detects sudden changes in user session patterns and request behavior</div>
+        </div>
+        <div class="detector-item">
+          <div class="detector-name">T1-009 Host Fan-Out</div>
+          <div class="detector-desc">Identifies lateral movement through destination diversity analysis</div>
+        </div>
+        <div class="detector-item">
+          <div class="detector-name">T1-003 Velocity Anomaly</div>
+          <div class="detector-desc">Flags unusual request frequency and timing patterns</div>
+        </div>
+        <div class="detector-item">
+          <div class="detector-name">T2-001 Session Entropy</div>
+          <div class="detector-desc">Measures randomness in session structure and duration</div>
+        </div>
+        <div class="detector-item">
+          <div class="detector-name">T1-007 Token Ratio</div>
+          <div class="detector-desc">Analyzes input/output token patterns for extraction signatures</div>
+        </div>
+        <div class="detector-item">
+          <div class="detector-name">T2-004 Model Targeting</div>
+          <div class="detector-desc">Identifies systematic model selection and targeting patterns</div>
+        </div>
       </div>
     </div>
 
     <!-- CTAs -->
-    <div class="cta-links">
-      <a href="parallax-demo.html">→ live demo</a>
-      <a href="https://github.com/chirag-dewan/parallax">→ source</a>
+    <div class="cta-section">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Ready to dive deeper?</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Explore the interactive detection pipeline or examine the source code.</p>
+
+      <div class="cta-links">
+        <a href="parallax-demo.html" class="cta-link">
+          <span>→</span> live demo
+        </a>
+        <a href="https://github.com/chirag-dewan/parallax" class="cta-link">
+          <span>⚡</span> source
+        </a>
+      </div>
     </div>
 
     <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">

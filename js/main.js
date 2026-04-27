@@ -753,4 +753,553 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
   }
+
+  // ============================================
+  // NEXT-LEVEL FRONTEND ENHANCEMENTS
+  // ============================================
+
+  // ---- Animated Counter Effect ----
+  function animateCounters() {
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target.querySelector('.metric-value, .chart-number');
+          if (counter && !counter.dataset.counted) {
+            counter.dataset.counted = 'true';
+            const text = counter.textContent;
+
+            // Extract number from text (e.g., "0.68" from "0.68", "220" from "220", "1,532×" from "1,532×")
+            const match = text.match(/([\d,]+\.?\d*)/);
+            if (match) {
+              const finalNumber = parseFloat(match[1].replace(/,/g, ''));
+              const suffix = text.replace(match[0], '');
+              let startNumber = 0;
+
+              // Special handling for decimals vs integers
+              const isDecimal = text.includes('.') && finalNumber < 10;
+              const steps = isDecimal ? 30 : Math.min(finalNumber, 60);
+              const increment = finalNumber / steps;
+
+              counter.textContent = isDecimal ? '0.00' + suffix : '0' + suffix;
+
+              let currentNumber = startNumber;
+              const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= finalNumber) {
+                  currentNumber = finalNumber;
+                  clearInterval(timer);
+                }
+
+                if (isDecimal) {
+                  counter.textContent = currentNumber.toFixed(2) + suffix;
+                } else {
+                  const displayNumber = Math.floor(currentNumber);
+                  counter.textContent = displayNumber.toLocaleString() + suffix;
+                }
+              }, isDecimal ? 40 : 25);
+            }
+          }
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.metric-card, .chart-item').forEach(el => {
+      counterObserver.observe(el);
+    });
+  }
+
+  // ---- True Parallax Scrolling for PARALLAX page ----
+  function initParallaxScrolling() {
+    if (!document.querySelector('.parallax-hero')) return;
+
+    let ticking = false;
+    function updateParallax() {
+      const scrolled = window.pageYOffset;
+      const parallaxElements = document.querySelectorAll('.parallax-bg, .parallax-hero::before, .story-section');
+
+      parallaxElements.forEach((el, index) => {
+        const rate = scrolled * (0.2 + index * 0.05);
+        el.style.transform = `translateY(${rate}px)`;
+      });
+
+      // Dynamic background color shift based on scroll
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const scrollPercent = scrolled / maxScroll;
+
+      if (document.querySelector('.parallax-hero')) {
+        document.documentElement.style.setProperty(
+          '--scroll-color',
+          `hsl(${120 + (scrollPercent * 40)}, 100%, ${5 + (scrollPercent * 10)}%)`
+        );
+      }
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+  }
+
+  // ---- Interactive Terminal Simulator ----
+  function createTerminalSimulator(container) {
+    const terminal = document.createElement('div');
+    terminal.className = 'live-terminal';
+    terminal.innerHTML = `
+      <div class="terminal-header">
+        <span class="terminal-controls">
+          <span class="control red"></span>
+          <span class="control yellow"></span>
+          <span class="control green"></span>
+        </span>
+        <span class="terminal-title">PARALLAX Detection Engine</span>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-output" id="terminal-output"></div>
+        <div class="terminal-input">
+          <span class="prompt">parallax@detection:~$</span>
+          <input type="text" id="terminal-input" placeholder="Type 'help' for commands" />
+        </div>
+      </div>
+    `;
+
+    container.appendChild(terminal);
+
+    const output = terminal.querySelector('#terminal-output');
+    const input = terminal.querySelector('#terminal-input');
+
+    const commands = {
+      'help': 'Available commands: scan, status, threats, analyze, clear',
+      'scan': () => {
+        addTerminalLine('Scanning for behavioral anomalies...', 'info');
+        setTimeout(() => {
+          addTerminalLine('✓ T2-006 Behavioral Shift: Normal baseline (z=-0.2)', 'success');
+          setTimeout(() => {
+            addTerminalLine('⚠ T1-009 Host Fan-Out: Elevated activity detected (z=+2.8)', 'warning');
+            setTimeout(() => {
+              addTerminalLine('✓ Scan complete. 1 anomaly detected.', 'info');
+            }, 800);
+          }, 600);
+        }, 400);
+      },
+      'status': 'System Status: ACTIVE | Detectors: 14/14 | Baseline: CURRENT | Last Update: 2m ago',
+      'threats': () => {
+        addTerminalLine('Active Threat Summary:', 'info');
+        addTerminalLine('MEDIUM: Unusual API velocity pattern (User: alice@company.com)', 'warning');
+        addTerminalLine('LOW: Off-hours access detected (User: bob@company.com)', 'info');
+        addTerminalLine('INFO: 2 baseline updates completed', 'success');
+      },
+      'analyze': () => {
+        addTerminalLine('Running advanced behavioral analysis...', 'info');
+        setTimeout(() => {
+          addTerminalLine('Token ratio analysis: NORMAL (μ=0.43, σ=0.12)', 'success');
+          setTimeout(() => {
+            addTerminalLine('Session entropy: ELEVATED (H=3.8 bits)', 'warning');
+            setTimeout(() => {
+              addTerminalLine('Risk score: 0.34 (LOW)', 'success');
+            }, 500);
+          }, 500);
+        }, 300);
+      },
+      'clear': () => {
+        output.innerHTML = '';
+        addTerminalLine('PARALLAX Detection Engine v3.0 - Behavioral Threat Detection', 'info');
+        addTerminalLine('Type "help" for available commands.', 'info');
+      }
+    };
+
+    function addTerminalLine(text, type = 'normal') {
+      const line = document.createElement('div');
+      line.className = `terminal-line ${type}`;
+      line.textContent = text;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const command = input.value.trim().toLowerCase();
+        addTerminalLine(`parallax@detection:~$ ${command}`, 'input');
+
+        if (commands[command]) {
+          if (typeof commands[command] === 'function') {
+            commands[command]();
+          } else {
+            addTerminalLine(commands[command], 'success');
+          }
+        } else if (command) {
+          addTerminalLine(`Command not found: ${command}. Type 'help' for available commands.`, 'error');
+        }
+
+        input.value = '';
+      }
+    });
+
+    // Initialize with welcome message
+    addTerminalLine('PARALLAX Detection Engine v3.0 - Behavioral Threat Detection', 'info');
+    addTerminalLine('Type "help" for available commands.', 'info');
+  }
+
+  // ---- Advanced 3D Card Effects ----
+  function enhance3DEffects() {
+    document.querySelectorAll('.metric-card, .detector-item, .story-section').forEach(card => {
+      card.style.transformStyle = 'preserve-3d';
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        const mouseX = e.clientX - centerX;
+        const mouseY = e.clientY - centerY;
+
+        const rotateX = (mouseY / rect.height) * 15;
+        const rotateY = (mouseX / rect.width) * 15;
+
+        card.style.transform = `
+          perspective(1000px)
+          rotateX(${-rotateX}deg)
+          rotateY(${rotateY}deg)
+          translateZ(10px)
+        `;
+
+        // Add subtle glow effect based on mouse position
+        const intensity = Math.min(Math.sqrt(mouseX * mouseX + mouseY * mouseY) / 200, 1);
+        card.style.boxShadow = `0 ${10 + intensity * 20}px ${30 + intensity * 40}px rgba(0, 255, 65, ${intensity * 0.2})`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  }
+
+  // ---- Live Threat Detection Simulation ----
+  function createThreatSimulation() {
+    const existingSimulation = document.querySelector('.threat-simulation');
+    if (existingSimulation) return;
+
+    const simulation = document.createElement('div');
+    simulation.className = 'threat-simulation';
+    simulation.innerHTML = `
+      <div class="simulation-header">
+        <h3>Live Threat Detection</h3>
+        <span class="simulation-status active">●</span>
+      </div>
+      <div class="simulation-feed" id="threat-feed"></div>
+    `;
+
+    // Find container (prefer project pages)
+    const container = document.querySelector('.story-section:last-of-type') ||
+                     document.querySelector('.container');
+
+    if (container) {
+      container.appendChild(simulation);
+
+      const feed = simulation.querySelector('#threat-feed');
+
+      const threats = [
+        { type: 'INFO', message: 'Baseline updated for user alice@corp.com', severity: 'low' },
+        { type: 'WARN', message: 'API velocity anomaly detected (z=+2.3)', severity: 'medium' },
+        { type: 'INFO', message: 'Session entropy within normal range', severity: 'low' },
+        { type: 'ALERT', message: 'Multi-region access pattern detected', severity: 'high' },
+        { type: 'INFO', message: 'Token ratio baseline: μ=0.41 σ=0.15', severity: 'low' },
+        { type: 'WARN', message: 'Off-hours API activity (02:34 UTC)', severity: 'medium' },
+        { type: 'INFO', message: 'Model targeting pattern: normal distribution', severity: 'low' }
+      ];
+
+      function addThreatLog(threat) {
+        const timestamp = new Date().toLocaleTimeString();
+        const log = document.createElement('div');
+        log.className = `threat-log ${threat.severity}`;
+        log.innerHTML = `
+          <span class="timestamp">${timestamp}</span>
+          <span class="threat-type">[${threat.type}]</span>
+          <span class="threat-message">${threat.message}</span>
+        `;
+
+        feed.insertBefore(log, feed.firstChild);
+
+        // Keep only last 6 logs
+        while (feed.children.length > 6) {
+          feed.removeChild(feed.lastChild);
+        }
+      }
+
+      // Add threats at random intervals
+      setInterval(() => {
+        const randomThreat = threats[Math.floor(Math.random() * threats.length)];
+        addThreatLog(randomThreat);
+      }, 3000 + Math.random() * 4000);
+
+      // Initial threat
+      setTimeout(() => addThreatLog(threats[0]), 1000);
+    }
+  }
+
+  // ---- Advanced Particle System with WebGL ----
+  function createAdvancedParticles() {
+    if (window.innerWidth < 768) return; // Skip on mobile
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'particle-canvas';
+    canvas.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.6;
+    `;
+
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 50;
+
+    class Particle {
+      constructor() {
+        this.reset();
+        this.life = Math.random();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 10;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = -(Math.random() * 2 + 0.5);
+        this.life = 1;
+        this.decay = Math.random() * 0.01 + 0.005;
+        this.size = Math.random() * 2 + 0.5;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life -= this.decay;
+
+        if (this.life <= 0 || this.y < -10) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        const alpha = this.life * 0.8;
+        const green = Math.floor(100 + this.life * 155);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgb(0, ${green}, 65)`;
+        ctx.fill();
+
+        // Add glow effect
+        ctx.shadowColor = `rgb(0, ${green}, 65)`;
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Initialize particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  }
+
+  // ---- Intelligent Content Loading ----
+  function addIntelligentLoading() {
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'intelligent-loading';
+    loadingOverlay.innerHTML = `
+      <div class="loading-content">
+        <div class="loading-logo">PARALLAX</div>
+        <div class="loading-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="loading-progress"></div>
+          </div>
+          <div class="loading-text" id="loading-text">Initializing detection engine...</div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(loadingOverlay);
+
+    const progressBar = loadingOverlay.querySelector('#loading-progress');
+    const loadingText = loadingOverlay.querySelector('#loading-text');
+
+    const steps = [
+      'Initializing detection engine...',
+      'Loading behavioral baselines...',
+      'Calibrating threat models...',
+      'Activating monitoring systems...',
+      'Ready for detection'
+    ];
+
+    let currentStep = 0;
+    const progressInterval = setInterval(() => {
+      const progress = ((currentStep + 1) / steps.length) * 100;
+      progressBar.style.width = progress + '%';
+      loadingText.textContent = steps[currentStep];
+
+      currentStep++;
+      if (currentStep >= steps.length) {
+        clearInterval(progressInterval);
+        setTimeout(() => {
+          loadingOverlay.style.opacity = '0';
+          setTimeout(() => loadingOverlay.remove(), 500);
+        }, 800);
+      }
+    }, 600);
+  }
+
+  // ---- Voice Control (Experimental) ----
+  function initVoiceControl() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      return; // Speech recognition not supported
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    let isListening = false;
+
+    // Add voice control button (subtle)
+    const voiceButton = document.createElement('button');
+    voiceButton.innerHTML = '🎤';
+    voiceButton.className = 'voice-control';
+    voiceButton.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 50px;
+      height: 50px;
+      border: none;
+      background: rgba(0, 255, 65, 0.1);
+      border-radius: 50%;
+      color: var(--green);
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    `;
+
+    voiceButton.addEventListener('click', () => {
+      if (!isListening) {
+        recognition.start();
+        isListening = true;
+        voiceButton.style.background = 'rgba(255, 0, 0, 0.2)';
+        voiceButton.innerHTML = '⏹️';
+      } else {
+        recognition.stop();
+        isListening = false;
+        voiceButton.style.background = 'rgba(0, 255, 65, 0.1)';
+        voiceButton.innerHTML = '🎤';
+      }
+    });
+
+    recognition.onresult = (event) => {
+      const command = event.results[0][0].transcript.toLowerCase();
+
+      // Voice commands
+      if (command.includes('scroll down')) {
+        window.scrollBy(0, 300);
+      } else if (command.includes('scroll up')) {
+        window.scrollBy(0, -300);
+      } else if (command.includes('go home') || command.includes('homepage')) {
+        window.location.href = '/';
+      } else if (command.includes('projects')) {
+        window.location.href = '/projects/';
+      } else if (command.includes('about')) {
+        window.location.href = '/about.html';
+      }
+
+      isListening = false;
+      voiceButton.style.background = 'rgba(0, 255, 65, 0.1)';
+      voiceButton.innerHTML = '🎤';
+    };
+
+    recognition.onerror = () => {
+      isListening = false;
+      voiceButton.style.background = 'rgba(0, 255, 65, 0.1)';
+      voiceButton.innerHTML = '🎤';
+    };
+
+    document.body.appendChild(voiceButton);
+  }
+
+  // ---- Initialize Next-Level Features ----
+  animateCounters();
+  initParallaxScrolling();
+  enhance3DEffects();
+  createThreatSimulation();
+  createAdvancedParticles();
+
+  // Add terminal simulator to demo pages
+  const demoContainers = document.querySelectorAll('.cta-section, .story-section:last-of-type');
+  if (demoContainers.length > 0 && window.location.pathname.includes('parallax')) {
+    createTerminalSimulator(demoContainers[0]);
+  }
+
+  // Initialize experimental features
+  if (window.location.search.includes('experimental')) {
+    addIntelligentLoading();
+    initVoiceControl();
+  }
+
+  // Add performance optimization
+  const optimizePerformance = () => {
+    // Reduce animation complexity on low-end devices
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      document.documentElement.style.setProperty('--animation-duration', '0.1s');
+      document.documentElement.style.setProperty('--transition-duration', '0.1s');
+    }
+
+    // Pause animations when page is not visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        document.documentElement.style.setProperty('--animation-play-state', 'paused');
+      } else {
+        document.documentElement.style.setProperty('--animation-play-state', 'running');
+      }
+    });
+  };
+
+  optimizePerformance();
 });

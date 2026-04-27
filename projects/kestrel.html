@@ -19,131 +19,403 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="../css/main.css">
   <style>
-    .story-section {
-      margin-bottom: 3rem;
+    /* ---- KESTREL Enhanced Styling ---- */
+    .kestrel-hero {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-raised) 100%);
+      padding: 3rem 0 2rem;
+      margin: -2rem -1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
     }
-    .story-section h2 {
-      color: var(--green);
-      font-size: 1rem;
-      margin-bottom: 0.8rem;
-      font-weight: 600;
+
+    .kestrel-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 176, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(0, 255, 65, 0.02) 0%, transparent 50%);
+      animation: cloudFloat 10s infinite ease-in-out;
     }
-    .story-section h2::before {
-      content: '▸ ';
+
+    @keyframes cloudFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      33% { transform: translateY(-8px) scale(1.01); }
+      66% { transform: translateY(-5px) scale(0.99); }
+    }
+
+    .kestrel-hero__content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .kestrel-title {
+      font-size: 3rem;
+      font-weight: 800;
       color: var(--amber);
+      margin-bottom: 0.5rem;
+      text-shadow:
+        0 0 20px var(--amber-glow),
+        0 0 40px rgba(255, 176, 0, 0.2);
+      letter-spacing: -1px;
+      line-height: 0.9;
     }
+
+    .kestrel-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-weight: 300;
+      max-width: 600px;
+    }
+
+    .kestrel-ascii {
+      font-family: var(--font);
+      font-size: 0.6rem;
+      color: var(--amber-dim);
+      line-height: 1;
+      text-align: center;
+      margin: 2rem 0;
+      opacity: 0.8;
+    }
+
+    .story-section {
+      margin-bottom: 4rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(255, 176, 0, 0.01) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .story-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--amber), var(--green));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .story-section:hover {
+      border-color: var(--amber-dim);
+      box-shadow: 0 10px 40px rgba(255, 176, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .story-section:hover::before {
+      opacity: 1;
+    }
+
+    .story-section h2 {
+      color: var(--amber);
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .story-section h2::before {
+      content: '◆ ';
+      color: var(--green);
+      text-shadow: 0 0 10px var(--green-glow);
+    }
+
+    .story-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--amber), transparent);
+    }
+
     .story-section p {
       color: var(--text);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       line-height: 1.8;
-      margin-bottom: 0.8rem;
-    }
-    .story-section .accent { color: var(--green); }
-    .story-section .amber { color: var(--amber); }
-    .story-section .red { color: var(--red); font-weight: 500; }
-    .story-section .dim { color: var(--text-muted); }
-
-    .metric-strip {
-      display: flex;
-      gap: 0;
-      margin: 1.5rem 0;
-      border: 1px solid var(--border);
-    }
-    .metric-strip__item {
-      flex: 1;
-      padding: 0.8rem;
-      text-align: center;
-      border-right: 1px solid var(--border);
-      background: var(--bg-raised);
-    }
-    .metric-strip__item:last-child { border-right: none; }
-    .metric-strip__value {
-      font-size: 1.4rem;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 0.2rem;
-    }
-    .metric-strip__label {
-      font-size: 0.6rem;
-      color: var(--text-dim);
-    }
-    @media (max-width: 500px) {
-      .metric-strip { flex-wrap: wrap; }
-      .metric-strip__item { flex: 1 1 45%; border-bottom: 1px solid var(--border); }
+      margin-bottom: 1rem;
     }
 
-    .detector-list {
-      font-size: 0.75rem;
-      margin: 1rem 0;
+    .story-section .accent {
+      color: var(--amber);
+      font-weight: 600;
+      text-shadow: 0 0 5px var(--amber-glow);
     }
-    .detector-list code {
-      background: var(--bg-surface);
-      padding: 0.1rem 0.4rem;
-      border-radius: 2px;
+    .story-section .green {
       color: var(--green);
-      font-size: 0.7rem;
+      font-weight: 600;
     }
-    .detector-list li {
-      margin-bottom: 0.3rem;
-      color: var(--text);
-      line-height: 1.6;
+    .story-section .red {
+      color: var(--red);
+      font-weight: 600;
+    }
+    .story-section .dim {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .metric-card {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--amber), var(--green));
+      transform: scaleX(0);
+      transition: transform 0.5s ease;
+    }
+
+    .metric-card:hover {
+      border-color: var(--amber-dim);
+      box-shadow: 0 8px 30px rgba(255, 176, 0, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .metric-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 15px var(--amber-glow);
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .arc-timeline {
+      background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      position: relative;
+    }
+
+    .arc-timeline::before {
+      content: 'DEVELOPMENT ARC';
+      position: absolute;
+      top: -0.6rem;
+      left: 2rem;
+      background: var(--bg);
+      color: var(--amber);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0 0.8rem;
+      letter-spacing: 2px;
     }
 
     .arc-flow {
       display: flex;
       align-items: center;
-      gap: 0.3rem;
-      font-size: 0.65rem;
-      color: var(--text-dim);
-      margin: 2rem 0;
-      padding: 0.8rem;
-      border: 1px solid var(--border);
-      background: var(--bg-raised);
-      overflow-x: auto;
-      flex-wrap: wrap;
+      gap: 0.8rem;
+      font-size: 0.8rem;
       justify-content: center;
+      flex-wrap: wrap;
     }
-    .arc-flow span {
-      white-space: nowrap;
+
+    .arc-step {
+      padding: 0.8rem 1.2rem;
+      border: 2px solid var(--border);
+      border-radius: 25px;
+      background: var(--bg-surface);
+      transition: all 0.3s ease;
+      position: relative;
+      color: var(--text-muted);
+      font-weight: 500;
     }
-    .arc-flow .arc-step {
-      padding: 0.3rem 0.6rem;
-      border: 1px solid var(--border-bright);
+
+    .arc-step.current {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: rgba(255, 176, 0, 0.05);
+      box-shadow: 0 0 20px rgba(255, 176, 0, 0.2);
     }
-    .arc-flow .arc-step.current {
-      border-color: var(--green);
-      color: var(--green);
-    }
-    .arc-flow .arc-step.fail {
+
+    .arc-step.fail {
       border-color: var(--red);
       color: var(--red);
+      background: rgba(255, 51, 51, 0.05);
     }
-    .arc-arrow { color: var(--text-dim); }
+
+    .arc-step.complete {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.05);
+    }
+
+    .arc-arrow {
+      color: var(--amber-dim);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .detector-showcase {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .detector-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .detector-item {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .detector-item:hover {
+      border-color: var(--amber-dim);
+      box-shadow: 0 5px 15px rgba(255, 176, 0, 0.1);
+    }
+
+    .detector-name {
+      color: var(--amber);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .detector-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
 
     .finding-item {
-      padding: 0.6rem 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.8rem;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      transition: all 0.3s ease;
     }
-    .finding-item:last-child { border-bottom: none; }
-    .finding-item strong { color: var(--amber); font-weight: 500; }
+
+    .finding-item:hover {
+      border-color: var(--amber-dim);
+      box-shadow: 0 3px 10px rgba(255, 176, 0, 0.08);
+    }
+
+    .finding-item strong {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(0, 255, 65, 0.02) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
 
     .cta-links {
       display: flex;
-      gap: 1rem;
-      margin: 1.5rem 0;
+      gap: 1.5rem;
+      justify-content: center;
       flex-wrap: wrap;
+      margin-top: 2rem;
     }
-    .cta-links a {
-      font-size: 0.8rem;
-      color: var(--amber);
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border: 2px solid var(--green);
+      color: var(--green);
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--amber);
-      transition: all 0.2s;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    .cta-links a:hover {
-      background: rgba(255, 176, 0, 0.08);
+
+    .cta-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .cta-link:hover {
+      background: rgba(0, 255, 65, 0.08);
+      box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .cta-link:hover::before {
+      left: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .kestrel-title {
+        font-size: 2rem;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .story-section {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
@@ -161,26 +433,41 @@
 
   <main>
   <article class="container">
-    <div class="section-header"><span>~/projects/kestrel</span></div>
+    <!-- Hero Section -->
+    <section class="kestrel-hero">
+      <div class="kestrel-hero__content">
+        <h1 class="kestrel-title">KESTREL</h1>
+        <p class="kestrel-subtitle">Cloud-native AI workload anomaly detection</p>
 
-    <h1 class="post-title">KESTREL</h1>
-    <p class="post-meta">Cloud-native AI workload anomaly detection</p>
+        <div class="kestrel-ascii">
+    ╭─────────────────────────────────────────╮
+    │  ◆ CLOUD WORKLOAD ANOMALY DETECTION ◆  │
+    │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
+    │ █████████████████████████████████████ │
+    │ ⚡ z_score.baseline = <span style="color: var(--green);">ROLLING</span>       │
+    │ 🔍 gpu_telemetry = <span style="color: var(--amber);">MONITORED</span>        │
+    ╰─────────────────────────────────────────╯
+        </div>
+      </div>
+    </section>
 
-    <!-- Arc flow -->
-    <div class="arc-flow">
-      <span class="arc-step">origin</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">thesis</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">build</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step fail">v1 failure</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">diagnosis</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step">v2 fix</span>
-      <span class="arc-arrow">→</span>
-      <span class="arc-step current">results</span>
+    <!-- Development Arc Timeline -->
+    <div class="arc-timeline">
+      <div class="arc-flow">
+        <span class="arc-step complete">origin</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">thesis</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">build</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step fail">v1 failure</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">diagnosis</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">v2 fix</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step current">results</span>
+      </div>
     </div>
 
     <div class="post-content">
@@ -204,11 +491,25 @@
         <h2>The Build</h2>
         <p>Three detectors, each targeting a different attack surface. 92 tests, 98% coverage. Built in Python 3.11+ with Pydantic v2, Click CLI, SQLite persistence, and Sigma rule export.</p>
 
-        <ul class="detector-list">
-          <li><code>GPUHijackDetector</code> — 3 signals: GPU utilization ≥90%, anomalous regions (ap-southeast-1, sa-east-1, af-south-1), off-hours activity (h&lt;6 or h≥22). Severity scales with signal count. ATLAS: AML.T0048 Denial of ML Service.</li>
-          <li><code>RogueTrainingDetector</code> — 4 signals: unexpected instance type, off-hours training, abnormal duration (z≥2.5σ), unusual data transfer (z≥2.5σ). Baseline-driven z-score checks. ATLAS: AML.T0020 Train Model.</li>
-          <li><code>CloudAPIAbuseDetector</code> — 4 signals in 5-minute sliding windows: API burst (≥50 calls/5m or z≥2.5), region fan-out (&gt;5 regions), off-hours spike, excessive error rate (≥30% AccessDenied). ATLAS: T1526 Cloud Service Discovery.</li>
-        </ul>
+        <div class="detector-showcase">
+          <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Detection Matrix</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Three-tier cloud workload anomaly detection system:</p>
+
+          <div class="detector-grid">
+            <div class="detector-item">
+              <div class="detector-name">GPUHijackDetector</div>
+              <div class="detector-desc">GPU utilization ≥90%, anomalous regions, off-hours activity. Severity scales with signal count. ATLAS: AML.T0048</div>
+            </div>
+            <div class="detector-item">
+              <div class="detector-name">RogueTrainingDetector</div>
+              <div class="detector-desc">Unexpected instance types, abnormal duration (z≥2.5σ), unusual data transfer. Baseline-driven detection. ATLAS: AML.T0020</div>
+            </div>
+            <div class="detector-item">
+              <div class="detector-name">CloudAPIAbuseDetector</div>
+              <div class="detector-desc">API burst detection, region fan-out analysis, off-hours monitoring, error rate tracking. ATLAS: T1526</div>
+            </div>
+          </div>
+        </div>
 
         <pre><code>kestrel generate   # Synthetic events (80/20 normal/attack)
 kestrel scan       # Ingest → baseline → detect → findings
@@ -224,22 +525,22 @@ kestrel serve      # Flask dashboard</code></pre>
 
         <p>Ran KESTREL against <span class="accent">34,427 real CloudTrail events</span> from Splunk's attack_data repository. 51 datasets covering MITRE ATT&CK techniques — IAM enumeration, privilege escalation, security group abuse, KMS manipulation. 77 unique entities across 16 AWS regions.</p>
 
-        <div class="metric-strip">
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">1.0</div>
-            <div class="metric-strip__label">Precision (v1)</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">1.0</div>
+            <div class="metric-label">Precision (v1)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">0.0005</div>
-            <div class="metric-strip__label">Recall (v1)</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">0.0005</div>
+            <div class="metric-label">Recall (v1)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">1</div>
-            <div class="metric-strip__label">findings</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">1</div>
+            <div class="metric-label">findings</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--red);">5 / 6</div>
-            <div class="metric-strip__label">entities missed</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--red);">5 / 6</div>
+            <div class="metric-label">entities missed</div>
           </div>
         </div>
 
@@ -276,22 +577,22 @@ kestrel serve      # Flask dashboard</code></pre>
       <div class="story-section">
         <h2>The Results</h2>
 
-        <div class="metric-strip">
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">1.0</div>
-            <div class="metric-strip__label">Precision (v2)</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">1.0</div>
+            <div class="metric-label">Precision (v2)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">0.766</div>
-            <div class="metric-strip__label">Recall (v2)</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">0.766</div>
+            <div class="metric-label">Recall (v2)</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">220</div>
-            <div class="metric-strip__label">findings</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">220</div>
+            <div class="metric-label">findings</div>
           </div>
-          <div class="metric-strip__item">
-            <div class="metric-strip__value" style="color: var(--green);">1,532×</div>
-            <div class="metric-strip__label">recall improvement</div>
+          <div class="metric-card">
+            <div class="metric-value" style="color: var(--green);">1,532×</div>
+            <div class="metric-label">recall improvement</div>
           </div>
         </div>
 
@@ -314,20 +615,63 @@ kestrel serve      # Flask dashboard</code></pre>
       <!-- WHERE IT STANDS -->
       <div class="story-section">
         <h2>Where It Stands</h2>
-        <p>v2 complete. 3 detectors, 92 tests, 98% coverage. Real-data evaluation on 34K CloudTrail events. Open source. Clear paths forward:</p>
-        <ul class="detector-list">
-          <li>Privilege escalation detector for CreateAccessKey/AttachPolicy chains</li>
-          <li>Cross-entity correlation for coordinated scanning patterns</li>
-          <li>Real GPU telemetry evaluation (CloudWatch/DCGM) for existing detectors</li>
-          <li>Time-windowed severity decay for sustained vs burst activity</li>
-        </ul>
+        <p>v2 complete. 3 detectors, 92 tests, 98% coverage. Real-data evaluation on 34K CloudTrail events. Open source. Four clear paths forward:</p>
+
+        <div class="detector-grid" style="margin: 1.5rem 0;">
+          <div class="detector-item" style="border-left: 3px solid var(--green);">
+            <div class="detector-name" style="color: var(--green);">Privilege Escalation Detection</div>
+            <div class="detector-desc">Chain analysis for CreateAccessKey/AttachPolicy sequences and role assumption patterns</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--green);">
+            <div class="detector-name" style="color: var(--green);">Cross-Entity Correlation</div>
+            <div class="detector-desc">Multi-account scanning pattern detection and coordinated attack identification</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--green);">
+            <div class="detector-name" style="color: var(--green);">GPU Telemetry Integration</div>
+            <div class="detector-desc">CloudWatch and NVIDIA DCGM data integration for existing GPU-focused detectors</div>
+          </div>
+          <div class="detector-item" style="border-left: 3px solid var(--green);">
+            <div class="detector-name" style="color: var(--green);">Windowed Severity Decay</div>
+            <div class="detector-desc">Time-based severity adjustment for sustained versus burst activity patterns</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signal Analysis Showcase -->
+    <div class="detector-showcase">
+      <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">v2 Signal Analysis</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Key signals that drove the 1,532× recall improvement in CloudAPIAbuseDetector:</p>
+
+      <div class="detector-grid">
+        <div class="finding-item">
+          <strong>api_burst_frequency:</strong> Detected cloudmapper at 130 calls/window, okta_ro_role at 292. Z-score anomaly detection with rolling baseline.
+        </div>
+        <div class="finding-item">
+          <strong>region_fanout:</strong> Caught multi-region enumeration patterns. cloudmapper: 13 regions, cloudsploit: 12 regions. Geographic diversity signature.
+        </div>
+        <div class="finding-item">
+          <strong>off_hours_api_spike:</strong> Off-business-hour activity detection. Flagged daftpunk's 11 PM Bedrock guardrail scanning attempts.
+        </div>
+        <div class="finding-item">
+          <strong>excessive_error_rate:</strong> High AccessDenied/Forbidden rate detection. Caught daftpunk at 100% error rate for bruteforce identification.
+        </div>
       </div>
     </div>
 
     <!-- CTAs -->
-    <div class="cta-links">
-      <a href="kestrel-demo.html">→ live demo</a>
-      <a href="https://github.com/chirag-dewan/kestrel">→ source</a>
+    <div class="cta-section">
+      <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Explore the detection engine</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Test the z-score baseline anomaly detection or dive into the CloudTrail processing pipeline.</p>
+
+      <div class="cta-links">
+        <a href="kestrel-demo.html" class="cta-link">
+          <span>→</span> live demo
+        </a>
+        <a href="https://github.com/chirag-dewan/kestrel" class="cta-link">
+          <span>⚡</span> source
+        </a>
+      </div>
     </div>
 
     <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
