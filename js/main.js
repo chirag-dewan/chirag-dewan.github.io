@@ -456,6 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nav) {
         const opacity = Math.min(scrollY / 100, 0.95);
         nav.style.background = `rgba(10, 10, 10, ${opacity})`;
+        nav.style.backdropFilter = scrollY > 50 ? 'blur(10px)' : 'none';
       }
 
       ticking = false;
@@ -466,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(updateScrollEffects);
         ticking = true;
       }
-    });
+    }, { passive: true });
   }
 
   // ---- Typewriter Effect ----
@@ -809,29 +810,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---- True Parallax Scrolling for PARALLAX page ----
+  // ---- Improved Parallax Scrolling ----
   function initParallaxScrolling() {
-    if (!document.querySelector('.parallax-hero')) return;
+    if (!document.querySelector('.parallax-hero, .kestrel-hero')) return;
 
     let ticking = false;
     function updateParallax() {
       const scrolled = window.pageYOffset;
-      const parallaxElements = document.querySelectorAll('.parallax-bg, .parallax-hero::before, .story-section');
+      const heroElement = document.querySelector('.parallax-hero, .kestrel-hero');
 
-      parallaxElements.forEach((el, index) => {
-        const rate = scrolled * (0.2 + index * 0.05);
-        el.style.transform = `translateY(${rate}px)`;
-      });
-
-      // Dynamic background color shift based on scroll
-      const maxScroll = document.body.scrollHeight - window.innerHeight;
-      const scrollPercent = scrolled / maxScroll;
-
-      if (document.querySelector('.parallax-hero')) {
-        document.documentElement.style.setProperty(
-          '--scroll-color',
-          `hsl(${120 + (scrollPercent * 40)}, 100%, ${5 + (scrollPercent * 10)}%)`
-        );
+      if (heroElement && scrolled < window.innerHeight) {
+        // Only apply parallax in the hero section for performance
+        const rate = scrolled * 0.3;
+        heroElement.style.transform = `translateY(${rate}px)`;
       }
 
       ticking = false;
@@ -842,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(updateParallax);
         ticking = true;
       }
-    });
+    }, { passive: true });
   }
 
   // ---- Interactive Terminal Simulator ----
@@ -979,7 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---- Live Threat Detection Simulation ----
+  // ---- Enhanced Live Threat Detection Simulation ----
   function createThreatSimulation() {
     const existingSimulation = document.querySelector('.threat-simulation');
     if (existingSimulation) return;
@@ -988,8 +979,8 @@ document.addEventListener('DOMContentLoaded', () => {
     simulation.className = 'threat-simulation';
     simulation.innerHTML = `
       <div class="simulation-header">
-        <h3>Live Threat Detection</h3>
-        <span class="simulation-status active">●</span>
+        <h3>PARALLAX Detection Engine</h3>
+        <div class="simulation-status">MONITORING</div>
       </div>
       <div class="simulation-feed" id="threat-feed"></div>
     `;
@@ -1004,47 +995,63 @@ document.addEventListener('DOMContentLoaded', () => {
       const feed = simulation.querySelector('#threat-feed');
 
       const threats = [
-        { type: 'INFO', message: 'Baseline updated for user alice@corp.com', severity: 'low' },
-        { type: 'WARN', message: 'API velocity anomaly detected (z=+2.3)', severity: 'medium' },
-        { type: 'INFO', message: 'Session entropy within normal range', severity: 'low' },
-        { type: 'ALERT', message: 'Multi-region access pattern detected', severity: 'high' },
-        { type: 'INFO', message: 'Token ratio baseline: μ=0.41 σ=0.15', severity: 'low' },
-        { type: 'WARN', message: 'Off-hours API activity (02:34 UTC)', severity: 'medium' },
-        { type: 'INFO', message: 'Model targeting pattern: normal distribution', severity: 'low' }
+        { type: 'T2-006', message: 'Behavioral shift detected: user pattern deviation +2.8σ', severity: 'high', score: '0.89' },
+        { type: 'T1-009', message: 'Host fan-out anomaly: 13 destinations in 4h window', severity: 'medium', score: '0.67' },
+        { type: 'T1-003', message: 'Token ratio baseline updated: μ=0.41 σ=0.15', severity: 'low', score: '0.23' },
+        { type: 'T2-001', message: 'Distribution convergence detected: normal behavior', severity: 'low', score: '0.18' },
+        { type: 'T1-007', message: 'Error pattern spike: 23% authentication failures', severity: 'medium', score: '0.54' },
+        { type: 'T1-008', message: 'Concurrent session limit exceeded: 7 active', severity: 'medium', score: '0.61' },
+        { type: 'T2-004', message: 'Power-law deviation in request timing patterns', severity: 'high', score: '0.78' },
+        { type: 'T1-001', message: 'Volume baseline: 127 req/hr within normal range', severity: 'low', score: '0.31' }
       ];
 
+      let logCounter = 1;
+
       function addThreatLog(threat) {
-        const timestamp = new Date().toLocaleTimeString();
+        const now = new Date();
+        const timestamp = now.toTimeString().slice(0, 8);
         const log = document.createElement('div');
         log.className = `threat-log ${threat.severity}`;
         log.innerHTML = `
           <span class="timestamp">${timestamp}</span>
           <span class="threat-type">[${threat.type}]</span>
           <span class="threat-message">${threat.message}</span>
+          <span class="threat-score">${threat.score}</span>
         `;
 
         feed.insertBefore(log, feed.firstChild);
 
-        // Keep only last 6 logs
-        while (feed.children.length > 6) {
+        // Keep only last 8 logs for better visibility
+        while (feed.children.length > 8) {
           feed.removeChild(feed.lastChild);
         }
+
+        logCounter++;
       }
 
-      // Add threats at random intervals
-      setInterval(() => {
+      // More realistic threat intervals
+      function scheduleNextThreat() {
         const randomThreat = threats[Math.floor(Math.random() * threats.length)];
         addThreatLog(randomThreat);
-      }, 3000 + Math.random() * 4000);
 
-      // Initial threat
-      setTimeout(() => addThreatLog(threats[0]), 1000);
+        // Variable intervals: 2-8 seconds
+        const nextInterval = 2000 + Math.random() * 6000;
+        setTimeout(scheduleNextThreat, nextInterval);
+      }
+
+      // Initial threats with staggered timing
+      setTimeout(() => addThreatLog(threats[0]), 500);
+      setTimeout(() => addThreatLog(threats[2]), 1200);
+      setTimeout(() => addThreatLog(threats[4]), 2100);
+
+      // Start the ongoing simulation
+      setTimeout(scheduleNextThreat, 4000);
     }
   }
 
-  // ---- Advanced Particle System with WebGL ----
+  // ---- Optimized Particle System ----
   function createAdvancedParticles() {
-    if (window.innerWidth < 768) return; // Skip on mobile
+    if (window.innerWidth < 768 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const canvas = document.createElement('canvas');
     canvas.className = 'particle-canvas';
@@ -1056,7 +1063,7 @@ document.addEventListener('DOMContentLoaded', () => {
       height: 100vh;
       pointer-events: none;
       z-index: -1;
-      opacity: 0.6;
+      opacity: 0.4;
     `;
 
     document.body.appendChild(canvas);
@@ -1066,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 25; // Reduced for performance
 
     class Particle {
       constructor() {
@@ -1077,11 +1084,11 @@ document.addEventListener('DOMContentLoaded', () => {
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = canvas.height + 10;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = -(Math.random() * 2 + 0.5);
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = -(Math.random() * 1.5 + 0.3);
         this.life = 1;
-        this.decay = Math.random() * 0.01 + 0.005;
-        this.size = Math.random() * 2 + 0.5;
+        this.decay = Math.random() * 0.005 + 0.002;
+        this.size = Math.random() * 1.5 + 0.3;
       }
 
       update() {
@@ -1095,19 +1102,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       draw() {
-        const alpha = this.life * 0.8;
-        const green = Math.floor(100 + this.life * 155);
+        const alpha = this.life * 0.6;
+        const green = Math.floor(150 + this.life * 105);
 
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgb(0, ${green}, 65)`;
-        ctx.fill();
-
-        // Add glow effect
-        ctx.shadowColor = `rgb(0, ${green}, 65)`;
-        ctx.shadowBlur = 4;
         ctx.fill();
         ctx.restore();
       }
@@ -1118,6 +1120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       particles.push(new Particle());
     }
 
+    let animationId;
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1126,10 +1129,19 @@ document.addEventListener('DOMContentLoaded', () => {
         particle.draw();
       });
 
-      requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     }
 
     animate();
+
+    // Pause animation when page is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationId);
+      } else {
+        animate();
+      }
+    });
 
     // Handle resize
     window.addEventListener('resize', () => {
