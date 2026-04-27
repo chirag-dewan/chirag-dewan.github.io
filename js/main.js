@@ -972,6 +972,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Enhanced Live Threat Detection Simulation ----
   function createThreatSimulation() {
+    // Only show on PARALLAX project pages
+    if (!window.location.pathname.includes('parallax')) return;
+
     const existingSimulation = document.querySelector('.threat-simulation');
     if (existingSimulation) return;
 
@@ -985,9 +988,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="simulation-feed" id="threat-feed"></div>
     `;
 
-    // Find container (prefer project pages)
+    // Find container - only add to specific project pages
     const container = document.querySelector('.story-section:last-of-type') ||
-                     document.querySelector('.container');
+                     document.querySelector('.cta-section');
 
     if (container) {
       container.appendChild(simulation);
@@ -1279,13 +1282,17 @@ document.addEventListener('DOMContentLoaded', () => {
   animateCounters();
   initParallaxScrolling();
   enhance3DEffects();
-  createThreatSimulation();
   createAdvancedParticles();
 
-  // Add terminal simulator to demo pages
-  const demoContainers = document.querySelectorAll('.cta-section, .story-section:last-of-type');
-  if (demoContainers.length > 0 && window.location.pathname.includes('parallax')) {
-    createTerminalSimulator(demoContainers[0]);
+  // Add special features only to PARALLAX pages
+  if (window.location.pathname.includes('parallax')) {
+    createThreatSimulation();
+
+    // Add terminal simulator to demo pages
+    const demoContainers = document.querySelectorAll('.cta-section, .story-section:last-of-type');
+    if (demoContainers.length > 0) {
+      createTerminalSimulator(demoContainers[0]);
+    }
   }
 
   // Initialize experimental features
