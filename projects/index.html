@@ -27,6 +27,7 @@
       <ul class="nav__links">
         <li><a href="/about.html">about</a></li>
         <li><a href="/projects/">projects</a></li>
+        <li><a href="/blog/">blog</a></li>
       </ul>
     </div>
   </nav>
@@ -35,7 +36,7 @@
   <div class="container">
     <h1 class="section-header"><span>~/projects</span></h1>
 
-    <p style="font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 580px; margin-bottom: 1.5rem;">Four projects. Offense, research, application defense, infrastructure defense. <span style="color: var(--green);">The attack lives in the pattern, not the content.</span></p>
+    <p style="font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 580px; margin-bottom: 1.5rem;">Result first. Method second. <span style="color: var(--green);">Securing AI agents — adaptive defenses are themselves an attack surface, and the agent action layer needs detection, not just prevention.</span></p>
 
     <div style="max-width: 580px; margin-bottom: 2.5rem; padding: 1rem; border: 1px solid var(--border); background: var(--bg-raised);">
       <p style="font-size: 0.8rem; color: var(--green); margin-bottom: 0.6rem; font-weight: 600;">$ cat methodology</p>
@@ -48,8 +49,22 @@
     </div>
 
     <div class="project-card line-in animate-in">
+      <div class="project-card__name">ADAPTIVE DEFENSES AS AN ATTACK SURFACE</div>
+      <div class="project-card__thesis">Testing whether a self-retraining guardrail's continual-learning loop can be poisoned — reproducing AdaptiveGuard (ASE 2025), then attacking its adaptation loop.</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Reproduce baseline → probe the retraining trigger → craft drift-shaped inputs that survive guardrail filtering and shift the decision boundary.</p>
+      <div class="project-card__stack">
+        <span class="stack-tag">MITRE ATLAS AML.T0020</span>
+        <span class="stack-tag">MITRE ATLAS AML.T0018</span>
+        <span class="stack-tag">OWASP LLM04</span>
+      </div>
+      <div class="project-card__status">Status: <span class="active">Work in progress</span></div>
+      <a href="/blog/post.html?slug=adaptive-defenses-attack-surface" class="project-card__link">→ blog post</a>
+    </div>
+
+    <div class="project-card line-in animate-in">
       <div class="project-card__name">PARALLAX</div>
-      <div class="project-card__thesis">Privacy-preserving behavioral threat detection for AI platforms.</div>
+      <div class="project-card__thesis">0.68 AUC on 17M real events using metadata-only behavioral features — detecting abuse without inspecting payloads.</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Behavioral telemetry pipeline; metadata-only features; hybrid supervised + anomaly scoring.</p>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
         <span class="stack-tag">Behavioral Analytics</span>
@@ -62,7 +77,8 @@
 
     <div class="project-card line-in animate-in">
       <div class="project-card__name">KESTREL</div>
-      <div class="project-card__thesis">Cloud-native AI workload anomaly detection.</div>
+      <div class="project-card__thesis">0.766 recall on 34K real cloud-workload events, with Sigma-exportable detections.</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Cloud anomaly detection over workload telemetry; CLI + Flask + SQLite; Sigma export for SIEM hand-off.</p>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
         <span class="stack-tag">SQLite</span>
@@ -77,7 +93,8 @@
 
     <div class="project-card line-in animate-in">
       <div class="project-card__name">CTF Records</div>
-      <div class="project-card__thesis">Security challenge completion tracking and practice log.</div>
+      <div class="project-card__thesis">Gandalf L2–L7 complete — running log of LLM jailbreak challenges and what each level actually teaches.</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Solve, write up, link the technique back to MITRE ATLAS / OWASP LLM categories.</p>
       <div class="project-card__stack">
         <span class="stack-tag">CTF</span>
         <span class="stack-tag">Security Challenges</span>
@@ -91,7 +108,8 @@
 
     <div class="project-card line-in animate-in">
       <div class="project-card__name">ReconAI</div>
-      <div class="project-card__thesis">AI-powered offensive reconnaissance with GPT-4 analysis and target prioritization.</div>
+      <div class="project-card__thesis">AI-prioritized offensive reconnaissance — GPT-4 ranks subdomains and surfaces from Bbot output so the operator looks at the right target first.</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Bbot for breadth; LLM scoring for prioritization; OSINT enrichment per target.</p>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
         <span class="stack-tag">GPT-4</span>

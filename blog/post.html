@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Chirag Dewan</title>
+  <meta name="description" content="A post on AI security, agent red teaming, and behavioral detection.">
+  <link rel="canonical" href="https://chirag-dewan.github.io/blog/">
+  <meta property="og:title" content="Blog — Chirag Dewan">
+  <meta property="og:description" content="A post on AI security, agent red teaming, and behavioral detection.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://chirag-dewan.github.io/blog/">
+  <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog — Chirag Dewan">
+  <meta name="twitter:description" content="A post on AI security, agent red teaming, and behavioral detection.">
+  <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    .post-meta {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      font-family: var(--font);
+    }
+    .post-meta .date { color: var(--amber); }
+    .post-meta .sep { color: var(--text-dim); margin: 0 0.4rem; }
+    .post-tags { margin: 0.6rem 0 1.5rem; }
+    .post-body {
+      max-width: 640px;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+    .post-body p { margin-bottom: 1.1rem; }
+    .post-body .post-lede {
+      font-size: 1.05rem;
+      color: var(--text);
+      border-left: 2px solid var(--green-dim);
+      padding-left: 1rem;
+      margin-bottom: 1.4rem;
+    }
+    .post-body a { color: var(--green); }
+    .post-body code {
+      font-family: var(--font);
+      color: var(--amber);
+      background: var(--bg-raised);
+      padding: 0.1rem 0.35rem;
+      border: 1px solid var(--border);
+    }
+    .post-back {
+      display: inline-block;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .post-back:hover { color: var(--green); }
+    .post-missing { font-size: 0.85rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/about.html">about</a></li>
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/blog/">blog</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+  <div class="container">
+    <h1 class="section-header" id="post-title"><span>~/blog/post</span></h1>
+    <div class="post-meta" id="post-meta"></div>
+    <div class="post-tags" id="post-tags"></div>
+    <article class="post-body" id="post-body">
+      <p class="post-missing">Loading post…</p>
+    </article>
+    <a class="post-back" href="/blog/"><span style="color: var(--green);">$</span> cd ../blog</a>
+
+    <noscript>
+      <p class="post-missing" style="margin-top: 1.5rem;">JavaScript is required to render posts. <a href="/blog/" style="color: var(--green);">Back to blog index</a></p>
+    </noscript>
+  </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag0728@gmail.com">email</a>
+      <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+    <p class="footer__tagline">> see the pattern, not the content.</p>
+    <p class="footer__push"></p>
+  </footer>
+
+  <script src="../js/main.js" defer></script>
+  <script>
+    (async function () {
+      const slug = new URLSearchParams(location.search).get('slug');
+      const titleEl = document.getElementById('post-title');
+      const metaEl = document.getElementById('post-meta');
+      const tagsEl = document.getElementById('post-tags');
+      const bodyEl = document.getElementById('post-body');
+      const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+
+      if (!slug) {
+        bodyEl.innerHTML = '<p class="post-missing">No post specified. <a href="/blog/" style="color: var(--green);">Back to blog index</a></p>';
+        return;
+      }
+
+      try {
+        const res = await fetch('./posts.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error('posts.json ' + res.status);
+        const posts = await res.json();
+        const post = posts.find((p) => p.slug === slug);
+        if (!post) {
+          bodyEl.innerHTML = '<p class="post-missing">Post not found. <a href="/blog/" style="color: var(--green);">Back to blog index</a></p>';
+          return;
+        }
+
+        document.title = post.title + ' — Chirag Dewan';
+        titleEl.innerHTML = '<span>' + esc(post.title) + '</span>';
+        metaEl.innerHTML = '<span class="date">' + esc(post.date || '') + '</span>'
+          + (post.status ? '<span class="sep">·</span><span>' + esc(post.status) + '</span>' : '');
+        tagsEl.innerHTML = (post.tags || [])
+          .map((t) => '<span class="stack-tag">' + esc(t) + '</span>')
+          .join('');
+        // bodyHtml is author-controlled JSON content; rendered as HTML by design.
+        bodyEl.innerHTML = post.bodyHtml || '';
+      } catch (err) {
+        bodyEl.innerHTML = '<p class="post-missing">Could not load post.</p>';
+        console.error(err);
+      }
+    })();
+  </script>
+</body>
+</html>
