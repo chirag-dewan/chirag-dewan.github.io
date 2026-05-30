@@ -1,11 +1,1 @@
-[
-  {
-    "slug": "adaptive-defenses-attack-surface",
-    "title": "Adaptive Defenses Are an Attack Surface",
-    "date": "2026-05-29",
-    "status": "Work in progress",
-    "tags": ["MITRE ATLAS AML.T0020", "MITRE ATLAS AML.T0018", "OWASP LLM04"],
-    "excerpt": "Securing AI agents — adaptive defenses are themselves an attack surface, and the agent action layer needs detection, not just prevention.",
-    "bodyHtml": "<p class=\"post-lede\">Securing AI agents — adaptive defenses are themselves an attack surface, and the agent action layer needs detection, not just prevention.</p><p><em>Work in progress.</em> This post tracks the reproduction of AdaptiveGuard (ASE 2025) and the attempt to poison its continual-learning loop by shaping the drift that triggers retraining. Notes, failed attempts, and any working exploits will land here as the research ships.</p>"
-  }
-]
+[]
