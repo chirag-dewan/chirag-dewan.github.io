@@ -3,7 +3,7 @@
    Terminal/Hacker Aesthetic
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600&display=swap');
 /* font-display:swap is handled by the Google Fonts &display=swap param above */
 
 :root {
@@ -17,14 +17,40 @@
   --amber-dim: #cc8d00;
   --amber-glow: rgba(255, 176, 0, 0.15);
   --red: #ff3333;
-  --text: #cccccc;
-  --text-muted: #666666;
-  --text-dim: #444444;
-  --border: #1a1a1a;
+  --text: #e6e6e6;
+  --text-muted: #9a9a9a;
+  --text-dim: #6a6a6a;
+  --border: #1f1f1f;
   --border-bright: #2a2a2a;
-  --font: 'JetBrains Mono', monospace;
-  --line-height: 1.7;
-  --max-width: 780px;
+
+  /* Type system — body proportional, mono as accent */
+  --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Type scale (rem) */
+  --t-hero: clamp(2rem, 4.5vw + 0.5rem, 3.25rem);
+  --t-h2:   1.0625rem;
+  --t-lead: 1.1875rem;
+  --t-body: 1rem;
+  --t-mono: 0.8125rem;
+  --t-mono-xs: 0.75rem;
+
+  /* Spacing scale (4/8 rhythm) */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+
+  --line-height: 1.6;
+  --max-width: 880px;
+  --measure: 36rem;
   --cursor-blink: cursor-blink 1s step-end infinite;
 }
 
@@ -40,84 +66,26 @@ html {
 }
 
 body {
-  font-family: var(--font);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
   background: var(--bg);
   color: var(--text);
   line-height: var(--line-height);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern", "liga", "calt";
 }
 
-/* ---- Enhanced CRT Effects ---- */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0, 0, 0, 0.04) 2px,
-      rgba(0, 0, 0, 0.04) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 1px,
-      rgba(0, 255, 65, 0.01) 1px,
-      rgba(0, 255, 65, 0.01) 3px
-    );
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.6;
-  animation: scanline-drift 8s infinite ease-in-out;
-}
-
-@keyframes scanline-drift {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 0.4; }
-}
-
-/* ---- CRT Vignette ---- */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 60%,
-    rgba(0, 0, 0, 0.35) 100%
-  );
-  pointer-events: none;
-  z-index: 9998;
-}
-
-/* ---- CRT Flicker (subtle) ---- */
-@keyframes crt-flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.98; }
-  94% { opacity: 1; }
-}
-body { animation: crt-flicker 8s infinite; }
-
-/* ---- Boot sequence ---- */
-@keyframes boot-in {
-  from { opacity: 0; filter: brightness(2) saturate(0); }
-  30% { opacity: 1; filter: brightness(1.5) saturate(0.5); }
-  to { opacity: 1; filter: brightness(1) saturate(1); }
-}
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1.5rem;
-  animation: boot-in 0.8s ease-out;
+  padding: var(--s-6) var(--s-5);
 }
 
-/* ---- Phosphor glow utility ---- */
-.glow-green { text-shadow: 0 0 8px var(--green-glow), 0 0 20px rgba(0, 255, 65, 0.08); }
-.glow-amber { text-shadow: 0 0 8px var(--amber-glow), 0 0 20px rgba(255, 176, 0, 0.08); }
+/* ---- Phosphor glow utilities (kept as no-op for back-compat with deep pages) ---- */
+.glow-green { text-shadow: none; }
+.glow-amber { text-shadow: none; }
 
 /* ---- Navigation ---- */
 .nav {
@@ -141,10 +109,10 @@ body { animation: crt-flicker 8s infinite; }
   font-weight: 600;
   font-size: 0.95rem;
   letter-spacing: 0.02em;
-  transition: text-shadow 0.3s;
+  transition: color 0.2s;
 }
 .nav__home:hover {
-  text-shadow: 0 0 12px var(--green-glow), 0 0 30px rgba(0, 255, 65, 0.1);
+  color: var(--text);
 }
 .nav__home::before { content: '~/'; color: var(--text-muted); }
 .nav__links {
@@ -157,7 +125,7 @@ body { animation: crt-flicker 8s infinite; }
   text-decoration: none;
   font-size: 0.8rem;
   letter-spacing: 0.04em;
-  transition: color 0.2s, text-shadow 0.3s;
+  transition: color 0.2s;
   position: relative;
 }
 .nav__links a::before {
@@ -168,7 +136,6 @@ body { animation: crt-flicker 8s infinite; }
 .nav__links a:hover,
 .nav__links a.active {
   color: var(--green);
-  text-shadow: 0 0 10px var(--green-glow);
 }
 /* Terminal cursor on nav hover */
 .nav__links a::after {
@@ -327,7 +294,6 @@ body { animation: crt-flicker 8s infinite; }
   color: var(--green);
   font-weight: 700;
   margin-bottom: 0.5rem;
-  text-shadow: 0 0 20px var(--green-glow);
 }
 
 /* ---- Enhanced Project Cards ---- */
