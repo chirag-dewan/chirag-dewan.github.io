@@ -217,76 +217,43 @@
 
   <main>
   <div class="container">
-    <section class="home-hero">
-      <h1 class="home-hero__name" data-glitch="Chirag Dewan">Chirag Dewan</h1>
-      <p class="home-hero__line">Security engineer. Offensive background, detection focus.</p>
-      <p class="home-hero__sub">I build systems that detect abuse through behavioral patterns — not content inspection.</p>
+    <header class="hero">
+      <p class="hero__eyebrow">security engineer</p>
+      <h1 class="hero__name">Chirag Dewan</h1>
+      <p class="hero__line">Security engineer. Offensive background, detection focus.</p>
+      <p class="hero__thesis">I build systems that detect abuse through behavioral patterns — not content inspection.</p>
+      <p class="hero__caption">&gt; see the pattern, not the content.</p>
+    </header>
 
-      <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; font-size: 0.7rem; color: var(--text-dim);">
-        <span style="color: var(--green); font-weight: 600;">$ status</span>
-        <span style="color: var(--amber);">● ACTIVE</span>
-        <span>|</span>
-        <span>detection systems operational</span>
-        <span>|</span>
-        <span>behavioral analytics focused</span>
+    <section class="work" aria-labelledby="work-label">
+      <p id="work-label" class="work__label">selected work</p>
+      <div class="work__grid">
+        <a class="work-card" href="/projects/parallax.html">
+          <p class="work-card__metric">0.68 AUC · 17M real auth events</p>
+          <h2 class="work-card__name">PARALLAX</h2>
+          <p class="work-card__desc">Behavioral threat detection for AI platforms.</p>
+        </a>
+
+        <a class="work-card" href="/projects/kestrel.html">
+          <p class="work-card__metric">0.766 recall @ 1.0 precision · 34K events</p>
+          <h2 class="work-card__name">KESTREL</h2>
+          <p class="work-card__desc">Cloud workload anomaly detection.</p>
+        </a>
+
+        <a class="work-card" href="/projects/ai-security.html">
+          <p class="work-card__metric">Gandalf L2–L7 complete</p>
+          <h2 class="work-card__name">AI Red Team Lab</h2>
+          <p class="work-card__desc">Security challenge completion log and practice tracking.</p>
+        </a>
+
+        <a class="work-card" href="https://github.com/chirag-dewan">
+          <h2 class="work-card__name">ReconAI</h2>
+          <p class="work-card__desc">AI-powered offensive reconnaissance and target prioritization.</p>
+        </a>
       </div>
     </section>
 
-    <p class="home-quote footer__tagline">> see the pattern, not the content.</p>
-
-    <div class="ascii-art" style="margin: 2rem 0; font-size: 0.65rem; line-height: 1; color: var(--green-dim);">
-    ╭────────────────────────────────────────╮
-    │ ◆ BEHAVIORAL DETECTION • AI SECURITY ◆ │
-    │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
-    │ ████████████████████████████████████ │
-    │ ⚡ system.status = <span style="color: var(--amber);">OPERATIONAL</span> ⚡     │
-    │ 🔍 threat.detection = <span style="color: var(--green);">ACTIVE</span>       │
-    ╰────────────────────────────────────────╯
-    </div>
-
-    <div style="margin: 2rem 0; padding: 1rem; border: 1px solid var(--border); background: linear-gradient(135deg, var(--bg-raised), rgba(0, 255, 65, 0.01)); border-radius: 8px;">
-      <div style="font-size: 0.8rem; color: var(--green); margin-bottom: 0.8rem; font-weight: 600;">
-        $ cat recent_achievements.log
-      </div>
-      <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;">
-        <div style="margin-bottom: 0.4rem;">
-          <span style="color: var(--amber);">[2026-04]</span> PARALLAX detection system → Behavioral threat detection
-        </div>
-        <div style="margin-bottom: 0.4rem;">
-          <span style="color: var(--amber);">[2026-03]</span> KESTREL cloud anomaly detection → Infrastructure defense
-        </div>
-        <div>
-          <span style="color: var(--amber);">[2026-02]</span> AI Red Team Lab → Security research and methodology
-        </div>
-      </div>
-    </div>
-
-    <div class="home-cards">
-      <a href="/projects/parallax.html" class="home-card">
-        <span class="home-card__name">PARALLAX</span>
-        <span class="home-card__desc">Behavioral threat detection for AI platforms.</span>
-        <span class="home-card__metric">0.68 AUC on 17M real events</span>
-      </a>
-
-      <a href="/projects/kestrel.html" class="home-card">
-        <span class="home-card__name">KESTREL</span>
-        <span class="home-card__desc">Cloud workload anomaly detection.</span>
-        <span class="home-card__metric">0.766 recall on 34K real events</span>
-      </a>
-
-      <a href="/projects/ai-security.html" class="home-card">
-        <span class="home-card__name">CTF Records</span>
-        <span class="home-card__desc">Security challenge completion log and practice tracking.</span>
-        <span class="home-card__metric">Gandalf L2-L7 complete</span>
-      </a>
-
-      <a href="https://github.com/chirag-dewan" class="home-card">
-        <span class="home-card__name">ReconAI</span>
-        <span class="home-card__desc">AI-powered offensive reconnaissance and target prioritization.</span>
-      </a>
-    </div>
-
-    <div class="activity" id="activity">
+    <section class="activity" id="activity" aria-label="git activity">
       <p class="activity__cmd">$ git log --activity</p>
       <div class="sparkline" id="sparkline"></div>
       <div class="heatmap-wrap">
@@ -296,9 +263,7 @@
         <div class="heatmap" id="heatmap"></div>
       </div>
       <div class="activity__stats" id="activity-stats"></div>
-    </div>
-
-    <p class="home-about"><a href="/about.html"><span class="cmd">$</span> cat about.txt →</a></p>
+    </section>
   </div>
   </main>
 
@@ -310,7 +275,6 @@
       <a href="/Chirag_Dewan_Resume.pdf">resume</a>
     </div>
     <p>© 2026 Chirag Dewan</p>
-    <p class="footer__push"></p>
   </footer>
 
   <script src="js/main.js" defer></script>
