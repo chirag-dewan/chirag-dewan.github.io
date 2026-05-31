@@ -21,143 +21,155 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/main.css">
   <style>
-    .home-hero {
-      padding: 5rem 0 0.8rem;
+    /* ---- Hero ---------------------------------------------------------- */
+    .hero {
+      padding: var(--s-9) 0 var(--s-7);
+      max-width: var(--measure);
     }
-    .home-hero__name {
-      font-size: 2.4rem;
+    .hero__eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--t-mono-xs);
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: var(--s-5);
+    }
+    .hero__name {
+      font-size: var(--t-hero);
       font-weight: 700;
-      color: var(--green);
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 30px var(--green-glow), 0 0 60px rgba(0, 255, 65, 0.06);
-    }
-    .home-hero__line {
-      font-size: 0.9rem;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
       color: var(--text);
-      line-height: 1.6;
+      margin-bottom: var(--s-5);
     }
-    .home-hero__sub {
-      font-size: 0.8rem;
+    .hero__line {
+      font-size: var(--t-body);
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-top: 0.3rem;
+      margin-bottom: var(--s-4);
+    }
+    .hero__thesis {
+      font-size: var(--t-lead);
+      color: var(--text);
+      line-height: 1.5;
+      max-width: var(--measure);
+      margin-bottom: var(--s-6);
+    }
+    .hero__caption {
+      font-family: var(--font-mono);
+      font-size: var(--t-mono-xs);
+      color: var(--text-dim);
     }
 
-    .home-quote {
-      font-size: 0.7rem;
-      color: var(--green-dim);
-      font-style: italic;
-      opacity: 0.6;
-      margin: 1.2rem 0;
+    /* ---- Selected work ------------------------------------------------- */
+    .work {
+      margin-top: var(--s-8);
     }
-
-    .home-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
+    .work__label {
+      font-family: var(--font-mono);
+      font-size: var(--t-mono-xs);
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding-bottom: var(--s-3);
+      margin-bottom: var(--s-6);
+      border-bottom: 1px solid var(--border);
     }
-    .home-card {
+    .work__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+    @media (min-width: 768px) {
+      .work__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--s-6);
+      }
+    }
+    .work-card {
+      display: block;
+      padding: var(--s-6) var(--s-5);
       border: 1px solid var(--border);
-      background: var(--bg-raised);
-      padding: 1.2rem 1.5rem;
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      transition: border-color 0.3s;
       text-decoration: none;
-      cursor: pointer;
+      color: inherit;
+      min-height: 44px;
+      transition: border-color 0.2s ease;
     }
-    .home-card:hover { border-color: var(--green-dim); }
-    .home-card__name {
+    .work-card:hover { border-color: var(--text-muted); }
+    .work-card:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
+    }
+    .work-card__metric {
+      font-family: var(--font-mono);
+      font-size: var(--t-lead);
       font-weight: 600;
       color: var(--green);
-      font-size: 0.9rem;
-      flex-shrink: 0;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--s-3);
     }
-    .home-card__name::before {
-      content: '→ ';
-      color: var(--amber);
-    }
-    .home-card__desc {
-      font-size: 0.8rem;
+    .work-card__name {
+      font-family: var(--font-mono);
+      font-size: var(--t-mono);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--text-muted);
-      flex: 1;
-      min-width: 200px;
+      margin-bottom: var(--s-2);
     }
-    .home-card__metric {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--amber);
-      flex-shrink: 0;
+    .work-card__desc {
+      font-size: var(--t-body);
+      color: var(--text);
+      line-height: 1.5;
     }
 
-    .home-about {
-      margin-top: 1.5rem;
-      font-size: 0.8rem;
-    }
-    .home-about a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .home-about a:hover { color: var(--green); }
-    .home-about .cmd { color: var(--green); }
-
-    /* ---- Activity Panel ---- */
+    /* ---- Activity panel (hidden until JS sets .loaded) ----------------- */
     .activity {
-      margin-top: 2rem;
-      padding: 1.2rem 1.5rem;
-      border: 1px solid var(--border);
-      background: var(--bg-raised);
-      display: none; /* shown by JS */
+      display: none;
+      margin-top: var(--s-8);
+      padding-top: var(--s-6);
+      border-top: 1px solid var(--border);
     }
     .activity.loaded { display: block; }
     .activity__cmd {
-      font-size: 0.7rem;
-      color: var(--green);
-      margin-bottom: 0.8rem;
+      font-family: var(--font-mono);
+      font-size: var(--t-mono-xs);
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: var(--s-4);
     }
 
-    /* Sparkline */
     .sparkline {
       display: flex;
       align-items: flex-end;
       gap: 2px;
       height: 32px;
-      margin-bottom: 0.6rem;
+      margin-bottom: var(--s-3);
     }
     .spark-bar {
       flex: 1;
       min-width: 3px;
       max-width: 8px;
-      border-radius: 1px 1px 0 0;
+      background: var(--text-dim);
       transform-origin: bottom;
       transform: scaleY(0);
       transition: transform 0.4s ease;
     }
     .spark-bar.animate { transform: scaleY(1); }
 
-    /* Heatmap */
     .heatmap-wrap {
       display: flex;
       align-items: flex-start;
-      gap: 0.6rem;
-      margin-bottom: 0.6rem;
+      gap: var(--s-2);
+      margin-bottom: var(--s-3);
     }
     .heatmap-labels {
       display: flex;
       flex-direction: column;
       gap: 1px;
+      font-family: var(--font-mono);
       font-size: 0.5rem;
       color: var(--text-dim);
       padding-top: 1px;
     }
-    .heatmap-labels span {
-      height: 7px;
-      line-height: 7px;
-    }
+    .heatmap-labels span { height: 7px; line-height: 7px; }
     .heatmap {
       display: grid;
       grid-template-rows: repeat(7, 7px);
@@ -168,38 +180,23 @@
     .hm-cell {
       width: 7px;
       height: 7px;
-      border-radius: 1px;
       background: var(--bg-surface);
-      transition: background 0.3s ease, box-shadow 0.3s ease;
+      transition: background 0.3s ease;
     }
     .hm-cell.l1 { background: #003d10; }
     .hm-cell.l2 { background: #006d1a; }
     .hm-cell.l3 { background: #00aa2a; }
-    .hm-cell.l4 { background: var(--green); box-shadow: 0 0 4px var(--green-glow); }
+    .hm-cell.l4 { background: var(--green); }
 
-    /* Stats row */
     .activity__stats {
       display: flex;
-      gap: 1.5rem;
-      font-size: 0.65rem;
-      color: var(--text-dim);
       flex-wrap: wrap;
+      gap: var(--s-5);
+      font-family: var(--font-mono);
+      font-size: var(--t-mono-xs);
+      color: var(--text-dim);
     }
-    .activity__stats .val {
-      color: var(--amber);
-      font-weight: 600;
-    }
-
-    @media (max-width: 600px) {
-      .home-hero { padding: 3rem 0 0.6rem; }
-      .home-hero__name { font-size: 1.8rem; }
-      .home-card {
-        flex-direction: column;
-        gap: 0.3rem;
-        padding: 1rem;
-      }
-      .home-card__desc { min-width: auto; }
-    }
+    .activity__stats .val { color: var(--text); }
   </style>
 </head>
 <body>
