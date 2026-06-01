@@ -29,18 +29,14 @@
     .entry { padding-top: 0.4rem; }
     .entry__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.01em; }
     .entry__title a { text-decoration: none; color: var(--text); }
-    .entry__title a:hover { color: var(--accent); }
+    .entry__title a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border-bright); }
     .entry__tag { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 0.25rem; }
     .entry__hook { font-size: 1.02rem; color: var(--text); line-height: 1.7; margin: 0.9rem 0 0; max-width: var(--measure); }
-    .entry__hook .pos { color: var(--accent); }
-    .entry__hook .neg { color: var(--red); }
+    .entry__hook .pos { color: var(--held); font-variant-numeric: tabular-nums; }
+    .entry__hook .neg { color: var(--broke); font-variant-numeric: tabular-nums; }
     .entry__hook .dim { color: var(--text-muted); }
     .entry__links { font-size: 0.9rem; margin-top: 0.9rem; }
     .entry__links a { margin-right: 1.3rem; }
-    .entry__links .muted { color: var(--text-dim); }
-
-    .slot { font-size: 0.92rem; color: var(--text-dim); margin-top: 0.9rem; }
-    .slot b { color: var(--text-muted); font-weight: 500; font-variant-numeric: tabular-nums; margin-right: 0.5rem; }
     .more { font-size: 0.9rem; margin-top: 1.6rem; }
 
     .lede { font-size: 1.02rem; color: var(--text); max-width: var(--measure); }
@@ -83,11 +79,8 @@
         <p class="entry__links">
           <a href="/projects/mcp-poison-bench.html">Project</a>
           <a href="https://github.com/chirag-dewan/MCP-Poison-Bench">GitHub</a>
-          <span class="muted">arXiv — coming soon</span>
         </p>
       </div>
-      <p class="slot"><b>02</b>slot open — next research</p>
-      <p class="slot"><b>03</b>slot open</p>
       <p class="more"><a href="/projects/">All projects — PARALLAX, KESTREL, …</a></p>
     </section>
 
