@@ -26,9 +26,8 @@
     }
     .demo-header h1 {
       font-size: 1.4rem;
-      color: var(--green);
+      color: var(--text);
       margin-bottom: 0.3rem;
-      text-shadow: 0 0 20px var(--green-glow);
     }
     .demo-header p {
       font-size: 0.75rem;
@@ -55,9 +54,9 @@
       border-radius: 2px;
     }
     .archetype-btn:hover { border-color: var(--border-bright); color: var(--text); }
-    .archetype-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
-    .archetype-btn.active.warn { border-color: var(--amber); color: var(--amber); background: rgba(255,176,0,0.05); }
-    .archetype-btn.active.danger { border-color: var(--red); color: var(--red); background: rgba(255,51,51,0.05); }
+    .archetype-btn.active { border-color: var(--text); color: var(--text); background: rgba(68, 131, 97,0.05); }
+    .archetype-btn.active.warn { border-color: var(--text-muted); color: var(--text-muted); background: rgba(120, 119, 116,0.05); }
+    .archetype-btn.active.danger { border-color: var(--red); color: var(--red); background: rgba(196, 85, 77,0.05); }
 
     /* Layout grid */
     .demo-grid {
@@ -85,7 +84,7 @@
       display: flex;
       justify-content: space-between;
     }
-    .feed-panel__header .count { color: var(--amber); }
+    .feed-panel__header .count { color: var(--text-muted); }
     .feed-list {
       padding: 0.4rem 0.8rem;
       font-size: 0.65rem;
@@ -212,13 +211,13 @@
     .composite-score__value {
       font-size: 2.2rem;
       font-weight: 700;
-      color: var(--green);
+      color: var(--text);
       line-height: 1;
       transition: color 0.3s;
     }
-    .composite-score__value.level-none { color: var(--green); }
+    .composite-score__value.level-none { color: var(--text); }
     .composite-score__value.level-low { color: var(--green-dim); }
-    .composite-score__value.level-medium { color: var(--amber); }
+    .composite-score__value.level-medium { color: var(--text-muted); }
     .composite-score__value.level-high { color: var(--red); }
     .composite-score__value.level-critical { color: #ff0040; text-shadow: 0 0 20px rgba(255,0,64,0.4); }
     .composite-score__label {
@@ -236,10 +235,10 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
-    .threat-badge.none { color: var(--green); border-color: var(--green); background: rgba(0,255,65,0.05); }
+    .threat-badge.none { color: var(--text); border-color: var(--text); background: rgba(68, 131, 97,0.05); }
     .threat-badge.low { color: var(--green-dim); border-color: var(--green-dim); background: rgba(0,204,51,0.05); }
-    .threat-badge.medium { color: var(--amber); border-color: var(--amber); background: rgba(255,176,0,0.05); }
-    .threat-badge.high { color: var(--red); border-color: var(--red); background: rgba(255,51,51,0.08); }
+    .threat-badge.medium { color: var(--text-muted); border-color: var(--text-muted); background: rgba(120, 119, 116,0.05); }
+    .threat-badge.high { color: var(--red); border-color: var(--red); background: rgba(196, 85, 77,0.08); }
     .threat-badge.critical { color: #ff0040; border-color: #ff0040; background: rgba(255,0,64,0.1); animation: pulse-border 1.5s ease infinite; }
 
     @keyframes pulse-border {
@@ -280,8 +279,8 @@
       transition: all 0.3s;
     }
     .pipeline-stage.active {
-      border-color: var(--green);
-      color: var(--green);
+      border-color: var(--text);
+      color: var(--text);
     }
     .pipeline-stage.done {
       border-color: var(--border-bright);
@@ -301,8 +300,7 @@
     }
     .lanl-header h2 {
       font-size: 1.3rem;
-      color: var(--green);
-      text-shadow: 0 0 20px var(--green-glow);
+      color: var(--text);
       margin-bottom: 0.3rem;
     }
     .lanl-header p {
@@ -320,7 +318,7 @@
       border: 1px solid var(--border);
       background: var(--bg-raised);
     }
-    .lanl-dataset span { color: var(--amber); font-weight: 500; }
+    .lanl-dataset span { color: var(--text-muted); font-weight: 500; }
 
     /* Headline metrics */
     .lanl-metrics {
@@ -344,8 +342,8 @@
       line-height: 1.1;
       margin-bottom: 0.25rem;
     }
-    .lanl-metric__value.green { color: var(--green); }
-    .lanl-metric__value.amber { color: var(--amber); }
+    .lanl-metric__value.green { color: var(--text); }
+    .lanl-metric__value.amber { color: var(--text-muted); }
     .lanl-metric__value.red { color: var(--red); }
     .lanl-metric__label {
       font-size: 0.65rem;
@@ -496,7 +494,7 @@
       font-weight: 600;
       flex-shrink: 0;
     }
-    .contrib-row__delta.pos { color: var(--green); }
+    .contrib-row__delta.pos { color: var(--text); }
     .contrib-row__delta.neg { color: var(--red); }
     .contrib-row__weight {
       min-width: 2.5rem;
@@ -568,19 +566,19 @@
       color: var(--text);
       border-bottom: 1px solid var(--border);
     }
-    .threshold-table tr.optimal { background: rgba(0, 255, 65, 0.05); }
-    .threshold-table tr.optimal td { color: var(--green); font-weight: 600; }
+    .threshold-table tr.optimal { background: rgba(68, 131, 97, 0.05); }
+    .threshold-table tr.optimal td { color: var(--text); font-weight: 600; }
 
     /* Findings callout */
     .lanl-findings {
       border: 1px solid var(--amber);
-      background: rgba(255, 176, 0, 0.03);
+      background: rgba(120, 119, 116, 0.03);
       padding: 1.2rem;
       margin: 2rem 0;
       font-size: 0.8rem;
     }
     .lanl-findings h3 {
-      color: var(--amber);
+      color: var(--text-muted);
       font-size: 0.85rem;
       margin-bottom: 0.8rem;
     }
@@ -589,7 +587,7 @@
       margin-bottom: 0.6rem;
       line-height: 1.7;
     }
-    .lanl-findings strong { color: var(--green); }
+    .lanl-findings strong { color: var(--text); }
     .lanl-findings .dim { color: var(--text-muted); }
   </style>
 </head>
@@ -609,8 +607,8 @@
   <main>
   <div class="container">
     <noscript>
-      <div style="border: 1px solid var(--amber); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.8rem; color: var(--amber);">
-        This interactive demo requires JavaScript. <a href="parallax.html" style="color: var(--green);">View the project page</a> for static results, or <a href="https://github.com/chirag-dewan/parallax" style="color: var(--green);">view the source on GitHub</a>.
+      <div style="border: 1px solid var(--amber); padding: 1.5rem; margin-bottom: 2rem; font-size: 0.8rem; color: var(--text-muted);">
+        This interactive demo requires JavaScript. <a href="parallax.html" style="color: var(--text);">View the project page</a> for static results, or <a href="https://github.com/chirag-dewan/parallax" style="color: var(--text);">view the source on GitHub</a>.
       </div>
     </noscript>
 
@@ -620,9 +618,9 @@
     </div>
 
     <div class="archetype-selector">
-      <button class="archetype-btn active" data-type="normal">$ normal_user</button>
-      <button class="archetype-btn" data-type="power">$ power_developer</button>
-      <button class="archetype-btn" data-type="attacker">$ attacker</button>
+      <button class="archetype-btn active" data-type="normal">normal user</button>
+      <button class="archetype-btn" data-type="power">power developer</button>
+      <button class="archetype-btn" data-type="attacker">attacker</button>
     </div>
 
     <!-- Pipeline stages -->
@@ -804,7 +802,7 @@
 
       <!-- Key Findings -->
       <div class="lanl-findings">
-        <h3>$ cat findings.txt</h3>
+        <h3>Findings</h3>
         <p><strong>T2-006 Behavioral Shift</strong> is the engine. Compromised users show sharp behavioral changes in peak 4-hour windows (mean 0.71 vs normal 0.43). Delta +0.29 — drives most of the separation. This is the cross-domain signal: lateral movement in auth logs manifests as sudden behavioral shift, the same pattern that catches account takeover on AI platforms.</p>
         <p><strong>T1-009 Host Fan-Out</strong> delivers the second-strongest signal (+0.13 delta). Compromised users access more distinct hosts in their peak windows (mean 0.79 vs normal 0.66) — lateral movement leaves a destination diversity signature.</p>
         <p><strong>7 of 12 detectors were anti-correlated in v2</strong> — they scored normal users higher than compromised. Designed for AI platform abuse, they penalized the wrong group on auth data. <span class="dim">v3 zeroed all 10 non-contributing detectors and redistributed weight to the 5 correctly-oriented signals. AUC jumped from 0.48 to 0.68.</span></p>
@@ -843,7 +841,7 @@
     </div>
 
     <div style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim);">
-      <p style="margin-top: 0.5rem;"><a href="parallax.html" style="color: var(--amber); text-decoration: none;">← back to project details</a> · <a href="https://github.com/chirag-dewan/parallax" style="color: var(--amber); text-decoration: none;">source on GitHub</a></p>
+      <p style="margin-top: 0.5rem;"><a href="parallax.html" style="color: var(--text-muted); text-decoration: none;">← back to project details</a> · <a href="https://github.com/chirag-dewan/parallax" style="color: var(--text-muted); text-decoration: none;">source on GitHub</a></p>
     </div>
   </div>
   </main>
@@ -1292,7 +1290,7 @@
     }
 
     // X-axis
-    ctx.strokeStyle = '#1a1a1a';
+    ctx.strokeStyle = 'var(--bg-surface)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, H - padding.bottom);
@@ -1333,7 +1331,7 @@
     }
     ctx.lineTo(W, H - padding.bottom);
     ctx.closePath();
-    ctx.fillStyle = 'rgba(0, 255, 65, 0.12)';
+    ctx.fillStyle = 'rgba(68, 131, 97, 0.12)';
     ctx.fill();
 
     // Normal outline
@@ -1357,7 +1355,7 @@
     }
     ctx.lineTo(W, H - padding.bottom);
     ctx.closePath();
-    ctx.fillStyle = 'rgba(255, 51, 51, 0.12)';
+    ctx.fillStyle = 'rgba(196, 85, 77, 0.12)';
     ctx.fill();
 
     // Compromised outline
