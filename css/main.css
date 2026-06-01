@@ -176,6 +176,8 @@ hr { border: none; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .arc3__t { font-weight: 600; color: var(--text); font-size: 0.95rem; line-height: 1.4; margin-bottom: var(--s-2); }
 .arc3__d { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 .arc3__r { margin-top: var(--s-3); font-family: var(--font-mono); font-size: var(--t-mono-xs); }
+.arc3__r .held { color: var(--held); font-weight: 600; }
+.arc3__r .broke { color: var(--broke); font-weight: 600; }
 .arc3__arrow { display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-family: var(--font-mono); }
 @media (max-width: 640px) { .arc3 { grid-template-columns: 1fr; } .arc3__arrow { transform: rotate(90deg); padding: var(--s-1) 0; } }
 
