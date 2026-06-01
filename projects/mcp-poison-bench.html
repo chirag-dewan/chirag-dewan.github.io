@@ -79,7 +79,7 @@
 
       <div class="story-section">
         <h2>The Thesis</h2>
-        <p>The literature splits two ways. <span class="accent">MCPTox</span> measures the attack on 45 real-world servers (ASR up to 72.8% on o1-mini) — but ships no defense. <span class="accent">Huang et al.</span> (arXiv:2603.22489) threat-model the ecosystem and <em>recommend</em> a multi-layer client-side defense — but don't build or measure one.</p>
+        <p>The literature splits two ways. <a href="https://arxiv.org/abs/2508.14925">MCPTox</a> measures the attack on 45 real-world servers (ASR up to 72.8% on o1-mini) — but ships no defense. <a href="https://arxiv.org/abs/2603.22489">Huang et al.</a> (arXiv:2603.22489) threat-model the ecosystem and <em>recommend</em> a multi-layer client-side defense — but don't build or measure one.</p>
         <p>This work closes the loop: implement one of those recommended mitigations, <span class="amber">measure it with a baseline-vs-defended delta</span>, then <span class="red">adversarially break it</span> and report exactly where it fails. The contribution is the built-and-measured defense plus its honest limits — not another attack-only or proposal-only result.</p>
       </div>
 
@@ -98,12 +98,20 @@
       <div class="story-section">
         <h2>The Measurement</h2>
         <p>Exposure is real and <span class="accent">sharply model-dependent</span>. The only cell that fired was Haiku on tool-description injection — and it exfiltrated the token verbatim on all five trials. Opus and Sonnet resisted every class on these payloads.</p>
-        <div class="metric-grid">
-          <div class="metric-card"><div class="metric-value" style="color: var(--red);">1.00</div><div class="metric-label">baseline ASR · Haiku · tool_description<br>[0.57, 1.00]</div></div>
-          <div class="metric-card"><div class="metric-value" style="color: var(--green);">→ 0.00</div><div class="metric-label">defended ASR<br>[0.00, 0.43]</div></div>
-          <div class="metric-card"><div class="metric-value" style="color: var(--green);">0.40→1.00</div><div class="metric-label">Sonnet utility restored by the defense</div></div>
-          <div class="metric-card"><div class="metric-value" style="color: var(--amber);">1 / 12</div><div class="metric-label">cells fired at baseline</div></div>
-        </div>
+        <table class="results">
+          <caption class="results-cap-top">ASR · baseline → defended</caption>
+          <thead>
+            <tr><th scope="col"></th><th scope="col">Haiku</th><th scope="col">Sonnet</th><th scope="col">Opus</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">tool_description</th><td><span class="broke">1.00</span> → <span class="held">0.00</span></td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+            <tr><th scope="row">schema_field</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+            <tr><th scope="row">rug_pull</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+            <tr><th scope="row">cross_server</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+          </tbody>
+        </table>
+        <p class="results-caption">ASR = sink fired. 5 seeds/cell, temp 1.0, Wilson-score 95% CIs. 1&nbsp;/&nbsp;12 cells fired at baseline. Firing cell (Haiku · tool_description): baseline 1.00&nbsp;[0.57–1.00] → defended 0.00&nbsp;[0.00–0.43].</p>
+        <p class="results-note">Utility: the defense restored Sonnet 0.40&nbsp;→&nbsp;1.00 at no utility cost on any cell.</p>
         <p>The defense is a strictly client-side layer that runs over the tool list <em>before</em> it reaches the model: segment each server-supplied description, <span class="amber">redact instruction-shaped segments</span> (imperative directives, authority framing, tool-redirection, exfiltration cues, sink references, override phrases), and wrap survivors in client-origin provenance markers. It zeroes the firing cell — and because the injection no longer derails the model, it <span class="accent">restores utility the attack had degraded</span> (Sonnet 0.40 → 1.00), at no utility cost on any cell.</p>
       </div>
 
@@ -138,6 +146,15 @@
         <a href="https://github.com/chirag-dewan/MCP-Poison-Bench" class="cta-link"><span>⚡</span> source</a>
       </div>
     </div>
+
+    <section class="references">
+      <p class="sec-label">References</p>
+      <ul class="ref-list">
+        <li>Zhiqiang Wang et&nbsp;al. <a href="https://arxiv.org/abs/2508.14925"><em>MCPTox: A Benchmark for Tool Poisoning Attack on Real-World MCP Servers</em></a>. arXiv:2508.14925, 2025. <span class="ref-note">— measured the attack on real servers; shipped no defense.</span></li>
+        <li>Charoes Huang et&nbsp;al. <a href="https://arxiv.org/abs/2603.22489"><em>Model Context Protocol Threat Modeling and Analyzing Vulnerabilities to Prompt Injection with Tool Poisoning</em></a>. arXiv:2603.22489, 2026. <span class="ref-note">— proposed a client-side defense; did not build or measure one.</span></li>
+      </ul>
+      <p class="ref-frame">This work closes that loop: a client-side defense built, measured (baseline → defended), and adversarially broken.</p>
+    </section>
 
     <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
       <a href="/projects/" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← back to projects</a>
