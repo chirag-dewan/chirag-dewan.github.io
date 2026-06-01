@@ -25,9 +25,9 @@
       <a href="/" class="nav__home">cdewan</a>
       <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
       <ul class="nav__links">
-        <li><a href="/about.html">about</a></li>
         <li><a href="/projects/">projects</a></li>
-        <li><a href="/blog/">blog</a></li>
+        <li><a href="/blog/">writing</a></li>
+        <li><a href="/#contact">contact</a></li>
       </ul>
     </div>
   </nav>
@@ -47,8 +47,8 @@
         </div>
         <div class="mpb-ascii">╭───────────────────────────────────────────────╮
 │  ◆ MCP TOOL-POISONING BENCHMARK ◆             │
-│  defense.redaction   = <span style="color: var(--green);">ASR 1.00 → 0.00</span>        │
-│  adversarial.bypass  = <span style="color: var(--red);">9 / 11 techniques</span>       │
+│  defense.redaction   = <span style="color: var(--text);">ASR 1.00 → 0.00</span>        │
+│  adversarial.bypass  = <span style="color: var(--text);">9 / 11 techniques</span>       │
 ╰───────────────────────────────────────────────╯</div>
       </div>
     </section>
@@ -119,9 +119,9 @@
         <h2>Breaking My Own Defense</h2>
         <p>The honesty is the point. A heuristic, keyword/regex metadata validator has gaps by construction. An 11-technique adversarial suite finds them: <span class="red">9 of 11 bypass</span> the layer; 1 is caught (the blatant control it was built for); 1 is a false positive.</p>
         <div class="detector-grid">
-          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--red);">Out-of-scope channels</div><div class="detector-desc">tool results (rug-pull), schema title/enum, nested-object &amp; array-item descriptions, the tool name — never inspected.</div></div>
-          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--red);">Rule evasion</div><div class="detector-desc">zero-width / homoglyph mangling of the sink name, base64 encoding, other languages, soft paraphrase with no trigger words.</div></div>
-          <div class="detector-item" style="border-left: 3px solid var(--amber);"><div class="detector-name" style="color: var(--amber);">False positives</div><div class="detector-desc">benign imperative phrasing ("you must provide a valid date") gets redacted — the bind of surface-form heuristics.</div></div>
+          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--text);">Out-of-scope channels</div><div class="detector-desc">tool results (rug-pull), schema title/enum, nested-object &amp; array-item descriptions, the tool name — never inspected.</div></div>
+          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--text);">Rule evasion</div><div class="detector-desc">zero-width / homoglyph mangling of the sink name, base64 encoding, other languages, soft paraphrase with no trigger words.</div></div>
+          <div class="detector-item" style="border-left: 3px solid var(--amber);"><div class="detector-name" style="color: var(--text-muted);">False positives</div><div class="detector-desc">benign imperative phrasing ("you must provide a valid date") gets redacted — the bind of surface-form heuristics.</div></div>
         </div>
         <p><span class="amber">Live-verified, not inferred:</span> a zero-width-obfuscated sink name produced <span class="red">zero findings</span> and still fired 1/5 on Haiku <em>with the defense on</em>, exfiltrating the token. The conclusion is honest: client-side metadata validation is useful defense-in-depth against blatant in-band injection, but it is a <span class="red">speed-bump, not a trust boundary</span>.</p>
       </div>
@@ -139,7 +139,7 @@
     </div>
 
     <div class="cta-section">
-      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">See it run</h3>
+      <h3 style="color: var(--text); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">See it run</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Flip the defense on and off in the browser, or read the harness and the full results matrix.</p>
       <div class="cta-links">
         <a href="https://www.cdewan.me/MCP-Poison-Bench/demo.html" class="cta-link green"><span>▶</span> live demo</a>

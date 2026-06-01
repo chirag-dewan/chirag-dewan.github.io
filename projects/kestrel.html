@@ -25,9 +25,9 @@
       <a href="/" class="nav__home">cdewan</a>
       <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
       <ul class="nav__links">
-        <li><a href="/about.html">about</a></li>
         <li><a href="/projects/">projects</a></li>
-        <li><a href="/blog/">blog</a></li>
+        <li><a href="/blog/">writing</a></li>
+        <li><a href="/#contact">contact</a></li>
       </ul>
     </div>
   </nav>
@@ -45,8 +45,8 @@
     │  ◆ CLOUD WORKLOAD ANOMALY DETECTION ◆  │
     │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
     │ █████████████████████████████████████ │
-    │ ⚡ z_score.baseline = <span style="color: var(--green);">ROLLING</span>       │
-    │ 🔍 gpu_telemetry = <span style="color: var(--amber);">MONITORED</span>        │
+    │ ⚡ z_score.baseline = <span style="color: var(--text);">ROLLING</span>       │
+    │ 🔍 gpu_telemetry = <span style="color: var(--text-muted);">MONITORED</span>        │
     ╰─────────────────────────────────────────╯
         </div>
       </div>
@@ -93,7 +93,7 @@
         <p>Three detectors, each targeting a different attack surface. 92 tests, 98% coverage. Built in Python 3.11+ with Pydantic v2, Click CLI, SQLite persistence, and Sigma rule export.</p>
 
         <div class="detector-showcase">
-          <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Detection Matrix</h3>
+          <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Detection Matrix</h3>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Three-tier cloud workload anomaly detection system:</p>
 
           <div class="detector-grid">
@@ -128,19 +128,19 @@ kestrel serve      # Flask dashboard</code></pre>
 
         <div class="metric-grid">
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--green);">1.0</div>
+            <div class="metric-value" style="color: var(--text);">1.0</div>
             <div class="metric-label">Precision (v1)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--red);">0.0005</div>
+            <div class="metric-value" style="color: var(--text);">0.0005</div>
             <div class="metric-label">Recall (v1)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--red);">1</div>
+            <div class="metric-value" style="color: var(--text);">1</div>
             <div class="metric-label">findings</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--red);">5 / 6</div>
+            <div class="metric-value" style="color: var(--text);">5 / 6</div>
             <div class="metric-label">entities missed</div>
           </div>
         </div>
@@ -180,19 +180,19 @@ kestrel serve      # Flask dashboard</code></pre>
 
         <div class="metric-grid">
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--green);">1.0</div>
+            <div class="metric-value" style="color: var(--text);">1.0</div>
             <div class="metric-label">Precision (v2)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--green);">0.766</div>
+            <div class="metric-value" style="color: var(--text);">0.766</div>
             <div class="metric-label">Recall (v2)</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--green);">220</div>
+            <div class="metric-value" style="color: var(--text);">220</div>
             <div class="metric-label">findings</div>
           </div>
           <div class="metric-card">
-            <div class="metric-value" style="color: var(--green);">1,532×</div>
+            <div class="metric-value" style="color: var(--text);">1,532×</div>
             <div class="metric-label">recall improvement</div>
           </div>
         </div>
@@ -220,19 +220,19 @@ kestrel serve      # Flask dashboard</code></pre>
 
         <div class="detector-grid" style="margin: 1.5rem 0;">
           <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--green);">Privilege Escalation Detection</div>
+            <div class="detector-name" style="color: var(--text);">Privilege Escalation Detection</div>
             <div class="detector-desc">Chain analysis for CreateAccessKey/AttachPolicy sequences and role assumption patterns</div>
           </div>
           <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--green);">Cross-Entity Correlation</div>
+            <div class="detector-name" style="color: var(--text);">Cross-Entity Correlation</div>
             <div class="detector-desc">Multi-account scanning pattern detection and coordinated attack identification</div>
           </div>
           <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--green);">GPU Telemetry Integration</div>
+            <div class="detector-name" style="color: var(--text);">GPU Telemetry Integration</div>
             <div class="detector-desc">CloudWatch and NVIDIA DCGM data integration for existing GPU-focused detectors</div>
           </div>
           <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--green);">Windowed Severity Decay</div>
+            <div class="detector-name" style="color: var(--text);">Windowed Severity Decay</div>
             <div class="detector-desc">Time-based severity adjustment for sustained versus burst activity patterns</div>
           </div>
         </div>
@@ -241,7 +241,7 @@ kestrel serve      # Flask dashboard</code></pre>
 
     <!-- Signal Analysis Showcase -->
     <div class="detector-showcase">
-      <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">v2 Signal Analysis</h3>
+      <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">v2 Signal Analysis</h3>
       <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Key signals that drove the 1,532× recall improvement in CloudAPIAbuseDetector:</p>
 
       <div class="detector-grid">
@@ -262,7 +262,7 @@ kestrel serve      # Flask dashboard</code></pre>
 
     <!-- CTAs -->
     <div class="cta-section">
-      <h3 style="color: var(--amber); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Explore the detection engine</h3>
+      <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Explore the detection engine</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Test the z-score baseline anomaly detection or dive into the CloudTrail processing pipeline.</p>
 
       <div class="cta-links">
