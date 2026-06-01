@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chirag Dewan — AI Security Researcher</title>
-  <meta name="description" content="AI security researcher red teaming LLMs and agents. MCP-Poison-Bench: a client-side defense against MCP tool-poisoning — built, measured (ASR 1.00 → 0.00), then broken (9/11 techniques bypass).">
+  <meta name="description" content="AI security researcher red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <link rel="canonical" href="https://www.cdewan.me/">
   <meta property="og:title" content="Chirag Dewan — AI Security Researcher">
-  <meta property="og:description" content="Red teaming LLMs and agents. MCP-Poison-Bench: built a client-side defense, measured it, then broke it.">
+  <meta property="og:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/">
   <meta property="og:image" content="https://www.cdewan.me/og-image.png">
@@ -15,34 +15,38 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Chirag Dewan — AI Security Researcher">
-  <meta name="twitter:description" content="Red teaming LLMs and agents. Built a client-side MCP defense, measured it, then broke it.">
+  <meta name="twitter:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/main.css">
   <style>
-    .lh { margin-top: 2.5rem; }
-    .lh__name { font-family: var(--font-display); font-size: var(--t-hero); font-weight: 500; letter-spacing: -0.015em; line-height: 1.08; }
-    .lh__id { font-size: var(--t-lead); color: var(--text); margin-top: 0.7rem; max-width: var(--measure); line-height: 1.5; }
-    .lh__cred { font-size: 0.92rem; color: var(--text-muted); margin-top: 0.6rem; }
+    .lead { margin-top: 2rem; }
+    .identity { font-size: 1.05rem; color: var(--text); max-width: var(--measure); margin-top: 0.35rem; }
+    .identity.sub { color: var(--text-muted); }
 
-    .entry { padding-top: 0.4rem; }
-    .entry__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.01em; }
-    .entry__title a { text-decoration: none; color: var(--text); }
-    .entry__title a:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border-bright); }
-    .entry__tag { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.04em; margin-top: 0.25rem; }
-    .entry__hook { font-size: 1.02rem; color: var(--text); line-height: 1.7; margin: 0.9rem 0 0; max-width: var(--measure); }
-    .entry__hook .pos { color: var(--held); font-variant-numeric: tabular-nums; }
-    .entry__hook .neg { color: var(--broke); font-variant-numeric: tabular-nums; }
-    .entry__hook .dim { color: var(--text-muted); }
-    .entry__links { font-size: 0.9rem; margin-top: 0.9rem; }
-    .entry__links a { margin-right: 1.3rem; }
-    .more { font-size: 0.9rem; margin-top: 1.6rem; }
+    .work-item { margin-top: 1.7rem; }
+    .work-item:first-of-type { margin-top: 0.6rem; }
+    .work-item__title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .work-item__title a { text-decoration: none; color: var(--text); }
+    .work-item__title a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
+    .work-item__what { color: var(--text); margin-bottom: 0.1rem; }
+    .work-item__result { color: var(--text-muted); }
+    .work-item__result .held { color: var(--held); }
+    .work-item__result .broke { color: var(--broke); }
+    .work-item__read { margin-top: 0.4rem; font-size: 0.9rem; }
+    .work-item__read a { color: var(--text-muted); text-decoration: none; }
+    .work-item__read a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
 
-    .lede { font-size: 1.02rem; color: var(--text); max-width: var(--measure); }
-    .lede .em { color: var(--accent); }
-    .contact a { margin-right: 0.4rem; }
-    .contact .sep { color: var(--text-dim); margin: 0 0.4rem; }
+    .writing-empty { color: var(--text-dim); }
+    .writing-item { margin: 0.5rem 0; }
+    .writing-item a { text-decoration: none; color: var(--text); }
+    .writing-item a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
+    .writing-date { color: var(--text-dim); font-size: 0.85rem; margin-left: 0.5rem; }
+
+    .contact-line { color: var(--text); }
+    .contact-line a { color: var(--text); }
+    .contact-line .sep { color: var(--text-dim); margin: 0 0.4rem; }
   </style>
 </head>
 <body>
@@ -51,9 +55,9 @@
       <a href="/" class="nav__home">cdewan</a>
       <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
       <ul class="nav__links">
-        <li><a href="/about.html">about</a></li>
         <li><a href="/projects/">projects</a></li>
-        <li><a href="/blog/">blog</a></li>
+        <li><a href="/blog/">writing</a></li>
+        <li><a href="/#contact">contact</a></li>
       </ul>
     </div>
   </nav>
@@ -61,40 +65,49 @@
   <main>
   <div class="container">
 
-    <header class="lh">
-      <h1 class="lh__name">Chirag Dewan</h1>
-      <p class="lh__id">AI security researcher — red teaming LLMs &amp; agents.</p>
-      <p class="lh__cred">Offensive background · ex-RTX BBN · detection &amp; AI security.</p>
+    <header class="lead">
+      <h1>Chirag Dewan</h1>
+      <p class="identity">AI security researcher — red teaming LLMs &amp; agents.</p>
+      <p class="identity sub">Offensive security background.</p>
     </header>
 
-    <section>
-      <p class="sec-label">Selected work</p>
-      <div class="entry">
-        <h2 class="entry__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h2>
-        <p class="entry__tag">Defensive security research · MCP trust boundary</p>
-        <p class="entry__hook">Built a client-side defense, measured it
-          (<span class="pos">ASR 1.00 → 0.00</span>), then broke it
-          (<span class="neg">9 / 11 techniques bypass</span>) —
-          <span class="dim">defense-in-depth, not a boundary.</span></p>
-        <p class="entry__links">
-          <a href="/projects/mcp-poison-bench.html">Project</a>
-          <a href="https://github.com/chirag-dewan/MCP-Poison-Bench">GitHub</a>
-        </p>
+    <section id="work">
+      <h2 class="sec-label">Selected work</h2>
+
+      <div class="work-item">
+        <h3 class="work-item__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h3>
+        <p class="work-item__what">A reproducible benchmark and client-side defense for MCP tool-poisoning.</p>
+        <p class="work-item__result">Built the defense, measured it (<span class="held">ASR 1.00 → 0.00</span>), then broke it (<span class="broke">9 / 11 techniques bypass</span>).</p>
+        <p class="work-item__read"><a href="/projects/mcp-poison-bench.html">read →</a></p>
       </div>
-      <p class="more"><a href="/projects/">All projects — PARALLAX, KESTREL, …</a></p>
+
+      <div class="work-item">
+        <h3 class="work-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
+        <p class="work-item__what">Behavioral threat detection for AI platforms — metadata-only, no payload inspection.</p>
+        <p class="work-item__result">0.68 AUC on 17M real authentication events.</p>
+        <p class="work-item__read"><a href="/projects/parallax.html">read →</a></p>
+      </div>
+
+      <div class="work-item">
+        <h3 class="work-item__title"><a href="/projects/kestrel.html">KESTREL</a></h3>
+        <p class="work-item__what">Cloud-workload anomaly detection with Sigma-exportable detections.</p>
+        <p class="work-item__result">0.766 recall on 34K real CloudTrail events.</p>
+        <p class="work-item__read"><a href="/projects/kestrel.html">read →</a></p>
+      </div>
     </section>
 
-    <section>
-      <p class="sec-label">Now</p>
-      <p class="lede">AI security research · OSCP / OSAI in progress.</p>
+    <section id="writing">
+      <h2 class="sec-label">Writing</h2>
+      <div id="post-list" class="writing-list"></div>
     </section>
 
-    <section>
-      <p class="sec-label">Contact</p>
-      <p class="contact">
-        <a href="mailto:chirag0728@gmail.com">chirag0728@gmail.com</a>
-        <span class="sep">·</span>
-        <a href="https://github.com/chirag-dewan">github.com/chirag-dewan</a>
+    <section id="contact">
+      <h2 class="sec-label">Contact</h2>
+      <p class="contact-line">
+        <a href="mailto:chirag0728@gmail.com">email</a><span class="sep">·</span>
+        <a href="https://github.com/chirag-dewan">github</a><span class="sep">·</span>
+        <a href="https://linkedin.com/in/cdewan">linkedin</a><span class="sep">·</span>
+        <a href="/Chirag_Dewan_Resume.pdf">resume</a>
       </p>
     </section>
 
@@ -102,16 +115,29 @@
   </main>
 
   <footer class="footer">
-    <div class="footer__links">
-      <a href="https://github.com/chirag-dewan">github</a>
-      <a href="https://linkedin.com/in/cdewan">linkedin</a>
-      <a href="mailto:chirag0728@gmail.com">email</a>
-      <a href="/Chirag_Dewan_Resume.pdf">resume</a>
-    </div>
     <p>© 2026 Chirag Dewan</p>
     <p class="footer__push"></p>
   </footer>
 
   <script src="js/main.js" defer></script>
+  <script>
+    (async function () {
+      var el = document.getElementById('post-list');
+      if (!el) return;
+      try {
+        var res = await fetch('/blog/posts.json', { cache: 'no-cache' });
+        var posts = res.ok ? await res.json() : [];
+        if (!Array.isArray(posts) || posts.length === 0) {
+          el.innerHTML = '<p class="writing-empty">Nothing published yet.</p>';
+          return;
+        }
+        posts.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
+        var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]); }); };
+        el.innerHTML = posts.map(function (p) {
+          return '<p class="writing-item"><a href="/blog/post.html?slug=' + encodeURIComponent(p.slug) + '">' + esc(p.title) + '</a><span class="writing-date">' + esc(p.date || '') + '</span></p>';
+        }).join('');
+      } catch (e) { el.innerHTML = ''; }
+    })();
+  </script>
 </body>
 </html>
