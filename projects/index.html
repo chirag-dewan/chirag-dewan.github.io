@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects — Chirag Dewan</title>
-  <meta name="description" content="PARALLAX, KESTREL, CTF Records, and ReconAI — AI security tools and challenge tracking.">
+  <meta name="description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI — AI security research and tools.">
   <link rel="canonical" href="https://chirag-dewan.github.io/projects/">
   <meta property="og:title" content="Projects — Chirag Dewan">
-  <meta property="og:description" content="PARALLAX, KESTREL, CTF Records, and ReconAI — AI security tools and challenge tracking.">
+  <meta property="og:description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI — AI security research and tools.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chirag-dewan.github.io/projects/">
   <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Projects — Chirag Dewan">
-  <meta name="twitter:description" content="PARALLAX, KESTREL, CTF Records, and ReconAI — AI security tools and challenge tracking.">
+  <meta name="twitter:description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI — AI security research and tools.">
   <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -36,7 +36,7 @@
   <div class="container">
     <h1 class="section-header"><span>~/projects</span></h1>
 
-    <p style="font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 580px; margin-bottom: 1.5rem;">Four projects. Offense, research, application defense, infrastructure defense. <span style="color: var(--green);">The attack lives in the pattern, not the content.</span></p>
+    <p style="font-size: 1rem; color: var(--text); line-height: 1.7; max-width: 580px; margin-bottom: 1.5rem;">Five projects. AI-agent security research, offense, application defense, infrastructure defense. <span style="color: var(--green);">The attack lives in the pattern, not the content.</span></p>
 
     <div style="max-width: 580px; margin-bottom: 2.5rem; padding: 1rem; border: 1px solid var(--border); background: var(--bg-raised);">
       <p style="font-size: 0.8rem; color: var(--green); margin-bottom: 0.6rem; font-weight: 600;">$ cat methodology</p>
@@ -46,6 +46,23 @@
       <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;">
         <span style="color: var(--amber);">Why it works:</span> Forces clear thinking. Creates searchable knowledge base. Makes it easier to explain work to others.
       </p>
+    </div>
+
+    <div class="project-card line-in animate-in">
+      <div class="project-card__name">MCP-Poison-Bench</div>
+      <div class="project-card__thesis">Built a client-side defense against MCP tool-poisoning across four attack classes and three frontier models, measured the delta (ASR 1.00 → 0.00, utility retained), then adversarially broke it (9/11 bypass).</div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0.4rem 0 0.6rem;"><span style="color: var(--amber);">method:</span> Controlled MCP harness; provenance + static-metadata validation; baseline-vs-defended deltas with Wilson CIs; adversarial self-attack with a live-verified bypass.</p>
+      <div class="project-card__stack">
+        <span class="stack-tag">Python</span>
+        <span class="stack-tag">MCP</span>
+        <span class="stack-tag">LLM Security</span>
+        <span class="stack-tag">Prompt Injection</span>
+        <span class="stack-tag">Anthropic API</span>
+      </div>
+      <div class="project-card__status">Status: <span class="active">Research · Public</span></div>
+      <a href="mcp-poison-bench.html" class="project-card__link">→ details</a>
+      <a href="https://chirag-dewan.github.io/MCP-Poison-Bench/demo.html" class="project-card__link" style="margin-left: 1rem;">→ live demo</a>
+      <a href="https://github.com/chirag-dewan/MCP-Poison-Bench" class="project-card__link" style="margin-left: 1rem;">→ source</a>
     </div>
 
     <div class="project-card line-in animate-in">

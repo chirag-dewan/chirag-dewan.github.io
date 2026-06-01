@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP-Poison-Bench — Built, Measured, and Broken</title>
+  <meta name="description" content="A reproducible benchmark that builds and measures a client-side defense against MCP tool-poisoning across four attack classes and three frontier models — then adversarially breaks it.">
+  <link rel="canonical" href="https://chirag-dewan.github.io/projects/mcp-poison-bench.html">
+  <meta property="og:title" content="MCP-Poison-Bench — Built, Measured, and Broken">
+  <meta property="og:description" content="A client-side defense against MCP tool-poisoning — built, measured (ASR 1.00 → 0.00), then broken by its own adversarial suite (9/11 bypass).">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://chirag-dewan.github.io/projects/mcp-poison-bench.html">
+  <meta property="og:image" content="https://chirag-dewan.github.io/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MCP-Poison-Bench — Built, Measured, and Broken">
+  <meta name="twitter:description" content="A client-side defense against MCP tool-poisoning — built, measured, then broken.">
+  <meta name="twitter:image" content="https://chirag-dewan.github.io/og-image.png">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="../css/main.css">
+  <style>
+    .mpb-hero {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-raised) 100%);
+      padding: 3rem 0 2rem;
+      margin: -2rem -1.5rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .mpb-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 65, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255, 51, 51, 0.025) 0%, transparent 50%);
+      animation: mpbfloat 8s infinite ease-in-out;
+    }
+    @keyframes mpbfloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.02); }
+    }
+    .mpb-hero__content { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 2; }
+    .mpb-title {
+      font-size: 2.6rem; font-weight: 800; color: var(--green);
+      margin-bottom: 0.5rem; letter-spacing: -1px; line-height: 0.95;
+      text-shadow: 0 0 20px var(--green-glow), 0 0 40px rgba(0, 255, 65, 0.2);
+    }
+    .mpb-subtitle { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 1.6rem; font-weight: 300; max-width: 640px; line-height: 1.6; }
+    .mpb-bmb { display: flex; gap: 0.5rem; flex-wrap: wrap; font-family: var(--font); font-size: 0.8rem; }
+    .mpb-bmb span { padding: 0.4rem 0.9rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-surface); font-weight: 600; }
+    .mpb-bmb .b1, .mpb-bmb .b2 { color: var(--green); border-color: rgba(0,255,65,0.4); }
+    .mpb-bmb .b3 { color: var(--red); border-color: rgba(255,51,51,0.45); background: rgba(255,51,51,0.06); }
+    .mpb-bmb .ar { align-self: center; color: var(--text-dim); border: none; background: none; padding: 0 0.1rem; }
+    .mpb-ascii { font-family: var(--font); font-size: 0.62rem; color: var(--green-dim); line-height: 1.15; margin: 1.8rem 0 0; opacity: 0.85; white-space: pre; overflow-x: auto; }
+
+    .arc-timeline { background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 3rem 0; position: relative; }
+    .arc-timeline::before { content: 'DEVELOPMENT ARC'; position: absolute; top: -0.6rem; left: 2rem; background: var(--bg); color: var(--green); font-size: 0.7rem; font-weight: 600; padding: 0 0.8rem; letter-spacing: 2px; }
+    .arc-flow { display: flex; align-items: center; gap: 0.7rem; font-size: 0.78rem; justify-content: center; flex-wrap: wrap; }
+    .arc-step { padding: 0.7rem 1.1rem; border: 2px solid var(--border); border-radius: 25px; background: var(--bg-surface); color: var(--text-muted); font-weight: 500; }
+    .arc-step.complete { border-color: var(--amber); color: var(--amber); background: rgba(255, 176, 0, 0.05); }
+    .arc-step.fail { border-color: var(--red); color: var(--red); background: rgba(255, 51, 51, 0.05); }
+    .arc-step.current { border-color: var(--green); color: var(--green); background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); }
+    .arc-arrow { color: var(--green-dim); font-size: 1.1rem; font-weight: bold; }
+
+    .story-section { margin-bottom: 3.5rem; padding: 2rem; background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(0, 255, 65, 0.01) 100%); border: 1px solid var(--border); border-radius: 12px; position: relative; overflow: hidden; transition: all 0.3s ease; }
+    .story-section::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--green), var(--amber)); opacity: 0; transition: opacity 0.3s; }
+    .story-section:hover { border-color: var(--green-dim); box-shadow: 0 10px 40px rgba(0, 255, 65, 0.1); transform: translateY(-2px); }
+    .story-section:hover::before { opacity: 1; }
+    .story-section.break::before { background: linear-gradient(to bottom, var(--red), var(--amber)); }
+    .story-section.break:hover { border-color: var(--red); box-shadow: 0 10px 40px rgba(255, 51, 51, 0.1); }
+    .story-section h2 { color: var(--green); font-size: 1.4rem; margin-bottom: 1.2rem; font-weight: 700; letter-spacing: 0.5px; position: relative; }
+    .story-section.break h2 { color: var(--red); }
+    .story-section h2::before { content: '◆ '; color: var(--amber); text-shadow: 0 0 10px var(--amber-glow); }
+    .story-section p { color: var(--text); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+    .story-section .accent { color: var(--green); font-weight: 600; text-shadow: 0 0 5px var(--green-glow); }
+    .story-section .amber { color: var(--amber); font-weight: 600; }
+    .story-section .red { color: var(--red); font-weight: 600; }
+    .story-section .dim { color: var(--text-muted); font-style: italic; }
+    .story-section code { background: var(--bg-surface); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.85em; color: var(--green-dim); }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1.2rem; margin: 2rem 0; }
+    .metric-card { background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-raised) 100%); border: 1px solid var(--border); border-radius: 8px; padding: 1.4rem 1rem; text-align: center; transition: all 0.3s ease; }
+    .metric-card:hover { border-color: var(--green-dim); box-shadow: 0 8px 30px rgba(0, 255, 65, 0.12); transform: translateY(-4px); }
+    .metric-value { font-size: 1.9rem; font-weight: 800; color: var(--green); margin-bottom: 0.4rem; text-shadow: 0 0 15px var(--green-glow); }
+    .metric-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; line-height: 1.4; }
+
+    .detector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .detector-item { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; transition: all 0.3s ease; }
+    .detector-item:hover { border-color: var(--green-dim); box-shadow: 0 5px 15px rgba(0, 255, 65, 0.1); }
+    .detector-name { color: var(--green); font-weight: 600; font-size: 0.85rem; margin-bottom: 0.4rem; font-family: var(--font); }
+    .detector-desc { color: var(--text-muted); font-size: 0.8rem; line-height: 1.5; }
+
+    .cta-section { background: linear-gradient(135deg, var(--bg-raised) 0%, rgba(255, 176, 0, 0.02) 100%); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 3rem 0; text-align: center; }
+    .cta-links { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+    .cta-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; border: 2px solid var(--amber); color: var(--amber); text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; }
+    .cta-link.green { border-color: var(--green); color: var(--green); }
+    .cta-link:hover { background: rgba(255, 176, 0, 0.08); box-shadow: 0 5px 20px rgba(255, 176, 0, 0.3); transform: translateY(-2px); }
+    .cta-link.green:hover { background: rgba(0, 255, 65, 0.08); box-shadow: 0 5px 20px rgba(0, 255, 65, 0.25); }
+
+    @media (max-width: 768px) {
+      .mpb-title { font-size: 1.9rem; }
+      .metric-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.8rem; }
+      .story-section { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/about.html">about</a></li>
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/blog/">blog</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+  <article class="container">
+    <section class="mpb-hero">
+      <div class="mpb-hero__content">
+        <h1 class="mpb-title">MCP-Poison-Bench</h1>
+        <p class="mpb-subtitle">A reproducible benchmark that builds <em>and measures</em> a client-side defense against MCP tool-poisoning — across four attack classes and three frontier models — then adversarially breaks its own defense.</p>
+        <div class="mpb-bmb">
+          <span class="b1">BUILD the defense</span>
+          <span class="ar">→</span>
+          <span class="b2">MEASURE the delta</span>
+          <span class="ar">→</span>
+          <span class="b3">BREAK my own defense</span>
+        </div>
+        <div class="mpb-ascii">╭───────────────────────────────────────────────╮
+│  ◆ MCP TOOL-POISONING BENCHMARK ◆             │
+│  defense.redaction   = <span style="color: var(--green);">ASR 1.00 → 0.00</span>        │
+│  adversarial.bypass  = <span style="color: var(--red);">9 / 11 techniques</span>       │
+╰───────────────────────────────────────────────╯</div>
+      </div>
+    </section>
+
+    <div class="arc-timeline">
+      <div class="arc-flow">
+        <span class="arc-step complete">origin</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">thesis</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">build</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step complete">measure</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step fail">break it</span>
+        <span class="arc-arrow">→</span>
+        <span class="arc-step current">where it stands</span>
+      </div>
+    </div>
+
+    <div class="post-content">
+
+      <div class="story-section">
+        <h2>The Origin</h2>
+        <p>The Model Context Protocol lets a model act through third-party tool servers. The convenience that makes it work is also the weakness: a server supplies free-text tool <code>description</code>s and JSON schemas, and clients forward that metadata into model context <span class="accent">without validating it</span>. A malicious or compromised server can hide instructions in metadata that the model reads as guidance — <span class="amber">tool poisoning</span>.</p>
+        <p class="dim">So the question: if a server can smuggle an instruction through a tool description, can a client-side layer catch it — and how far does that actually get you?</p>
+      </div>
+
+      <div class="story-section">
+        <h2>The Thesis</h2>
+        <p>The literature splits two ways. <span class="accent">MCPTox</span> measures the attack on 45 real-world servers (ASR up to 72.8% on o1-mini) — but ships no defense. <span class="accent">Huang et al.</span> (arXiv:2603.22489) threat-model the ecosystem and <em>recommend</em> a multi-layer client-side defense — but don't build or measure one.</p>
+        <p>This work closes the loop: implement one of those recommended mitigations, <span class="amber">measure it with a baseline-vs-defended delta</span>, then <span class="red">adversarially break it</span> and report exactly where it fails. The contribution is the built-and-measured defense plus its honest limits — not another attack-only or proposal-only result.</p>
+      </div>
+
+      <div class="story-section">
+        <h2>The Build</h2>
+        <p>A controlled harness on the official MCP SDK. Four documented attack classes, all sharing one attacker <span class="accent">sink</span> — coerce the model into calling <code>export_data</code> and handing it a confidential session token (a synthetic <code>CANARY</code>) it should not transmit — so Attack Success Rate is comparable across classes. Only the delivery vector differs:</p>
+        <div class="detector-grid">
+          <div class="detector-item"><div class="detector-name">tool_description</div><div class="detector-desc">instruction hidden in a tool's free-text description</div></div>
+          <div class="detector-item"><div class="detector-name">schema_field</div><div class="detector-desc">instruction hidden in a JSON-schema field description</div></div>
+          <div class="detector-item"><div class="detector-name">rug_pull</div><div class="detector-desc">benign at approval time; injected into the tool result after it is called</div></div>
+          <div class="detector-item"><div class="detector-name">cross_server</div><div class="detector-desc">a malicious shadow tool redirects a trusted server's data to the sink</div></div>
+        </div>
+        <p>Swept over <code>{3 models} × {4 classes} × {5 seeds}</code> = 60 seeded trials at temperature 1.0. <span class="accent">ASR</span> = sink called; <span class="accent">utility</span> = benign task still completed — both scored from the same trace, so the dangerous "completes the task <em>and</em> fires" case is visible. Aggregated with Wilson-score confidence intervals; 31 tests; CI.</p>
+      </div>
+
+      <div class="story-section">
+        <h2>The Measurement</h2>
+        <p>Exposure is real and <span class="accent">sharply model-dependent</span>. The only cell that fired was Haiku on tool-description injection — and it exfiltrated the token verbatim on all five trials. Opus and Sonnet resisted every class on these payloads.</p>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-value" style="color: var(--red);">1.00</div><div class="metric-label">baseline ASR · Haiku · tool_description<br>[0.57, 1.00]</div></div>
+          <div class="metric-card"><div class="metric-value" style="color: var(--green);">→ 0.00</div><div class="metric-label">defended ASR<br>[0.00, 0.43]</div></div>
+          <div class="metric-card"><div class="metric-value" style="color: var(--green);">0.40→1.00</div><div class="metric-label">Sonnet utility restored by the defense</div></div>
+          <div class="metric-card"><div class="metric-value" style="color: var(--amber);">1 / 12</div><div class="metric-label">cells fired at baseline</div></div>
+        </div>
+        <p>The defense is a strictly client-side layer that runs over the tool list <em>before</em> it reaches the model: segment each server-supplied description, <span class="amber">redact instruction-shaped segments</span> (imperative directives, authority framing, tool-redirection, exfiltration cues, sink references, override phrases), and wrap survivors in client-origin provenance markers. It zeroes the firing cell — and because the injection no longer derails the model, it <span class="accent">restores utility the attack had degraded</span> (Sonnet 0.40 → 1.00), at no utility cost on any cell.</p>
+      </div>
+
+      <div class="story-section break">
+        <h2>Breaking My Own Defense</h2>
+        <p>The honesty is the point. A heuristic, keyword/regex metadata validator has gaps by construction. An 11-technique adversarial suite finds them: <span class="red">9 of 11 bypass</span> the layer; 1 is caught (the blatant control it was built for); 1 is a false positive.</p>
+        <div class="detector-grid">
+          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--red);">Out-of-scope channels</div><div class="detector-desc">tool results (rug-pull), schema title/enum, nested-object &amp; array-item descriptions, the tool name — never inspected.</div></div>
+          <div class="detector-item" style="border-left: 3px solid var(--red);"><div class="detector-name" style="color: var(--red);">Rule evasion</div><div class="detector-desc">zero-width / homoglyph mangling of the sink name, base64 encoding, other languages, soft paraphrase with no trigger words.</div></div>
+          <div class="detector-item" style="border-left: 3px solid var(--amber);"><div class="detector-name" style="color: var(--amber);">False positives</div><div class="detector-desc">benign imperative phrasing ("you must provide a valid date") gets redacted — the bind of surface-form heuristics.</div></div>
+        </div>
+        <p><span class="amber">Live-verified, not inferred:</span> a zero-width-obfuscated sink name produced <span class="red">zero findings</span> and still fired 1/5 on Haiku <em>with the defense on</em>, exfiltrating the token. The conclusion is honest: client-side metadata validation is useful defense-in-depth against blatant in-band injection, but it is a <span class="red">speed-bump, not a trust boundary</span>.</p>
+      </div>
+
+      <div class="story-section">
+        <h2>Why It Matters Now</h2>
+        <p>MCP is becoming the default way to give models tools, and every connected server is a metadata-sized hole in the trust boundary. Agents act on server-supplied descriptions they have no way to verify. The result that survives adversarial review isn't "this defense works" — it's <span class="accent">a measured map of exactly how far this class of defense goes, and what must replace it</span>: coverage of every model-visible field, classifier-based detection, and architectural controls like egress allow-lists and human-confirm for newly-seen or mutated tools.</p>
+      </div>
+
+      <div class="story-section">
+        <h2>Where It Stands</h2>
+        <p>Public and fully reproducible — one command (<code>run_all.sh</code>) runs the baseline sweep, the defended sweep, aggregation, the adversarial self-review, and a real-client spot-check. Seeds and environment pinned; 31 offline tests with the documented bypasses encoded so a silent regression flips a test.</p>
+        <p class="dim">Next: a second model provider, more payloads per class for richer per-cell variation, and either extending the defense to the channels it currently misses or leaning fully into "heuristic validation is structurally insufficient — measured."</p>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">See it run</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Flip the defense on and off in the browser, or read the harness and the full results matrix.</p>
+      <div class="cta-links">
+        <a href="https://chirag-dewan.github.io/MCP-Poison-Bench/demo.html" class="cta-link green"><span>▶</span> live demo</a>
+        <a href="https://github.com/chirag-dewan/MCP-Poison-Bench" class="cta-link"><span>⚡</span> source</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+      <a href="/projects/" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← back to projects</a>
+    </div>
+  </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag0728@gmail.com">email</a>
+      <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+    <p class="footer__tagline">> see the pattern, not the content.</p>
+    <p class="footer__push"></p>
+  </footer>
+
+  <script src="../js/main.js" defer></script>
+</body>
+</html>
