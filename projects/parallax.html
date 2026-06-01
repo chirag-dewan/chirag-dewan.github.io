@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PARALLAX — Behavioral Threat Detection for AI Platforms</title>
+  <title>PARALLAX: Behavioral Threat Detection for AI Platforms</title>
   <meta name="description" content="Privacy-preserving behavioral threat detection system for AI platforms.">
   <link rel="canonical" href="https://www.cdewan.me/projects/parallax.html">
-  <meta property="og:title" content="PARALLAX — Behavioral Threat Detection for AI Platforms">
+  <meta property="og:title" content="PARALLAX: Behavioral Threat Detection for AI Platforms">
   <meta property="og:description" content="Privacy-preserving behavioral threat detection system for AI platforms.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/projects/parallax.html">
   <meta property="og:image" content="https://www.cdewan.me/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PARALLAX — Behavioral Threat Detection">
+  <meta name="twitter:title" content="PARALLAX: Behavioral Threat Detection">
   <meta name="twitter:description" content="Advanced behavioral analytics for AI platform security.">
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -37,7 +37,7 @@
     <section class="parallax-hero">
       <div class="parallax-hero__content">
         <h1 class="parallax-title">PARALLAX</h1>
-        <p class="parallax-subtitle">Catching people who quietly steal AI models — by watching how they behave, never reading what they ask.</p>
+        <p class="parallax-subtitle">Metadata-only behavioral detection of model-extraction abuse: classify API misuse from the shape of traffic alone, never the prompt content. Validated on 16.9M real authentication events, where a 14-feature bank scored 0.45 AUC (worse than chance) and a single change-from-baseline signal recovered it to 0.68.</p>
 
         <div class="parallax-ascii">
     ╭─────────────────────────────────────────╮
@@ -75,39 +75,56 @@
     <div class="post-content">
 
       <div class="story-section">
-        <h2>The problem</h2>
-        <p>If you run an AI platform, here’s a nightmare that trips no alarm: someone quietly copies your model by hammering its API with thousands of clever little questions and learning from the answers. It’s called <em>model extraction</em>, and the maddening part is that every single request looks completely normal. The theft isn’t in any one question — it’s in the <em>pattern</em> of all of them.</p>
+        <h2>The problem: extraction is a pattern, not an event</h2>
+        <p>Model extraction steals a model by querying its API at scale and learning from the responses. Every individual request is well-formed and authorized, so no single-request rule fires. The signal lives in the distribution of requests over time: rate, regularity, breadth of targets, session structure. The detection problem is therefore a behavioral one, not a content one.</p>
       </div>
 
       <div class="story-section">
-        <h2>The idea</h2>
-        <p>What if you could spot the abuse without ever reading what people actually asked? Just watch the <em>shape</em> of their behaviour — how fast they ask, how long the answers are, when they show up, which models they target. Private by design: you never need to see the prompts. The motto I kept coming back to: <strong>see the pattern, not the content.</strong></p>
+        <h2>Design constraint: metadata only</h2>
+        <p>The system is restricted to request metadata and never inspects prompt or response content. Two reasons, one principle. Privacy: an abuse detector that has to read user prompts is itself a liability. Portability: behavioral shape generalizes across deployments in a way that content signatures do not. The operating thesis was <strong>see the pattern, not the content</strong>, and the constraint is what forced the design to earn that.</p>
       </div>
 
       <div class="story-section">
-        <h2>What I built</h2>
-        <p>Fourteen behavioural detectors — request speed, token ratios, timing regularity, session structure, and so on. On synthetic data it looked flawless: a clean line between normal users and attackers. I felt great about it. That feeling did not last.</p>
+        <h2>v1: a 14-feature behavioral bank</h2>
+        <p>The first build engineered fourteen behavioral features into a per-entity score. Grouped by what they measure:</p>
+        <div class="detector-grid">
+          <div class="detector-item"><div class="detector-name">volume and rate</div><div class="detector-desc">request frequency and burstiness per entity over rolling windows.</div></div>
+          <div class="detector-item"><div class="detector-name">token ratios</div><div class="detector-desc">input-to-output size relationships that distinguish probing from normal use.</div></div>
+          <div class="detector-item"><div class="detector-name">timing regularity</div><div class="detector-desc">inter-arrival periodicity, which separates scripted extraction from human cadence.</div></div>
+          <div class="detector-item"><div class="detector-name">session structure</div><div class="detector-desc">session length, target breadth, and access patterns across endpoints.</div></div>
+        </div>
+        <p>On synthetic data it separated attackers from normal users cleanly. Synthetic data is exactly where this kind of detector flatters itself, so the real test was real data.</p>
       </div>
 
       <div class="story-section">
-        <h2>The gut-check</h2>
-        <p>I pointed it at <strong>16.9 million real authentication events</strong> from Los Alamos — 500 users, 87 of them actually compromised. The score: <strong>0.45 AUC</strong> — <em>worse than flipping a coin.</em> Seven of my fourteen detectors were pointing the wrong way entirely: flagging the legitimate power users and waving the attackers through. Beautifully engineered, completely backwards.</p>
+        <h2>The reality check: 0.45 AUC on real data</h2>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-value">16.9M</div><div class="metric-label">real LANL authentication events</div></div>
+          <div class="metric-card"><div class="metric-value">87 / 500</div><div class="metric-label">entities actually compromised (ground truth)</div></div>
+          <div class="metric-card"><div class="metric-value">0.45</div><div class="metric-label">v1 ROC AUC, below the 0.50 chance line</div></div>
+        </div>
+        <p>Evaluated against the labeled Los Alamos authentication dataset, v1 scored <strong>0.45 AUC</strong>, worse than a coin flip. Diagnosis: 7 of the 14 features were <em>inverted</em> on real traffic. They had learned a synthetic attacker's silhouette, and on real data that silhouette belonged to legitimate power users, so the detector flagged heavy-but-benign accounts and cleared the actual intruders. Well-engineered, pointed backwards.</p>
       </div>
 
       <div class="story-section">
-        <h2>The fix</h2>
-        <p>So I did the unglamorous thing: worked out which signals were just noise, switched them off, and leaned hard on the one that actually held up — “this user’s behaviour just <em>changed</em>.” That got it to <strong>0.68 AUC</strong> on the real data.</p>
-        <p>The lesson that fell out: detectors that memorise specific attack shapes don’t survive contact with a new domain — but detecting <em>change from a baseline</em> travels everywhere. Subtraction beat addition.</p>
+        <h2>v2: subtract the memorized features</h2>
+        <p>The fix was subtractive, not additive. Rather than tune fourteen features, I removed the ones that had memorized a specific attack shape and kept the one signal that held up across the domain shift: <strong>change from an entity's own baseline</strong>. A feature that says "this account is behaving unlike its own history" carries no assumption about what an attack looks like, so it survives contact with a new environment. That raised real-data performance to <strong>0.68 AUC</strong>.</p>
+        <p>The transferable lesson: detectors that memorize attack silhouettes do not survive a domain change; detecting deviation from a per-entity baseline does. Subtraction beat addition.</p>
       </div>
 
       <div class="story-section break">
-        <h2>Where it still breaks</h2>
-        <p>Then I tried to slip past it, and found three honest holes: normalise one signal and you duck under the line; blend a little attack traffic into a lot of normal traffic and you vanish into the crowd; go slow and patient and you never trip the threshold. I published all three, because pretending a detector is bulletproof is how it gets you burned.</p>
+        <h2>Documented evasions</h2>
+        <p>A change-from-baseline detector has known blind spots, and they are published rather than hidden:</p>
+        <div class="detector-grid">
+          <div class="detector-item"><div class="detector-name">feature normalization</div><div class="detector-desc">shape one driving signal to look ordinary and the score drops below threshold.</div></div>
+          <div class="detector-item"><div class="detector-name">traffic dilution</div><div class="detector-desc">blend a small amount of attack traffic into a large volume of normal traffic to disappear into the entity's own baseline.</div></div>
+          <div class="detector-item"><div class="detector-name">low-and-slow</div><div class="detector-desc">extend the campaign so the per-window deviation never crosses the threshold.</div></div>
+        </div>
       </div>
 
       <div class="story-section">
         <h2>Why it matters</h2>
-        <p>Before anyone can weaponise a frontier model, they need <em>access</em> to it — and access leaves a behavioural trail. PARALLAX is the tripwire at the front gate: 0.68 AUC on real data, open source, and honest about exactly where it fails.</p>
+        <p>Weaponizing a frontier model requires access to it first, and access at extraction scale leaves a behavioral trail even when every request is individually clean. PARALLAX is the tripwire at that gate: 0.68 AUC on real data, metadata-only by construction, open source, and explicit about the three ways it can still be beaten.</p>
       </div>
 
     </div>

@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KESTREL — Cloud AI Workload Anomaly Detection</title>
+  <title>KESTREL: Cloud AI Workload Anomaly Detection</title>
   <meta name="description" content="Z-score baselining engine. 0.766 recall on 34K real CloudTrail events.">
   <link rel="canonical" href="https://www.cdewan.me/projects/kestrel.html">
-  <meta property="og:title" content="KESTREL — Cloud AI Workload Anomaly Detection">
+  <meta property="og:title" content="KESTREL: Cloud AI Workload Anomaly Detection">
   <meta property="og:description" content="Z-score baselining engine. 0.766 recall on 34K real CloudTrail events.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/projects/kestrel.html">
   <meta property="og:image" content="https://www.cdewan.me/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="KESTREL — Cloud-Native AI Workload Anomaly Detection">
+  <meta name="twitter:title" content="KESTREL: Cloud-Native AI Workload Anomaly Detection">
   <meta name="twitter:description" content="3 detectors, 34K real CloudTrail events, 220 findings. Diagnosed the impedance mismatch, then fixed it.">
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -37,7 +37,7 @@
     <section class="kestrel-hero">
       <div class="kestrel-hero__content">
         <h1 class="kestrel-title">KESTREL</h1>
-        <p class="kestrel-subtitle">Catching attacks on cloud infrastructure by learning each account’s normal and flagging the weird.</p>
+        <p class="kestrel-subtitle">Unsupervised anomaly detection for cloud-workload attacks: per-account z-score baselining with no labels and no fixed thresholds, MITRE ATLAS-tagged and Sigma-exportable. v1 hunted GPU telemetry the logs did not contain and scored 0.0005 recall on 34,427 real CloudTrail events; re-targeting to the API-audit signal that was actually present lifted recall to 0.766 at precision 1.0.</p>
 
         <div class="kestrel-ascii">
     ╭─────────────────────────────────────────╮
@@ -73,34 +73,49 @@
     <div class="post-content">
 
       <div class="story-section">
-        <h2>The problem</h2>
-        <p>PARALLAX watches what users <em>do</em> to an AI platform. KESTREL watches the machines underneath. Picture someone quietly hijacking your GPU cluster to mine crypto, a rogue training job burning compute for two days on a stolen account, or a recon tool listing every permission across thirteen cloud regions at 2&nbsp;a.m. None of that shows up in app behaviour — it shows up in the cloud’s own logs.</p>
+        <h2>The problem: attacks at the infrastructure layer</h2>
+        <p>PARALLAX watches what users do to an AI platform; KESTREL watches the machines underneath it. GPU clusters hijacked for mining, a rogue training job burning compute on a stolen account for days, a recon tool enumerating permissions across every region at 2 a.m. None of that surfaces in application behavior. It surfaces in the cloud control plane's own audit logs, which is where KESTREL looks.</p>
       </div>
 
       <div class="story-section">
-        <h2>The idea</h2>
-        <p>Learn what <em>normal</em> looks like for each account, then flag anything that drifts more than a couple of standard deviations from its own habits. No fixed thresholds, no training data — every account is judged against itself.</p>
+        <h2>The approach: self-referential baselines</h2>
+        <p>The detector is unsupervised and self-referential. For each account it builds a rolling per-feature baseline and flags activity that deviates beyond a z-score threshold from that account's own history. No labeled training data and no global fixed thresholds, so a small account and a large one are each judged against themselves rather than against a one-size cutoff. Every finding is tagged with the relevant MITRE ATLAS technique and exports directly to Sigma rules a SIEM can ingest.</p>
       </div>
 
       <div class="story-section">
-        <h2>What I built</h2>
-        <p>Three detectors — GPU hijacking, rogue training, and cloud-API abuse — that tag each finding with MITRE ATLAS techniques and export straight to Sigma rules a SIEM can ingest. It worked beautifully on my own synthetic data, which should always make you suspicious.</p>
+        <h2>v1: three workload detectors</h2>
+        <p>The first build shipped three detectors aimed at compute-layer abuse:</p>
+        <div class="detector-grid">
+          <div class="detector-item"><div class="detector-name">GPU hijacking</div><div class="detector-desc">utilization and power-draw anomalies signalling unauthorized compute use.</div></div>
+          <div class="detector-item"><div class="detector-name">rogue training</div><div class="detector-desc">unexpected long-running training jobs on an account's baseline.</div></div>
+          <div class="detector-item"><div class="detector-name">cloud-API abuse</div><div class="detector-desc">anomalous control-plane API behavior against the account's history.</div></div>
+        </div>
+        <p>On synthetic data it performed cleanly, which with anomaly detectors is a warning sign rather than a result.</p>
       </div>
 
       <div class="story-section">
-        <h2>The reality check</h2>
-        <p>I ran it against <strong>34,427 real CloudTrail events</strong> full of genuine attacks — IAM enumeration, privilege escalation, recon scanning. Precision: a perfect <strong>1.0</strong>. Recall: <strong>0.0005</strong>. It caught <em>one</em> thing out of 2,167 attack events. Flawless aim, pointed at the wrong target.</p>
+        <h2>The reality check: precision 1.0, recall 0.0005</h2>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-value">34,427</div><div class="metric-label">real CloudTrail events, 2,167 of them attacks</div></div>
+          <div class="metric-card"><div class="metric-value">1.0</div><div class="metric-label">v1 precision: zero false positives</div></div>
+          <div class="metric-card"><div class="metric-value">0.0005</div><div class="metric-label">v1 recall: 1 of 2,167 attack events caught</div></div>
+        </div>
+        <p>Run against 34,427 real CloudTrail events containing genuine attacks (IAM enumeration, privilege escalation, recon scanning), v1 hit perfect precision and near-zero recall. Flawless aim, wrong target.</p>
       </div>
 
       <div class="story-section">
-        <h2>The diagnosis</h2>
-        <p>Classic mismatch. My detectors were hunting for GPU telemetry — utilisation, power draw, training durations. But CloudTrail is an <em>API audit log</em>: 99.98% of the events were API calls, and exactly zero were GPU metrics. I’d built the right instrument for data that simply wasn’t there. (The baseline engine even spotted the attacker scanning at 11&nbsp;p.m. — nothing was listening to that signal.)</p>
+        <h2>The diagnosis: an instrument-to-data mismatch</h2>
+        <p>The detectors were built for GPU telemetry: utilization, power draw, training durations. CloudTrail is an API audit log. <strong>99.98% of the events were API calls and exactly zero were GPU metrics.</strong> The instrument was sound but pointed at data that was not in the stream. Tellingly, the baseline engine itself had already noticed the attacker scanning at off-hours; nothing in v1 was wired to listen to that signal.</p>
       </div>
 
       <div class="story-section">
-        <h2>The fix</h2>
-        <p>So I built a detector for the data I actually had: API bursts, fanning out across regions, off-hours spikes, and walls of “access denied.” Recall went from <strong>0.0005 to 0.766</strong> — a <strong>1,532× improvement</strong> — while precision stayed at <strong>1.0</strong>, zero false positives. 220 findings, and every account v1 missed got caught.</p>
-        <p>The fix wasn’t fancier machine learning. It was meeting the data where it lives: diagnose the mismatch, build the detector that fits. Subtraction before addition, again.</p>
+        <h2>v2: detect the signal that is actually present</h2>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-value">0.766</div><div class="metric-label">v2 recall, up from 0.0005</div></div>
+          <div class="metric-card"><div class="metric-value">1,532x</div><div class="metric-label">recall improvement, precision held at 1.0</div></div>
+          <div class="metric-card"><div class="metric-value">220</div><div class="metric-label">findings; every account v1 missed was caught</div></div>
+        </div>
+        <p>v2 retargets the same baselining engine at features the audit log actually carries: API-call burst rate, cross-region fan-out, off-hours spikes, and walls of access-denied responses. Recall went from 0.0005 to 0.766, a 1,532x improvement, with precision held at 1.0 and zero false positives. The fix was not heavier machine learning, it was meeting the data where it lives: diagnose the mismatch, then build the detector that fits the signal in front of you. Subtraction before addition, again. Stack: a Python CLI over Flask and SQLite.</p>
       </div>
 
     </div>
