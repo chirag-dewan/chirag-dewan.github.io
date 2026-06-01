@@ -38,7 +38,7 @@
     <section class="parallax-hero">
       <div class="parallax-hero__content">
         <h1 class="parallax-title">PARALLAX</h1>
-        <p class="parallax-subtitle">Privacy-preserving behavioral threat detection for AI platforms</p>
+        <p class="parallax-subtitle">Catching people who quietly steal AI models — by watching how they behave, never reading what they ask.</p>
 
         <div class="parallax-ascii">
     ╭─────────────────────────────────────────╮
@@ -75,183 +75,44 @@
 
     <div class="post-content">
 
-      <!-- ORIGIN -->
       <div class="story-section">
-        <h2>The Origin</h2>
-        <p>AI platforms can't tell when someone is systematically extracting model behavior through the API. Distillation attacks don't trip content filters because there's nothing malicious in any single query. The abuse lives in the pattern, not the content.</p>
-        <p>Short input, max output. Thousands of single-turn conversations. Mechanical timing. Cheap models only. Every request is benign. The aggregate is theft.</p>
-        <p class="dim">So the question: what if you could detect the extraction without ever reading the prompts?</p>
+        <h2>The problem</h2>
+        <p>If you run an AI platform, here’s a nightmare that trips no alarm: someone quietly copies your model by hammering its API with thousands of clever little questions and learning from the answers. It’s called <em>model extraction</em>, and the maddening part is that every single request looks completely normal. The theft isn’t in any one question — it’s in the <em>pattern</em> of all of them.</p>
       </div>
 
-      <!-- THESIS -->
       <div class="story-section">
-        <h2>The Thesis</h2>
-        <p><span class="accent">See the pattern, not the content.</span> Build behavioral detection that operates entirely on metadata — request velocity, token ratios, session cadence, model targeting patterns. Privacy-preserving by architecture, not policy. You never need to see what someone asked. You need to see <em>how</em> they asked it.</p>
+        <h2>The idea</h2>
+        <p>What if you could spot the abuse without ever reading what people actually asked? Just watch the <em>shape</em> of their behaviour — how fast they ask, how long the answers are, when they show up, which models they target. Private by design: you never need to see the prompts. The motto I kept coming back to: <strong>see the pattern, not the content.</strong></p>
       </div>
 
-      <!-- BUILD -->
       <div class="story-section">
-        <h2>The Build</h2>
-        <p>14 detectors across two tiers, built in roughly a week. 92 tests, 94% coverage. Request velocity, token ratios, timing regularity, session structure, model targeting, entropy analysis, cross-account clustering — the full behavioral surface. <span class="dim"><a href="https://github.com/chirag-dewan/parallax" style="color: var(--text-dim); text-decoration: underline; text-underline-offset: 3px;">Full detector list on GitHub.</a></span></p>
-
-        <pre><code>composite = Σ(score × weight × confidence) / Σ(weight)
-threat: NONE < 0.25 | LOW < 0.50 | MEDIUM < 0.70 | HIGH < 0.85 | CRITICAL</code></pre>
-
-        <p>Synthetic archetypes showed clean separation. Perfect class boundary at threshold 0.40 on generated data. Zero false positives, zero false negatives. <span class="dim">It looked great on paper.</span></p>
+        <h2>What I built</h2>
+        <p>Fourteen behavioural detectors — request speed, token ratios, timing regularity, session structure, and so on. On synthetic data it looked flawless: a clean line between normal users and attackers. I felt great about it. That feeling did not last.</p>
       </div>
 
-      <!-- FAILURE -->
       <div class="story-section">
-        <h2>The Reality Check</h2>
-
-        <p>Ran it against the <span class="accent">LANL Cyber1 dataset</span>. 16.9 million real authentication events from Los Alamos National Laboratory. 500 users. 87 labeled compromised. 187K sessions.</p>
-
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.45</div>
-            <div class="metric-label">AUC (v1)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.00</div>
-            <div class="metric-label">F1 (v1)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">7 / 14</div>
-            <div class="metric-label">anti-correlated</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">inverted</div>
-            <div class="metric-label">score direction</div>
-          </div>
-        </div>
-
-        <p><span class="red">Worse than a coin flip.</span> The detectors tuned on synthetic data were actively anti-correlated on real data. Seven of fourteen detectors were hurting, not helping. Normal users scored higher than compromised users. The engine was penalizing the wrong group.</p>
-
-        <p class="dim">The detectors designed for AI platform abuse — volume anomaly, temporal clustering, entropy analysis, distribution divergence — all pointed the wrong way on authentication data. They measured "how unusual is this user" and the most unusual users were the legitimate power users, not the attackers.</p>
+        <h2>The gut-check</h2>
+        <p>I pointed it at <strong>16.9 million real authentication events</strong> from Los Alamos — 500 users, 87 of them actually compromised. The score: <strong>0.45 AUC</strong> — <em>worse than flipping a coin.</em> Seven of my fourteen detectors were pointing the wrong way entirely: flagging the legitimate power users and waving the attackers through. Beautifully engineered, completely backwards.</p>
       </div>
 
-      <!-- FIX -->
       <div class="story-section">
-        <h2>The Fix</h2>
-
-        <p>Diagnosed root causes in one session. Three iterations.</p>
-
-        <p><span class="amber">v2:</span> Built <code>T1-009</code> Host Fan-Out detector for lateral movement. Added 4-hour sliding window scoring instead of whole-profile aggregation. Zeroed three dead-weight detectors. <span class="dim">AUC: 0.48. Still below random — anti-correlated detectors drowning the signal.</span></p>
-
-        <p><span class="amber">v3:</span> Zeroed all 10 non-contributing detectors. Redistributed weight to the 5 correctly-oriented signals, proportional to their measured separation delta.</p>
-
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.68</div>
-            <div class="metric-label">AUC (v3)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.49</div>
-            <div class="metric-label">Best F1</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text-muted);">48.8%</div>
-            <div class="metric-label">Precision</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text-muted);">48.3%</div>
-            <div class="metric-label">Recall</div>
-          </div>
-        </div>
-
-        <p>The key finding: <span class="accent">pattern-matching detectors don't transfer across domains, but behavioral shift detection does.</span> That one signal — "this user's behavior just changed" — worked everywhere.</p>
-
-        <p><code>T2-006</code> Behavioral Shift: compromised mean 0.71 vs normal 0.43. Delta +0.29. Drives most of the separation. Weight: 0.30.</p>
-        <p><code>T1-009</code> Host Fan-Out: compromised mean 0.79 vs normal 0.66. Delta +0.13. Lateral movement leaves a destination diversity signature. Weight: 0.25.</p>
-        <p class="dim">The approach that worked: diagnose which signals are noise, silence them, amplify what remains. Subtraction beat addition.</p>
+        <h2>The fix</h2>
+        <p>So I did the unglamorous thing: worked out which signals were just noise, switched them off, and leaned hard on the one that actually held up — “this user’s behaviour just <em>changed</em>.” That got it to <strong>0.68 AUC</strong> on the real data.</p>
+        <p>The lesson that fell out: detectors that memorise specific attack shapes don’t survive contact with a new domain — but detecting <em>change from a baseline</em> travels everywhere. Subtraction beat addition.</p>
       </div>
 
-      <!-- EVASION FINDINGS -->
-      <div class="story-section">
-        <h2>The Evasion Findings</h2>
-        <p>Adversarial testing surfaced three critical gaps:</p>
-
-        <div class="detector-grid" style="margin: 1.5rem 0;">
-          <div class="detector-item" style="border-left: 3px solid var(--red);">
-            <div class="detector-name" style="color: var(--text);">Single-Signal Normalization</div>
-            <div class="detector-desc">Normalizing token ratio alone drops an attacker below the escalation threshold. Individual detectors can be gamed.</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--red);">
-            <div class="detector-name" style="color: var(--text);">Blended Behavior</div>
-            <div class="detector-desc">A 90/10 mix of legitimate and attack traffic is indistinguishable from a power developer. The signal drowns in normal activity.</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--red);">
-            <div class="detector-name" style="color: var(--text);">Low-and-Slow Extraction</div>
-            <div class="detector-desc">Distillation at normal request rates scores 0.41 — below the 0.66 escalation threshold. Patient attackers evade.</div>
-          </div>
-        </div>
-
-        <p style="margin-top: 0.8rem;" class="dim">Published openly because honesty about failure modes is more credible than claiming perfect detection.</p>
+      <div class="story-section break">
+        <h2>Where it still breaks</h2>
+        <p>Then I tried to slip past it, and found three honest holes: normalise one signal and you duck under the line; blend a little attack traffic into a lot of normal traffic and you vanish into the crowd; go slow and patient and you never trip the threshold. I published all three, because pretending a detector is bulletproof is how it gets you burned.</p>
       </div>
 
-      <!-- WHY NOW -->
       <div class="story-section">
-        <h2>Why It Matters Now</h2>
-        <p>Anthropic announced that Mythos-class models can autonomously discover thousands of zero-day vulnerabilities. The attack surface for AI platforms is about to explode.</p>
-        <p>Before a Mythos-class model gets weaponized, someone needs <em>access</em> to it — and that access creates behavioral patterns. PARALLAX detects the precursor. Distillation, credential fraud, resource abuse at scale. <span class="accent">The first gate in the kill chain.</span></p>
+        <h2>Why it matters</h2>
+        <p>Before anyone can weaponise a frontier model, they need <em>access</em> to it — and access leaves a behavioural trail. PARALLAX is the tripwire at the front gate: 0.68 AUC on real data, open source, and honest about exactly where it fails.</p>
       </div>
 
-      <!-- WHERE IT STANDS -->
-      <div class="story-section">
-        <h2>Where It Stands</h2>
-        <p>0.68 AUC on real data. Honest about limitations. Open source. Three clear paths to improvement:</p>
-
-        <div class="detector-grid" style="margin: 1.5rem 0;">
-          <div class="detector-item" style="border-left: 3px solid var(--amber);">
-            <div class="detector-name" style="color: var(--text-muted);">Signal Correlation Bonuses</div>
-            <div class="detector-desc">Multi-signal validation to resist single-detector evasion techniques</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--amber);">
-            <div class="detector-name" style="color: var(--text-muted);">Windowed Session Scoring</div>
-            <div class="detector-desc">Time-segmented analysis to catch blended behavior attack patterns</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--amber);">
-            <div class="detector-name" style="color: var(--text-muted);">Auth-Failure Sequences</div>
-            <div class="detector-desc">Pattern detection for credential spraying and brute force attempts</div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Detector Showcase -->
-    <div class="detector-showcase">
-      <h3 style="color: var(--text); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Active Detection Matrix</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Core behavioral signals contributing to the v3 threat scoring engine:</p>
-
-      <div class="detector-grid">
-        <div class="detector-item">
-          <div class="detector-name">T2-006 Behavioral Shift</div>
-          <div class="detector-desc">Detects sudden changes in user session patterns and request behavior</div>
-        </div>
-        <div class="detector-item">
-          <div class="detector-name">T1-009 Host Fan-Out</div>
-          <div class="detector-desc">Identifies lateral movement through destination diversity analysis</div>
-        </div>
-        <div class="detector-item">
-          <div class="detector-name">T1-003 Velocity Anomaly</div>
-          <div class="detector-desc">Flags unusual request frequency and timing patterns</div>
-        </div>
-        <div class="detector-item">
-          <div class="detector-name">T2-001 Session Entropy</div>
-          <div class="detector-desc">Measures randomness in session structure and duration</div>
-        </div>
-        <div class="detector-item">
-          <div class="detector-name">T1-007 Token Ratio</div>
-          <div class="detector-desc">Analyzes input/output token patterns for extraction signatures</div>
-        </div>
-        <div class="detector-item">
-          <div class="detector-name">T2-004 Model Targeting</div>
-          <div class="detector-desc">Identifies systematic model selection and targeting patterns</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CTAs -->
     <div class="cta-section">
       <h3 style="color: var(--text); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Ready to dive deeper?</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Explore the interactive detection pipeline or examine the source code.</p>

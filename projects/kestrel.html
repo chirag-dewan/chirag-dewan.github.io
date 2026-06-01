@@ -38,7 +38,7 @@
     <section class="kestrel-hero">
       <div class="kestrel-hero__content">
         <h1 class="kestrel-title">KESTREL</h1>
-        <p class="kestrel-subtitle">Cloud-native AI workload anomaly detection</p>
+        <p class="kestrel-subtitle">Catching attacks on cloud infrastructure by learning each account’s normal and flagging the weird.</p>
 
         <div class="kestrel-ascii">
     ╭─────────────────────────────────────────╮
@@ -73,194 +73,39 @@
 
     <div class="post-content">
 
-      <!-- ORIGIN -->
       <div class="story-section">
-        <h2>The Origin</h2>
-        <p>PARALLAX watches the application layer — API request patterns, user behavior, metadata. But what about the infrastructure underneath? Someone hijacks a GPU cluster for crypto mining. A rogue training job burns through compute for 48 hours on a stolen service account. A recon tool enumerates every IAM role across 13 AWS regions at 2 AM.</p>
-        <p>These attacks don't show up in API behavior. They show up in <span class="accent">cloud telemetry</span> — GPU utilization spikes, anomalous instance types, burst API patterns, off-hours activity.</p>
-        <p class="dim">PARALLAX needed an infrastructure-layer companion. That's KESTREL.</p>
+        <h2>The problem</h2>
+        <p>PARALLAX watches what users <em>do</em> to an AI platform. KESTREL watches the machines underneath. Picture someone quietly hijacking your GPU cluster to mine crypto, a rogue training job burning compute for two days on a stolen account, or a recon tool listing every permission across thirteen cloud regions at 2&nbsp;a.m. None of that shows up in app behaviour — it shows up in the cloud’s own logs.</p>
       </div>
 
-      <!-- THESIS -->
       <div class="story-section">
-        <h2>The Thesis</h2>
-        <p><span class="accent">Baseline normal, detect deviations.</span> Build rolling per-entity behavioral profiles using Welford's online algorithm. When an entity's GPU utilization, API call frequency, or access patterns deviate beyond 2.5 standard deviations from their own baseline — that's the signal. No static thresholds. No training data requirements. Each entity is its own reference point.</p>
+        <h2>The idea</h2>
+        <p>Learn what <em>normal</em> looks like for each account, then flag anything that drifts more than a couple of standard deviations from its own habits. No fixed thresholds, no training data — every account is judged against itself.</p>
       </div>
 
-      <!-- BUILD -->
       <div class="story-section">
-        <h2>The Build</h2>
-        <p>Three detectors, each targeting a different attack surface. 92 tests, 98% coverage. Built in Python 3.11+ with Pydantic v2, Click CLI, SQLite persistence, and Sigma rule export.</p>
-
-        <div class="detector-showcase">
-          <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Detection Matrix</h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Three-tier cloud workload anomaly detection system:</p>
-
-          <div class="detector-grid">
-            <div class="detector-item">
-              <div class="detector-name">GPUHijackDetector</div>
-              <div class="detector-desc">GPU utilization ≥90%, anomalous regions, off-hours activity. Severity scales with signal count. ATLAS: AML.T0048</div>
-            </div>
-            <div class="detector-item">
-              <div class="detector-name">RogueTrainingDetector</div>
-              <div class="detector-desc">Unexpected instance types, abnormal duration (z≥2.5σ), unusual data transfer. Baseline-driven detection. ATLAS: AML.T0020</div>
-            </div>
-            <div class="detector-item">
-              <div class="detector-name">CloudAPIAbuseDetector</div>
-              <div class="detector-desc">API burst detection, region fan-out analysis, off-hours monitoring, error rate tracking. ATLAS: T1526</div>
-            </div>
-          </div>
-        </div>
-
-        <pre><code>kestrel generate   # Synthetic events (80/20 normal/attack)
-kestrel scan       # Ingest → baseline → detect → findings
-kestrel findings   # Export as JSON or Sigma YAML
-kestrel serve      # Flask dashboard</code></pre>
-
-        <p class="dim">Every finding is tagged with MITRE ATLAS tactics and techniques. Every finding exports to Sigma rules that plug into existing SIEM pipelines. <a href="https://github.com/chirag-dewan/kestrel" style="color: var(--text-dim); text-decoration: underline; text-underline-offset: 3px;">Full source on GitHub.</a></p>
+        <h2>What I built</h2>
+        <p>Three detectors — GPU hijacking, rogue training, and cloud-API abuse — that tag each finding with MITRE ATLAS techniques and export straight to Sigma rules a SIEM can ingest. It worked beautifully on my own synthetic data, which should always make you suspicious.</p>
       </div>
 
-      <!-- V1 FAILURE -->
       <div class="story-section">
-        <h2>The v1 Reality Check</h2>
-
-        <p>Ran KESTREL against <span class="accent">34,427 real CloudTrail events</span> from Splunk's attack_data repository. 51 datasets covering MITRE ATT&CK techniques — IAM enumeration, privilege escalation, security group abuse, KMS manipulation. 77 unique entities across 16 AWS regions.</p>
-
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">1.0</div>
-            <div class="metric-label">Precision (v1)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.0005</div>
-            <div class="metric-label">Recall (v1)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">1</div>
-            <div class="metric-label">findings</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">5 / 6</div>
-            <div class="metric-label">entities missed</div>
-          </div>
-        </div>
-
-        <p><span class="red">One finding out of 2,167 attack events.</span> The GPUHijackDetector fired once — on a Bedrock InvokeModel at 11 PM. That was a true positive. But daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role — all missed. The RogueTrainingDetector never fired at all.</p>
-        <p class="dim">Perfect precision. Near-zero recall. The pipeline worked. It was aimed at the wrong layer.</p>
+        <h2>The reality check</h2>
+        <p>I ran it against <strong>34,427 real CloudTrail events</strong> full of genuine attacks — IAM enumeration, privilege escalation, recon scanning. Precision: a perfect <strong>1.0</strong>. Recall: <strong>0.0005</strong>. It caught <em>one</em> thing out of 2,167 attack events. Flawless aim, pointed at the wrong target.</p>
       </div>
 
-      <!-- DIAGNOSIS -->
       <div class="story-section">
-        <h2>The Diagnosis</h2>
-
-        <p><span class="amber">Impedance mismatch.</span> CloudTrail is a management-plane audit log — it records who called what AWS API, when, from where. KESTREL's original detectors look for data-plane GPU telemetry — utilization %, memory %, power watts, training job durations.</p>
-
-        <p>99.98% of the CloudTrail events mapped to <code>api_call</code>. Zero mapped to <code>training_job</code>. One mapped to <code>gpu_metric</code>. The GPUHijackDetector and RogueTrainingDetector were built for CloudWatch metrics and NVIDIA DCGM telemetry — data that CloudTrail doesn't carry. The attacks in the dataset were real (IAM enumeration, recon scanning, privilege escalation), but they lived at the API call layer, not the GPU layer.</p>
-
-        <p class="dim">The baselining engine DID detect 105 z-score anomalies on time-of-day patterns. It flagged daftpunk at z=+11.7 for late-night Bedrock scanning. The signal was there — nothing was consuming it.</p>
+        <h2>The diagnosis</h2>
+        <p>Classic mismatch. My detectors were hunting for GPU telemetry — utilisation, power draw, training durations. But CloudTrail is an <em>API audit log</em>: 99.98% of the events were API calls, and exactly zero were GPU metrics. I’d built the right instrument for data that simply wasn’t there. (The baseline engine even spotted the attacker scanning at 11&nbsp;p.m. — nothing was listening to that signal.)</p>
       </div>
 
-      <!-- V2 FIX -->
       <div class="story-section">
-        <h2>The Fix</h2>
-
-        <p><span class="accent">CloudAPIAbuseDetector.</span> Built to process the 34,420 api_call events that v1 ignored. Four signals in 5-minute sliding windows:</p>
-
-        <div class="finding-item"><strong>api_burst_frequency:</strong> ≥50 API calls per 5-minute window, or z-score ≥2.5 against rolling baseline. Caught cloudmapper at 130 calls/window, okta_ro_role at 292.</div>
-        <div class="finding-item"><strong>region_fanout:</strong> Entity touching &gt;5 distinct AWS regions in one window. Caught cloudmapper scanning 13 regions, cloudsploit across 12. Recon tools enumerate everything — the destination diversity is the signature.</div>
-        <div class="finding-item"><strong>off_hours_api_spike:</strong> Significant API activity outside business hours. Caught daftpunk's 11 PM Bedrock guardrail scanning.</div>
-        <div class="finding-item"><strong>excessive_error_rate:</strong> ≥30% AccessDenied/Forbidden responses. Caught daftpunk at 100% error rate — every single call denied. A bruteforce signature.</div>
-
-        <p style="margin-top: 1rem;">Multi-signal combinations drive severity escalation: daftpunk (off-hours + 100% errors) → <span class="amber">HIGH</span>. cloudmapper (burst + 13-region fan-out) → <span class="amber">HIGH</span>. okta_ro_role (292 calls + 12 regions) → <span class="amber">HIGH</span>. bhavin_cli generated 24 findings across multiple time windows.</p>
+        <h2>The fix</h2>
+        <p>So I built a detector for the data I actually had: API bursts, fanning out across regions, off-hours spikes, and walls of “access denied.” Recall went from <strong>0.0005 to 0.766</strong> — a <strong>1,532× improvement</strong> — while precision stayed at <strong>1.0</strong>, zero false positives. 220 findings, and every account v1 missed got caught.</p>
+        <p>The fix wasn’t fancier machine learning. It was meeting the data where it lives: diagnose the mismatch, build the detector that fits. Subtraction before addition, again.</p>
       </div>
 
-      <!-- RESULTS -->
-      <div class="story-section">
-        <h2>The Results</h2>
-
-        <div class="metric-grid">
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">1.0</div>
-            <div class="metric-label">Precision (v2)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">0.766</div>
-            <div class="metric-label">Recall (v2)</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">220</div>
-            <div class="metric-label">findings</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value" style="color: var(--text);">1,532×</div>
-            <div class="metric-label">recall improvement</div>
-          </div>
-        </div>
-
-        <p><span class="accent">Recall: 0.0005 → 0.766. Precision held at 1.0. Zero false positives.</span></p>
-
-        <p>220 findings across 3 detectors. Severity distribution: 2 CRITICAL, 14 HIGH, 98 MEDIUM, 106 LOW (baseline anomalies). The entities that v1 missed — daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role — v2 catches them all.</p>
-
-        <p>The fix wasn't more sophisticated ML. It was <span class="accent">meeting the data where it lives</span>. CloudTrail provides API call patterns. CloudAPIAbuseDetector processes API call patterns. 99.98% of the dataset went from ignored to analyzed.</p>
-
-        <p class="dim">The approach that worked: diagnose the mismatch, build the detector that fits the data, keep the existing detectors for when the right telemetry arrives. Subtraction (understanding what's missing) came before addition (building what's needed).</p>
-      </div>
-
-      <!-- RELATIONSHIP -->
-      <div class="story-section">
-        <h2>Full-Stack Detection</h2>
-        <p>PARALLAX operates at the <span class="amber">application layer</span> — API request patterns, user behavior, content-free metadata. 15 detectors, 0.68 AUC on real LANL data. KESTREL operates at the <span class="amber">infrastructure layer</span> — GPU utilization, training job profiles, API abuse patterns. 3 detectors, 0.766 recall on real CloudTrail data.</p>
-        <p>Together they provide full-stack AI platform threat detection. PARALLAX catches distillation and account takeover through behavioral shifts. KESTREL catches GPU hijacking, rogue training, and infrastructure recon through z-score anomalies. Different layers, same principle: <span class="accent">the attack lives in the pattern, not the content.</span></p>
-      </div>
-
-      <!-- WHERE IT STANDS -->
-      <div class="story-section">
-        <h2>Where It Stands</h2>
-        <p>v2 complete. 3 detectors, 92 tests, 98% coverage. Real-data evaluation on 34K CloudTrail events. Open source. Four clear paths forward:</p>
-
-        <div class="detector-grid" style="margin: 1.5rem 0;">
-          <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--text);">Privilege Escalation Detection</div>
-            <div class="detector-desc">Chain analysis for CreateAccessKey/AttachPolicy sequences and role assumption patterns</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--text);">Cross-Entity Correlation</div>
-            <div class="detector-desc">Multi-account scanning pattern detection and coordinated attack identification</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--text);">GPU Telemetry Integration</div>
-            <div class="detector-desc">CloudWatch and NVIDIA DCGM data integration for existing GPU-focused detectors</div>
-          </div>
-          <div class="detector-item" style="border-left: 3px solid var(--green);">
-            <div class="detector-name" style="color: var(--text);">Windowed Severity Decay</div>
-            <div class="detector-desc">Time-based severity adjustment for sustained versus burst activity patterns</div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Signal Analysis Showcase -->
-    <div class="detector-showcase">
-      <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">v2 Signal Analysis</h3>
-      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Key signals that drove the 1,532× recall improvement in CloudAPIAbuseDetector:</p>
-
-      <div class="detector-grid">
-        <div class="finding-item">
-          <strong>api_burst_frequency:</strong> Detected cloudmapper at 130 calls/window, okta_ro_role at 292. Z-score anomaly detection with rolling baseline.
-        </div>
-        <div class="finding-item">
-          <strong>region_fanout:</strong> Caught multi-region enumeration patterns. cloudmapper: 13 regions, cloudsploit: 12 regions. Geographic diversity signature.
-        </div>
-        <div class="finding-item">
-          <strong>off_hours_api_spike:</strong> Off-business-hour activity detection. Flagged daftpunk's 11 PM Bedrock guardrail scanning attempts.
-        </div>
-        <div class="finding-item">
-          <strong>excessive_error_rate:</strong> High AccessDenied/Forbidden rate detection. Caught daftpunk at 100% error rate for bruteforce identification.
-        </div>
-      </div>
-    </div>
-
-    <!-- CTAs -->
     <div class="cta-section">
       <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Explore the detection engine</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Test the z-score baseline anomaly detection or dive into the CloudTrail processing pipeline.</p>
