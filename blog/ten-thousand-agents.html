@@ -78,6 +78,11 @@
   .sw.m{ background:var(--mem-fill); border-color:var(--mem) }
   hr{ border:0; border-top:1px solid var(--rule); margin:54px 0 28px }
   .foot{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink-soft); line-height:1.7 }
+  footer.colophon{ margin-top:6px; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink-soft); line-height:1.7 }
+  footer.colophon a{ color:var(--slate); text-decoration:none; margin-right:18px; border-bottom:1px solid var(--rule) }
+  footer.colophon a:hover{ color:var(--attack); border-color:var(--attack) }
+  footer.colophon .colophon__links{ margin-top:6px }
+  footer.colophon .colophon__meta{ margin-top:12px; letter-spacing:.02em }
   /* shared svg primitives */
   svg .box{ fill:var(--paper); stroke:var(--slate); stroke-width:1.5 }
   svg .box-atk{ fill:var(--attack-fill); stroke:var(--attack); stroke-width:1.5 }
@@ -119,10 +124,21 @@
 
   <h2>So the fix has to be a standing adversary</h2>
   <p>If the hole is permanent, a one-time audit is the wrong shape of defense. It checks the system once and walks away — while the system keeps changing and the attackers never stop. The defense has to look like the threat: continuous, and automated. Not a red team that runs once, but one that runs forever — a system that keeps hammering on your agents the way a real attacker would, and feeds whatever it finds straight back into hardening them, as the models and tools shift underneath you.</p>
-  <p>That's the system I'm building. The <a href="#">next post</a> is the architecture — eight components, walked through end to end, with the diagrams.</p>
+  <p>That's the system I'm building. The <a href="/blog/autonomous-red-team.html">next post</a> is the architecture — eight components, walked through end to end, with the diagrams.</p>
 
   <hr>
-  <p class="foot">Sources: 404 Media on the Meta AI account-takeover; OpenAI and UK NCSC statements on prompt injection; <em>The Attacker Moves Second</em> (arXiv:2510.09023). Verify exact quotes and dates against the primary sources before publishing.</p>
+  <footer class="colophon">
+    <div class="colophon__nav">
+      <a href="/blog/">← all writing</a>
+      <a href="/blog/autonomous-red-team.html">Part 2 · the architecture →</a>
+    </div>
+    <div class="colophon__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag0728@gmail.com">email</a>
+    </div>
+    <div class="colophon__meta">© 2026 Chirag Dewan · see the pattern, not the content.</div>
+  </footer>
 
 </div>
 </body>
