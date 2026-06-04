@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ten thousand agents, and none of them can tell a command from an attack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F1E8;
+    --paper-2:#FBF8F1;
+    --ink:#1C1A17;
+    --ink-soft:#4A453E;
+    --rule:#D8D0BF;
+    --attack:#9B2C2C;     /* adversary / injection path */
+    --attack-fill:#F2E2E0;
+    --slate:#2A5560;      /* system / defensive flow */
+    --slate-fill:#E2ECEE;
+    --mem:#9C6A12;         /* shared memory substrate */
+    --mem-fill:#F7EDD7;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box}
+  html{ -webkit-text-size-adjust:100% }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:19px; line-height:1.62;
+    background-image:radial-gradient(var(--rule) 0.5px, transparent 0.5px);
+    background-size:22px 22px;
+  }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:72px 24px 120px; }
+  .kicker{
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--attack); margin:0 0 18px;
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:clamp(34px,6vw,52px);
+    line-height:1.04; letter-spacing:-0.015em; margin:0 0 22px;
+  }
+  .standfirst{ font-size:21px; color:var(--ink-soft); font-style:italic; margin:0 0 40px; line-height:1.5 }
+  h2{
+    font-family:'Fraunces', serif; font-weight:600; font-size:28px; letter-spacing:-0.01em;
+    margin:56px 0 18px; padding-top:10px;
+  }
+  p{ margin:0 0 22px }
+  a{ color:var(--attack); text-underline-offset:3px; text-decoration-thickness:1px }
+  em{ font-style:italic }
+  strong{ font-weight:600 }
+  .comp-title{
+    font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600;
+    letter-spacing:.04em; color:var(--slate); text-transform:uppercase;
+    margin:46px 0 10px; display:flex; align-items:baseline; gap:10px;
+  }
+  .comp-title .n{
+    font-family:'Fraunces',serif; font-size:22px; color:var(--attack); font-weight:600;
+    -webkit-text-stroke:0;
+  }
+  figure{ margin:30px 0 14px; }
+  figure.hi{ margin:34px 0 18px; }
+  svg{ width:100%; height:auto; display:block;
+    background:var(--paper-2); border:1px solid var(--rule); border-radius:4px; padding:14px; }
+  figcaption{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft);
+    letter-spacing:.02em; margin-top:9px; text-align:center;
+  }
+  .legend{
+    display:flex; flex-wrap:wrap; gap:16px 22px; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft);
+    margin:6px 0 0;
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:7px }
+  .sw{ width:14px; height:14px; border-radius:2px; border:1.4px solid }
+  .sw.a{ background:var(--attack-fill); border-color:var(--attack) }
+  .sw.s{ background:var(--slate-fill); border-color:var(--slate) }
+  .sw.m{ background:var(--mem-fill); border-color:var(--mem) }
+  hr{ border:0; border-top:1px solid var(--rule); margin:54px 0 28px }
+  .foot{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink-soft); line-height:1.7 }
+  /* shared svg primitives */
+  svg .box{ fill:var(--paper); stroke:var(--slate); stroke-width:1.5 }
+  svg .box-atk{ fill:var(--attack-fill); stroke:var(--attack); stroke-width:1.5 }
+  svg .box-mem{ fill:var(--mem-fill); stroke:var(--mem); stroke-width:1.5 }
+  svg .box-ghost{ fill:none; stroke:var(--ink-soft); stroke-width:1.3; stroke-dasharray:5 4 }
+  svg .t{ font-family:'JetBrains Mono',monospace; font-size:13px; fill:var(--ink); font-weight:500 }
+  svg .ts{ font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:var(--ink-soft) }
+  svg .tw{ font-family:'JetBrains Mono',monospace; font-size:11px; fill:#fff; font-weight:500 }
+  svg .flow{ stroke:var(--slate); stroke-width:1.7; fill:none; marker-end:url(#ah) }
+  svg .flow-a{ stroke:var(--attack); stroke-width:1.7; fill:none; marker-end:url(#ahA) }
+  svg .flow-m{ stroke:var(--mem); stroke-width:1.3; fill:none; stroke-dasharray:4 3 }
+  svg .flow-g{ stroke:var(--ink-soft); stroke-width:1.4; fill:none; stroke-dasharray:5 4; marker-end:url(#ahG) }
+  /* entrance */
+  .wrap>*{ opacity:0; transform:translateY(10px); animation:rise .6s cubic-bezier(.2,.7,.3,1) forwards }
+  @keyframes rise{ to{ opacity:1; transform:none } }
+  @media (prefers-reduced-motion:reduce){ .wrap>*{ animation:none; opacity:1; transform:none } }
+</style>
+</head>
+<body>
+
+
+
+<div class="wrap">
+
+  <p class="kicker">Agentic Security · Part 1 of 2</p>
+  <h1>Ten thousand agents, and none of them can tell a command from an attack</h1>
+  <p class="standfirst">Prompt injection isn't a bug you patch — it's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</p>
+
+  <p>Companies are spinning up autonomous agents fast — one org might be running thousands, even tens of thousands of them. Each one can take actions that need some set of permissions. And those permissions? Half the time they're too broad, misconfigured, or nobody ever locked them down. When an agent can do more than it should, it cuts both ways: it can hit the company's own infrastructure, and it can hit the company's users.</p>
+
+  <p>The way in is prompt injection — direct and indirect — and it's not some rare edge case. It happens constantly. And it's not the kind of thing you patch in the next release, because it's baked into how LLMs work. A model can't reliably tell its own instructions apart from the data it's reading. The trusted commands and the untrusted input show up as the same stream of tokens, with nothing between them. That's the whole problem: to the model, instructions and data are the same thing. Bolt on as many filters as you want — it keeps coming back.</p>
+
+  <h2>This already happened — about as publicly as it gets</h2>
+  <p>In June 2026, <a href="https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/">404 Media reported</a> that hackers got into a bunch of high-profile Instagram accounts by — and this is the whole trick — just asking Meta's AI support bot to change the email on the account. The ones that got taken over reportedly included the Obama White House account, the Chief Master Sergeant of the Space Force, and Sephora. One attack going around literally just told the bot: link my new email to this username, I'll send the code. And it did it.</p>
+  <p>The interesting part isn't who got hit — it's why it worked. Meta had handed its AI support real, state-changing power: reset passwords, change account details. Then it pointed that at untrusted users, on the same channel the bot reads its instructions from. So the attacker's message <em>was</em> the instruction. The model had no way to tell a real recovery request from an attack, because they look identical. Over-scoped permissions plus the instruction/data problem equals account takeover, at scale.</p>
+
+  <h2>You can't patch your way out of this</h2>
+  <p>After something like this, the reflex is to slap on a filter — catch the bad request, block it, done. Trouble is, the people closest to this have basically given up on the filter being the answer. OpenAI's security folks call prompt injection a frontier, unsolved problem and have said it probably never gets fully solved; the UK's NCSC says it may never be totally fixed. And when a group of researchers actually went and stress-tested the defenses that claim to stop it — in a paper called <em>The Attacker Moves Second</em> — they broke a dozen of them, most at over 90% success, even though those same defenses had originally reported almost zero. That's the tell: an audit only checks for what you thought of, on the day you ran it. An attacker checks for everything you didn't.</p>
+
+  <h2>So the fix has to be a standing adversary</h2>
+  <p>If the hole is permanent, a one-time audit is the wrong shape of defense. It checks the system once and walks away — while the system keeps changing and the attackers never stop. The defense has to look like the threat: continuous, and automated. Not a red team that runs once, but one that runs forever — a system that keeps hammering on your agents the way a real attacker would, and feeds whatever it finds straight back into hardening them, as the models and tools shift underneath you.</p>
+  <p>That's the system I'm building. The <a href="#">next post</a> is the architecture — eight components, walked through end to end, with the diagrams.</p>
+
+  <hr>
+  <p class="foot">Sources: 404 Media on the Meta AI account-takeover; OpenAI and UK NCSC statements on prompt injection; <em>The Attacker Moves Second</em> (arXiv:2510.09023). Verify exact quotes and dates against the primary sources before publishing.</p>
+
+</div>
+</body>
+</html>

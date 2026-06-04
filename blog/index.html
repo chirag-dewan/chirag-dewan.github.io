@@ -103,8 +103,10 @@
           const status = p.status
             ? `<div class="project-card__status">Status: <span class="active">${esc(p.status)}</span></div>`
             : '';
+          // Standalone posts can set `url` (their own page); others fall back to the slug renderer.
+          const href = p.url ? p.url : `/blog/post.html?slug=${encodeURIComponent(p.slug)}`;
           return `
-            <a class="post-row" href="/blog/post.html?slug=${encodeURIComponent(p.slug)}">
+            <a class="post-row" href="${esc(href)}">
               <div class="project-card line-in animate-in">
                 <div class="post-meta">
                   <span class="date">${esc(p.date || '')}</span>
