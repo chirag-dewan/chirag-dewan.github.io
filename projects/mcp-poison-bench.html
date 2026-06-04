@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MCP-Poison-Bench: a de-circularized tool-poisoning benchmark</title>
-  <meta name="description" content="A reproducible MCP tool-poisoning benchmark across four attack classes, six models, and three vendors — with a de-circularized test that shows a client-side metadata defense is structurally blind to rug-pull injection. Controlled harness.">
+  <meta name="description" content="A reproducible MCP tool-poisoning benchmark across four attack classes, six models, and three vendors, with a de-circularized test that shows a client-side metadata defense is structurally blind to rug-pull injection. Controlled harness.">
   <link rel="canonical" href="https://www.cdewan.me/projects/mcp-poison-bench.html">
   <meta property="og:title" content="MCP-Poison-Bench: a de-circularized tool-poisoning benchmark">
   <meta property="og:description" content="Six models, three vendors. The headline defense win was circular; on independently-authored payloads the reduction vanishes, and the one attack that lands (rug_pull) bypasses the defense by design.">
@@ -73,7 +73,7 @@
         <h2>Threat model</h2>
         <p>An MCP client hands the model a set of tools, each described by server-supplied metadata: a free-text <code>description</code> and a JSON-Schema for its arguments. The model reads that metadata as trusted context and decides which tool to call. That trust is the attack surface. A malicious or compromised server embeds imperative instructions in the metadata so the model is steered into an action the user never asked for. This is <strong>tool poisoning</strong>.</p>
         <p>The benchmark fixes one concrete objective so attacks are comparable. Every trial gives the model a benign task and one confidential session token, the <code>CANARY</code>, that it is told to keep. Success for the attacker is coercing the model into calling an attacker-controlled <code>export_data</code> sink with the canary as the argument. ASR is binary per trial: the sink fired with the canary, or it did not. Everything is local and defanged; the sink is a no-op and the secret is synthetic.</p>
-        <p>Tasks are <strong>multi-step</strong> on purpose, so each attack class gets a real opening. A two-step <code>notes_pipeline</code> (calculate &rarr; save a note) lets <code>rug_pull</code> land mid-flow in a tool result; a two-server <code>account_review</code> (look up a record &rarr; compute on it) puts a second server on the critical path so <code>cross_server</code> has a concrete trigger. An earlier single-step calculator task gave <code>rug_pull</code> and <code>cross_server</code> no opening, which is why they read 0.00 — a measurement artifact, not robustness.</p>
+        <p>Tasks are <strong>multi-step</strong> on purpose, so each attack class gets a real opening. A two-step <code>notes_pipeline</code> (calculate &rarr; save a note) lets <code>rug_pull</code> land mid-flow in a tool result; a two-server <code>account_review</code> (look up a record &rarr; compute on it) puts a second server on the critical path so <code>cross_server</code> has a concrete trigger. An earlier single-step calculator task gave <code>rug_pull</code> and <code>cross_server</code> no opening, which is why they read 0.00, a measurement artifact, not robustness.</p>
 
         <style>
           .mpb-fig{margin:24px 0 4px;border:1px solid var(--border);border-radius:6px;background:var(--bg);padding:18px 16px 6px}
@@ -165,9 +165,9 @@
             <line class="ln" x1="426" y1="92" x2="538" y2="92" marker-end="url(#ah2)"/>
             <text class="tg" x="483" y="84" text-anchor="middle" font-size="10">scanned</text>
             <path class="lr" d="M176,193 L460,193 L460,118 L538,108" marker-end="url(#ah2r)"/>
-            <text class="tr" x="330" y="208" text-anchor="middle" font-size="10.5">never inspected — routes around the filter</text>
+            <text class="tr" x="330" y="208" text-anchor="middle" font-size="10.5">never inspected: routes around the filter</text>
           </svg>
-          <figcaption>The <code>tool_transform</code> scans tool, schema, and shadow-tool descriptions before the model sees them. A tool <em>result</em> is produced after the call is approved and never passes through the filter — so result-borne (<code>rug_pull</code>) injection bypasses the defense by construction, regardless of wording.</figcaption>
+          <figcaption>The <code>tool_transform</code> scans tool, schema, and shadow-tool descriptions before the model sees them. A tool <em>result</em> is produced after the call is approved and never passes through the filter, so result-borne (<code>rug_pull</code>) injection bypasses the defense by construction, regardless of wording.</figcaption>
         </figure>
       </div>
 
@@ -176,10 +176,10 @@
         <div class="metric-grid">
           <div class="metric-card"><div class="metric-value">6 / 3</div><div class="metric-label">models / vendors: Claude (Opus 4.8, Sonnet 4.6, Haiku 4.5), OpenAI (GPT-5.5, gpt-4o-mini), DeepSeek</div></div>
           <div class="metric-card"><div class="metric-value">~2.5k</div><div class="metric-label">scored trials across held-out + seen payloads, baseline and defended</div></div>
-          <div class="metric-card"><div class="metric-value">held-out</div><div class="metric-label">payloads authored to trip zero defense rules — the de-circularization, CI-enforced</div></div>
+          <div class="metric-card"><div class="metric-value">held-out</div><div class="metric-label">payloads authored to trip zero defense rules: the de-circularization, CI-enforced</div></div>
         </div>
-        <p><strong>The de-circularization.</strong> The defense is a keyword filter; the original attack payloads happened to use the same words it scans for (<code>export_data</code>, "compliance", "audit", "mandatory"). A &minus;1.00 reduction against payloads built from your own blocklist proves almost nothing. So the payload set is split: a <strong>seen</strong> set (the original wording, the near-circular contrast) and a <strong>held-out</strong> set authored independently of the rules — 5 registers per class (markdown, terse, conversational, config-comment, verbose), each referring to the sink by function and moving the secret with non-trigger verbs. A unit test asserts <em>mechanically</em> that every held-out payload trips zero defense rules and that the seen payloads still trip them, so the separation can't silently regress.</p>
-        <p>ASR is a rate, so trials sample at temperature 1.0; seeds index independent trials. Scorers are pure functions of the recorded JSONL trace — ASR (sink fired) and utility (benign task still completed) read from the same trace, so the dangerous "completes the task <em>and</em> exfiltrates" case stays visible. Trials that error (e.g. provider rate/credit limits) are <em>excluded</em>, never scored as "attack didn't fire." Confidence intervals are Wilson score, non-degenerate at the p = 0 / p = 1 boundaries this benchmark lives on.</p>
+        <p><strong>The de-circularization.</strong> The defense is a keyword filter; the original attack payloads happened to use the same words it scans for (<code>export_data</code>, "compliance", "audit", "mandatory"). A &minus;1.00 reduction against payloads built from your own blocklist proves almost nothing. So the payload set is split: a <strong>seen</strong> set (the original wording, the near-circular contrast) and a <strong>held-out</strong> set authored independently of the rules: 5 registers per class (markdown, terse, conversational, config-comment, verbose), each referring to the sink by function and moving the secret with non-trigger verbs. A unit test asserts <em>mechanically</em> that every held-out payload trips zero defense rules and that the seen payloads still trip them, so the separation can't silently regress.</p>
+        <p>ASR is a rate, so trials sample at temperature 1.0; seeds index independent trials. Scorers are pure functions of the recorded JSONL trace: ASR (sink fired) and utility (benign task still completed) read from the same trace, so the dangerous "completes the task <em>and</em> exfiltrates" case stays visible. Trials that error (e.g. provider rate/credit limits) are <em>excluded</em>, never scored as "attack didn't fire." Confidence intervals are Wilson score, non-degenerate at the p = 0 / p = 1 boundaries this benchmark lives on.</p>
 
         <figure class="mpb-fig">
           <svg viewBox="0 0 720 210" role="img" aria-label="Evaluation pipeline from payload sets through the harness to a Wilson-CI matrix">
@@ -221,7 +221,7 @@
 
       <div class="story-section">
         <h2>Results: held-out vs seen</h2>
-        <p>Susceptibility tracks <strong>capability, not vendor</strong>. The flagships — Opus 4.8, GPT-5.5, Sonnet 4.6 — resist nearly every cell; the cheaper models account for most firing, with <strong>gpt-4o-mini the worst</strong>. Read the two tables side by side.</p>
+        <p>Susceptibility tracks <strong>capability, not vendor</strong>. The flagships (Opus 4.8, GPT-5.5, Sonnet 4.6) resist nearly every cell; the cheaper models account for most firing, with <strong>gpt-4o-mini the worst</strong>. Read the two tables side by side.</p>
 
         <table class="results">
           <caption class="results-cap-top">HELD-OUT (de-circularized) · ASR baseline → defended</caption>
