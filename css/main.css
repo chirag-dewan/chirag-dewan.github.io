@@ -1,5 +1,5 @@
 /* ============================================
-   cdewan.me — Design System
+   cdewan.me, Design System
    Editorial paper. Fraunces display + Source Serif body + JetBrains Mono
    for labels/data. Warm paper ground, dark ink, an attack-red / slate /
    amber accent system. Matches the long-form essays in /blog.
@@ -18,18 +18,18 @@
   --slate:  #2A5560;  --slate-fill:  #E2ECEE;   /* system / defensive */
   --mem:    #9C6A12;  --mem-fill:    #F7EDD7;   /* memory / amber */
 
-  /* Semantic mappings — every component below resolves through these,
+  /* Semantic mappings, every component below resolves through these,
      so the whole site re-themes from this block. */
   --bg: var(--paper);
   --bg-raised: var(--paper-2);
-  --bg-surface: #EBE3D1;       /* inline-code chip — a warmer paper tint */
+  --bg-surface: #EBE3D1;       /* inline-code chip, a warmer paper tint */
   --text: var(--ink);
   --text-muted: var(--ink-soft);
   --text-dim: #8A8275;
   --border: var(--rule);
   --border-bright: #C9C0AC;
 
-  /* Outcome colours — used ONLY on result metrics (held vs. broke) */
+  /* Outcome colours, used ONLY on result metrics (held vs. broke) */
   --green: #2F6B46;  --held: #2F6B46;
   --red:   #9B2C2C;  --broke: #9B2C2C;
   /* Legacy accent aliases routed into the new system */
@@ -170,7 +170,7 @@ hr { border: none; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 .story-section .dim { color: var(--ink-soft); }
 .story-section code { background: var(--bg-surface); color: var(--ink); }
 
-/* stat figures + deltas — mono, tabular, quiet */
+/* stat figures + deltas, mono, tabular, quiet */
 .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-5) var(--s-6); margin: var(--s-5) 0; max-width: var(--measure); }
 .metric-card { background: none !important; border: none !important; border-left: 2px solid var(--rule) !important; border-radius: 0; padding: 0 0 0 var(--s-4); text-align: left; box-shadow: none !important; transform: none !important; transition: none; }
 .metric-card::before, .metric-card::after { content: none !important; display: none !important; }

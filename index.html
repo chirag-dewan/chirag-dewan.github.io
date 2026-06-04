@@ -29,6 +29,7 @@
 
     .work-item { margin-top: 2rem; }
     .work-item:first-of-type { margin-top: 0.8rem; }
+    .work-item__meta { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--text-dim); margin-bottom: 0.4rem; }
     .work-item__title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 0.3rem; }
     .work-item__title a { text-decoration: none; color: var(--ink); transition: color 0.15s; }
     .work-item__title a:hover { color: var(--attack); }
@@ -73,6 +74,7 @@
       <h2 class="sec-label">Selected work</h2>
 
       <div class="work-item">
+        <p class="work-item__meta">2026-06-01 → 2026-06-03</p>
         <h3 class="work-item__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h3>
         <p class="work-item__what">A reproducible MCP tool-poisoning benchmark across six models and three vendors.</p>
         <p class="work-item__result">De-circularized the defense: the headline win was an artifact of shared vocabulary, and <code>rug_pull</code> bypasses it by design (<span class="broke">1.00 → 1.00</span>). Susceptibility tracks capability, not vendor.</p>
@@ -80,6 +82,7 @@
       </div>
 
       <div class="work-item">
+        <p class="work-item__meta">2026-02-25 → 2026-04-09</p>
         <h3 class="work-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
         <p class="work-item__what">Behavioral threat detection for AI platforms: metadata-only, no payload inspection.</p>
         <p class="work-item__result">0.68 AUC on 17M real authentication events.</p>
@@ -87,6 +90,7 @@
       </div>
 
       <div class="work-item">
+        <p class="work-item__meta">2026-04-08</p>
         <h3 class="work-item__title"><a href="/projects/kestrel.html">KESTREL</a></h3>
         <p class="work-item__what">Cloud-workload anomaly detection with Sigma-exportable detections.</p>
         <p class="work-item__result">0.766 recall on 34K real CloudTrail events.</p>

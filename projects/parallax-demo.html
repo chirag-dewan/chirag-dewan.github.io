@@ -613,7 +613,7 @@
 
     <div class="demo-header">
       <h1>PARALLAX DETECTION PIPELINE</h1>
-      <p>Live simulation — select an account archetype and watch 15 detectors classify behavior in real time</p>
+      <p>Live simulation, select an account archetype and watch 15 detectors classify behavior in real time</p>
     </div>
 
     <div class="archetype-selector">
@@ -650,24 +650,24 @@
       <!-- Account Profile -->
       <div class="profile-panel">
         <div class="profile-panel__header">account_profile</div>
-        <div class="profile-row"><span class="label">account_id</span><span class="value" id="p-acct">—</span></div>
-        <div class="profile-row"><span class="label">account_age</span><span class="value" id="p-age">—</span></div>
-        <div class="profile-row"><span class="label">requests/hr</span><span class="value" id="p-rate">—</span></div>
-        <div class="profile-row"><span class="label">avg_input_tokens</span><span class="value" id="p-input">—</span></div>
-        <div class="profile-row"><span class="label">avg_output_tokens</span><span class="value" id="p-output">—</span></div>
-        <div class="profile-row"><span class="label">token_ratio</span><span class="value" id="p-ratio">—</span></div>
-        <div class="profile-row"><span class="label">api_ratio</span><span class="value" id="p-api">—</span></div>
-        <div class="profile-row"><span class="label">single_turn_ratio</span><span class="value" id="p-single">—</span></div>
-        <div class="profile-row"><span class="label">safety_trigger_rate</span><span class="value" id="p-safety">—</span></div>
-        <div class="profile-row"><span class="label">interval_cv</span><span class="value" id="p-cv">—</span></div>
-        <div class="profile-row"><span class="label">hours_active</span><span class="value" id="p-hours">—</span></div>
-        <div class="profile-row"><span class="label">conv/day</span><span class="value" id="p-conv">—</span></div>
+        <div class="profile-row"><span class="label">account_id</span><span class="value" id="p-acct">, </span></div>
+        <div class="profile-row"><span class="label">account_age</span><span class="value" id="p-age">, </span></div>
+        <div class="profile-row"><span class="label">requests/hr</span><span class="value" id="p-rate">, </span></div>
+        <div class="profile-row"><span class="label">avg_input_tokens</span><span class="value" id="p-input">, </span></div>
+        <div class="profile-row"><span class="label">avg_output_tokens</span><span class="value" id="p-output">, </span></div>
+        <div class="profile-row"><span class="label">token_ratio</span><span class="value" id="p-ratio">, </span></div>
+        <div class="profile-row"><span class="label">api_ratio</span><span class="value" id="p-api">, </span></div>
+        <div class="profile-row"><span class="label">single_turn_ratio</span><span class="value" id="p-single">, </span></div>
+        <div class="profile-row"><span class="label">safety_trigger_rate</span><span class="value" id="p-safety">, </span></div>
+        <div class="profile-row"><span class="label">interval_cv</span><span class="value" id="p-cv">, </span></div>
+        <div class="profile-row"><span class="label">hours_active</span><span class="value" id="p-hours">, </span></div>
+        <div class="profile-row"><span class="label">conv/day</span><span class="value" id="p-conv">, </span></div>
       </div>
 
       <!-- Detectors -->
       <div class="detectors-section">
         <div class="detectors-section__header">
-          detection_results — <span id="triggered-count">0</span>/15 triggered (threshold ≥ 0.50)
+          detection_results, <span id="triggered-count">0</span>/15 triggered (threshold ≥ 0.50)
         </div>
         <div class="detector-grid" id="detector-grid"></div>
       </div>
@@ -692,7 +692,7 @@
           </div>
           <div class="composite-details__row">
             <span class="label">top_signal</span>
-            <span class="value" id="top-signal">—</span>
+            <span class="value" id="top-signal">, </span>
           </div>
           <div class="composite-details__row">
             <span class="label">escalation</span>
@@ -712,7 +712,7 @@
     <div class="lanl-section">
       <div class="lanl-header">
         <h2>REAL-WORLD VALIDATION</h2>
-        <p>Evaluated against the Los Alamos National Laboratory Unified Host and Network Dataset — 16.9M real authentication events, 87 known-compromised users</p>
+        <p>Evaluated against the Los Alamos National Laboratory Unified Host and Network Dataset, 16.9M real authentication events, 87 known-compromised users</p>
       </div>
 
       <div class="lanl-dataset">
@@ -744,7 +744,7 @@
       </div>
 
       <!-- AUC Progression: v1 → v2 → v3 -->
-      <div class="section-header" style="margin-top: 2rem;"><span>~/results</span> — AUC progression across 3 iterations</div>
+      <div class="section-header" style="margin-top: 2rem;"><span>~/results</span>, AUC progression across 3 iterations</div>
       <div class="auc-progression">
         <div class="auc-version">
           <div class="auc-container">
@@ -777,7 +777,7 @@
 
       <!-- Score Distribution Canvas -->
       <div class="dist-section">
-        <div class="dist-section__header">score_distributions — compromised vs normal (v3, n=500)</div>
+        <div class="dist-section__header">score_distributions, compromised vs normal (v3, n=500)</div>
         <div class="dist-canvas-wrap">
           <canvas id="dist-canvas" role="img" aria-label="Score distribution histogram: compromised users (mean 0.60) vs normal users (mean 0.48) with threshold at 0.77">Score distribution: compromised mean=0.60, normal mean=0.48, threshold=0.77</canvas>
         </div>
@@ -795,21 +795,21 @@
 
       <!-- Per-Detector Contribution -->
       <div class="detector-contrib">
-        <div class="detector-contrib__header">per_detector_contribution — delta (compromised mean − normal mean), sorted by signal strength</div>
+        <div class="detector-contrib__header">per_detector_contribution, delta (compromised mean − normal mean), sorted by signal strength</div>
         <div id="contrib-chart"></div>
       </div>
 
       <!-- Key Findings -->
       <div class="lanl-findings">
         <h3>Findings</h3>
-        <p><strong>T2-006 Behavioral Shift</strong> is the engine. Compromised users show sharp behavioral changes in peak 4-hour windows (mean 0.71 vs normal 0.43). Delta +0.29 — drives most of the separation. This is the cross-domain signal: lateral movement in auth logs manifests as sudden behavioral shift, the same pattern that catches account takeover on AI platforms.</p>
-        <p><strong>T1-009 Host Fan-Out</strong> delivers the second-strongest signal (+0.13 delta). Compromised users access more distinct hosts in their peak windows (mean 0.79 vs normal 0.66) — lateral movement leaves a destination diversity signature.</p>
-        <p><strong>7 of 12 detectors were anti-correlated in v2</strong> — they scored normal users higher than compromised. Designed for AI platform abuse, they penalized the wrong group on auth data. <span class="dim">v3 zeroed all 10 non-contributing detectors and redistributed weight to the 5 correctly-oriented signals. AUC jumped from 0.48 to 0.68.</span></p>
+        <p><strong>T2-006 Behavioral Shift</strong> is the engine. Compromised users show sharp behavioral changes in peak 4-hour windows (mean 0.71 vs normal 0.43). Delta +0.29, drives most of the separation. This is the cross-domain signal: lateral movement in auth logs manifests as sudden behavioral shift, the same pattern that catches account takeover on AI platforms.</p>
+        <p><strong>T1-009 Host Fan-Out</strong> delivers the second-strongest signal (+0.13 delta). Compromised users access more distinct hosts in their peak windows (mean 0.79 vs normal 0.66), lateral movement leaves a destination diversity signature.</p>
+        <p><strong>7 of 12 detectors were anti-correlated in v2</strong>, they scored normal users higher than compromised. Designed for AI platform abuse, they penalized the wrong group on auth data. <span class="dim">v3 zeroed all 10 non-contributing detectors and redistributed weight to the 5 correctly-oriented signals. AUC jumped from 0.48 to 0.68.</span></p>
         <p><strong>The approach that worked:</strong> diagnose which signals are noise, silence them, amplify what remains. Subtraction beat addition.</p>
       </div>
 
       <!-- Precision / Recall table -->
-      <div class="section-header"><span>~/results</span> — precision_recall at multiple thresholds</div>
+      <div class="section-header"><span>~/results</span>, precision_recall at multiple thresholds</div>
       <table class="threshold-table">
         <thead>
           <tr><th>Threshold</th><th>TP</th><th>FP</th><th>FN</th><th>TN</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
@@ -824,13 +824,13 @@
       </table>
 
       <!-- v3 Active Weights -->
-      <div class="section-header"><span>~/results</span> — v3 active detector weights (5 of 15)</div>
+      <div class="section-header"><span>~/results</span>, v3 active detector weights (5 of 15)</div>
       <table class="threshold-table">
         <thead>
           <tr><th>Detector</th><th>Weight</th><th>Delta</th><th>Role</th></tr>
         </thead>
         <tbody>
-          <tr><td style="color:var(--green);">T2-006 Behavioral Shift</td><td>0.30</td><td style="color:var(--green);">+0.29</td><td>Primary — cross-domain signal</td></tr>
+          <tr><td style="color:var(--green);">T2-006 Behavioral Shift</td><td>0.30</td><td style="color:var(--green);">+0.29</td><td>Primary, cross-domain signal</td></tr>
           <tr><td style="color:var(--green);">T1-009 Host Fan-Out</td><td>0.25</td><td style="color:var(--green);">+0.13</td><td>Lateral movement signature</td></tr>
           <tr><td>T1-008 Concurrent Sessions</td><td>0.20</td><td style="color:var(--green-dim);">+0.05</td><td>Parallel access patterns</td></tr>
           <tr><td>T1-007 Error Pattern</td><td>0.15</td><td style="color:var(--green-dim);">+0.01</td><td>Auth failure signatures</td></tr>
@@ -860,7 +860,7 @@
   <script src="../js/main.js" defer></script>
   <script>
   /* ========================================================
-     PARALLAX Detection Pipeline — Browser Simulation
+     PARALLAX Detection Pipeline, Browser Simulation
      ======================================================== */
 
   const DETECTORS = [
@@ -881,7 +881,7 @@
     { id: 'T2-006', name: 'Behavioral Shift',      tier: 2, weight: 0.02, threshold: 0.5 },
   ];
 
-  /* Archetype parameters — matches real traffic_generator.py */
+  /* Archetype parameters, matches real traffic_generator.py */
   const ARCHETYPES = {
     normal: {
       label: 'normal_user',
@@ -982,7 +982,7 @@
         <div class="detector-bar"><div class="detector-bar__fill" id="bar-${d.id}"></div></div>
         <div class="detector-card__score">
           <span>score: <span class="score-val" id="score-${d.id}">0.00</span></span>
-          <span id="trig-${d.id}">—</span>
+          <span id="trig-${d.id}">, </span>
         </div>
       `;
       grid.appendChild(card);
@@ -1057,7 +1057,7 @@
       bar.style.width = (score * 100) + '%';
       bar.className = 'detector-bar__fill ' + (score < 0.3 ? 'low' : score < 0.6 ? 'med' : 'high');
       scoreEl.textContent = score.toFixed(2);
-      trigEl.textContent = triggered ? 'TRIGGERED' : '—';
+      trigEl.textContent = triggered ? 'TRIGGERED' : ', ';
       trigEl.style.color = triggered ? 'var(--red)' : 'var(--text-dim)';
       card.className = 'detector-card' + (triggered ? ' triggered' : '');
 
@@ -1145,7 +1145,7 @@
       bar.style.width = '0%';
       bar.className = 'detector-bar__fill low';
       scoreEl.textContent = '0.00';
-      trigEl.textContent = '—';
+      trigEl.textContent = ', ';
       trigEl.style.color = 'var(--text-dim)';
       card.className = 'detector-card';
     });
@@ -1158,7 +1158,7 @@
     document.getElementById('t1-count').textContent = '0 / 9';
     document.getElementById('t2-count').textContent = '0 / 6';
     document.getElementById('triggered-count').textContent = '0';
-    document.getElementById('top-signal').textContent = '—';
+    document.getElementById('top-signal').textContent = ', ';
     document.getElementById('escalation').textContent = 'not recommended';
     document.getElementById('escalation').className = 'value no-escalation';
 

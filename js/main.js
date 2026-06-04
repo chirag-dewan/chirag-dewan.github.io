@@ -1,4 +1,4 @@
-/* cdewan.me — minimal behaviour only (no decorative effects). */
+/* cdewan.me, minimal behaviour only (no decorative effects). */
 
 document.addEventListener('DOMContentLoaded', () => {
   // Active nav link

@@ -721,7 +721,7 @@
 
     <div class="demo-header">
       <h1>KESTREL DETECTION PIPELINE</h1>
-      <p>Live simulation — select a cloud workload scenario and watch z-score baselining catch anomalies in real time</p>
+      <p>Live simulation, select a cloud workload scenario and watch z-score baselining catch anomalies in real time</p>
     </div>
 
     <div class="scenario-selector">
@@ -775,7 +775,7 @@
       <!-- Z-Score Baseline -->
       <div class="baseline-section">
         <div class="baseline-section__header">
-          z_score_baselines — sigma threshold = <span style="color:var(--amber);">2.5</span> | <span id="anomaly-count">0</span> anomalies detected
+          z_score_baselines, sigma threshold = <span style="color:var(--amber);">2.5</span> | <span id="anomaly-count">0</span> anomalies detected
         </div>
         <div class="zscore-grid" id="zscore-grid"></div>
       </div>
@@ -783,7 +783,7 @@
       <!-- Detectors -->
       <div class="detectors-section">
         <div class="detectors-section__header">
-          detection_modules — <span id="det-fired">0</span>/3 fired
+          detection_modules, <span id="det-fired">0</span>/3 fired
         </div>
         <div class="detector-panels">
           <!-- GPU Hijack Detector -->
@@ -865,15 +865,15 @@
       <!-- Finding Output -->
       <div class="finding-section">
         <div class="finding-panel" id="finding-panel">
-          <div class="finding-panel__header">Findings — JSON</div>
-          <div id="finding-output"><span class="finding-empty">[ ] no findings — all clear</span></div>
+          <div class="finding-panel__header">Findings, JSON</div>
+          <div id="finding-output"><span class="finding-empty">[ ] no findings, all clear</span></div>
         </div>
       </div>
 
       <!-- Sigma Export -->
       <div class="sigma-section">
         <div class="sigma-panel" id="sigma-panel">
-          <div class="sigma-panel__header">Findings — Sigma</div>
+          <div class="sigma-panel__header">Findings, Sigma</div>
           <div id="sigma-output"><span class="finding-empty"># no sigma rules generated</span></div>
         </div>
       </div>
@@ -889,7 +889,7 @@
     <div class="eval-section">
       <div class="eval-header">
         <h2>REAL-WORLD EVALUATION</h2>
-        <p>Evaluated against Splunk Attack Data — 34,427 real CloudTrail events from AWS attack scenarios. Two iterations: diagnose, then fix.</p>
+        <p>Evaluated against Splunk Attack Data, 34,427 real CloudTrail events from AWS attack scenarios. Two iterations: diagnose, then fix.</p>
       </div>
 
       <div class="eval-dataset">
@@ -966,8 +966,8 @@
 
       <!-- The v1 problem -->
       <div class="mismatch-panel">
-        <h3>v1 — diagnosis</h3>
-        <p><strong>v1 hit an impedance mismatch.</strong> CloudTrail is a management-plane audit log. The original detectors (GPUHijack, RogueTraining) look for data-plane GPU telemetry — utilization %, memory %, power watts — that CloudTrail doesn't carry.</p>
+        <h3>v1, diagnosis</h3>
+        <p><strong>v1 hit an impedance mismatch.</strong> CloudTrail is a management-plane audit log. The original detectors (GPUHijack, RogueTraining) look for data-plane GPU telemetry, utilization %, memory %, power watts, that CloudTrail doesn't carry.</p>
 
         <table class="mismatch-table">
           <thead>
@@ -980,21 +980,21 @@
           </tbody>
         </table>
 
-        <p class="dim">99.98% of the data was api_call events that v1 couldn't process. One finding. Precision 1.0, recall 0.0005. The pipeline worked — it was aimed at the wrong layer.</p>
+        <p class="dim">99.98% of the data was api_call events that v1 couldn't process. One finding. Precision 1.0, recall 0.0005. The pipeline worked, it was aimed at the wrong layer.</p>
       </div>
 
       <!-- The v2 fix -->
       <div class="worked-panel">
-        <h3>v2 — fix</h3>
-        <p><strong>CloudAPIAbuseDetector</strong> — built to process the 34,420 api_call events that v1 ignored. Four signals in 5-minute sliding windows:</p>
+        <h3>v2, fix</h3>
+        <p><strong>CloudAPIAbuseDetector</strong>, built to process the 34,420 api_call events that v1 ignored. Four signals in 5-minute sliding windows:</p>
         <div class="worked-item"><strong>api_burst_frequency:</strong> &ge;50 API calls per 5-minute window, or z-score &ge;2.5 against rolling baseline. Caught cloudmapper at 130 calls/window, okta_ro_role at 292 calls/window.</div>
         <div class="worked-item"><strong>region_fanout:</strong> Entity touching &gt;5 distinct AWS regions in one window. Caught cloudmapper scanning 13 regions, cloudsploit across 12.</div>
         <div class="worked-item"><strong>off_hours_api_spike:</strong> Significant API activity outside business hours (6AM-10PM). Caught daftpunk's 11 PM Bedrock scanning.</div>
-        <div class="worked-item"><strong>excessive_error_rate:</strong> &ge;30% AccessDenied/Forbidden responses. Caught daftpunk at 100% error rate — every single call denied.</div>
+        <div class="worked-item"><strong>excessive_error_rate:</strong> &ge;30% AccessDenied/Forbidden responses. Caught daftpunk at 100% error rate, every single call denied.</div>
         <p style="margin-top: 0.8rem;">Multi-signal combinations produce meaningful severity: daftpunk (off-hours + 100% errors) &rarr; HIGH. cloudmapper (burst + 13-region fan-out) &rarr; HIGH. bhavin_cli generated 24 findings across multiple windows.</p>
       </div>
 
-      <!-- Attack entities table — v2 -->
+      <!-- Attack entities table, v2 -->
       <div class="section-header"><span>~/eval/v2</span> -- attack entities in the data</div>
       <table class="entity-table">
         <thead>
@@ -1057,8 +1057,8 @@
       <div class="mismatch-panel" style="border-color: var(--text); margin-top: 2rem;">
         <h3 style="color: var(--text);">Conclusion</h3>
         <p><strong>Recall: 0.0005 &rarr; 0.766. Precision held at 1.0. Zero false positives.</strong></p>
-        <p>The fix wasn't more sophisticated ML — it was meeting the data where it lives. CloudTrail provides API call patterns. CloudAPIAbuseDetector processes API call patterns. 99.98% of the dataset went from ignored to analyzed.</p>
-        <p>220 findings across 3 detectors. Multi-signal severity escalation produces meaningful tiers: 2 CRITICAL, 14 HIGH, 98 MEDIUM. The entities that v1 missed — daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role — v2 catches them all.</p>
+        <p>The fix wasn't more sophisticated ML, it was meeting the data where it lives. CloudTrail provides API call patterns. CloudAPIAbuseDetector processes API call patterns. 99.98% of the dataset went from ignored to analyzed.</p>
+        <p>220 findings across 3 detectors. Multi-signal severity escalation produces meaningful tiers: 2 CRITICAL, 14 HIGH, 98 MEDIUM. The entities that v1 missed, daftpunk, cloudmapper, cloudsploit, bhavin_cli, okta_ro_role, v2 catches them all.</p>
         <p class="dim">Published transparently because the v1 failure is what makes the v2 improvement credible. Subtraction (diagnosing the mismatch) came before addition (building the right detector).</p>
       </div>
     </div>
@@ -1084,7 +1084,7 @@
   <script src="../js/main.js" defer></script>
   <script>
   /* ========================================================
-     KESTREL Detection Pipeline — Browser Simulation
+     KESTREL Detection Pipeline, Browser Simulation
      ======================================================== */
 
   const ZSCORE_METRICS = [
@@ -1095,7 +1095,7 @@
     { key: 'api_calls_per_hour', name: 'api_calls/hr' },
   ];
 
-  /* Scenario parameters — from real generator/profiles.py */
+  /* Scenario parameters, from real generator/profiles.py */
   const SCENARIOS = {
     normal: {
       label: 'data_scientist',
@@ -1473,7 +1473,7 @@
     if (!gpuFired && !rogueFired && !apiFired) {
       findingPanel.className = 'finding-panel';
       sigmaPanel.className = 'sigma-panel';
-      findingOut.innerHTML = '<span class="finding-empty">[ ] no findings — all clear</span>';
+      findingOut.innerHTML = '<span class="finding-empty">[ ] no findings, all clear</span>';
       sigmaOut.innerHTML = '<span class="finding-empty"># no sigma rules generated</span>';
       return;
     }
@@ -1639,7 +1639,7 @@ ${evidenceYaml}
 
     // Reset findings
     document.getElementById('finding-panel').className = 'finding-panel';
-    document.getElementById('finding-output').innerHTML = '<span class="finding-empty">[ ] no findings — all clear</span>';
+    document.getElementById('finding-output').innerHTML = '<span class="finding-empty">[ ] no findings, all clear</span>';
     document.getElementById('sigma-panel').className = 'sigma-panel';
     document.getElementById('sigma-output').innerHTML = '<span class="finding-empty"># no sigma rules generated</span>';
 
@@ -1688,7 +1688,7 @@ ${evidenceYaml}
     const recallObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          // v1 recall is 0.0005 — show as tiny sliver (min 1% for visibility)
+          // v1 recall is 0.0005, show as tiny sliver (min 1% for visibility)
           setTimeout(() => { document.getElementById('recall-v1').style.height = '1%'; }, 300);
           // v2 recall is 0.766
           setTimeout(() => { document.getElementById('recall-v2').style.height = '76.6%'; }, 700);
