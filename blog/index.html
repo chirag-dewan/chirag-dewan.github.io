@@ -51,11 +51,32 @@
 
     <p class="sec-label" style="margin-top:1.5rem;">Posts</p>
 
-    <div id="post-list"></div>
-
-    <noscript>
-      <div class="blog-empty">JavaScript is required to render the post list dynamically. No posts published yet.</div>
-    </noscript>
+    <div id="post-list">
+      <a class="post-row" href="/blog/ten-thousand-agents.html">
+        <div class="project-card line-in animate-in">
+          <div class="post-meta">
+            <span class="date">2026-06-04</span>
+            <span class="sep">·</span><span>Part 1 of 2</span>
+          </div>
+          <div class="project-card__name">Ten thousand agents, and none of them can tell a command from an attack</div>
+          <div class="project-card__thesis">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</div>
+          <div class="project-card__stack"><span class="stack-tag">Agentic Security</span><span class="stack-tag">Prompt Injection</span><span class="stack-tag">Red Teaming</span></div>
+          <span class="project-card__link">→ read</span>
+        </div>
+      </a>
+      <a class="post-row" href="/blog/autonomous-red-team.html">
+        <div class="project-card line-in animate-in">
+          <div class="post-meta">
+            <span class="date">2026-06-04</span>
+            <span class="sep">·</span><span>Part 2 of 2</span>
+          </div>
+          <div class="project-card__name">How I'd build an autonomous red team for AI agents</div>
+          <div class="project-card__thesis">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</div>
+          <div class="project-card__stack"><span class="stack-tag">Agentic Security</span><span class="stack-tag">Red Teaming</span><span class="stack-tag">Architecture</span></div>
+          <span class="project-card__link">→ read</span>
+        </div>
+      </a>
+    </div>
   </div>
   </main>
 
@@ -72,45 +93,5 @@
   </footer>
 
   <script src="../js/main.js" defer></script>
-  <script>
-    (async function () {
-      const list = document.getElementById('post-list');
-      try {
-        const res = await fetch('./posts.json', { cache: 'no-cache' });
-        if (!res.ok) throw new Error('posts.json ' + res.status);
-        const posts = await res.json();
-        if (!Array.isArray(posts) || posts.length === 0) {
-          list.innerHTML = '<p class="blog-empty">No posts yet.</p>';
-          return;
-        }
-        posts.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-        const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        }[c]));
-        list.innerHTML = posts.map((p) => {
-          const tags = (p.tags || []).map((t) => `<span class="stack-tag">${esc(t)}</span>`).join('');
-          // Standalone posts can set `url` (their own page); others fall back to the slug renderer.
-          const href = p.url ? p.url : `/blog/post.html?slug=${encodeURIComponent(p.slug)}`;
-          return `
-            <a class="post-row" href="${esc(href)}">
-              <div class="project-card line-in animate-in">
-                <div class="post-meta">
-                  <span class="date">${esc(p.date || '')}</span>
-                  ${p.status ? `<span class="sep">·</span><span>${esc(p.status)}</span>` : ''}
-                </div>
-                <div class="project-card__name">${esc(p.title)}</div>
-                <div class="project-card__thesis">${esc(p.excerpt || '')}</div>
-                <div class="project-card__stack">${tags}</div>
-                <span class="project-card__link">→ read</span>
-              </div>
-            </a>
-          `;
-        }).join('');
-      } catch (err) {
-        list.innerHTML = '<p class="blog-empty">Could not load posts. <a href="https://github.com/chirag-dewan/chirag-dewan.github.io/tree/main/blog" style="color: var(--attack);">View source on GitHub.</a></p>';
-        console.error(err);
-      }
-    })();
-  </script>
 </body>
 </html>

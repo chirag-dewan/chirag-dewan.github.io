@@ -43,6 +43,7 @@
 
     .writing-empty { color: var(--text-dim); font-style: italic; }
     .writing-item { margin: 0.6rem 0; }
+    .writing-summary { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.5; margin: 0.15rem 0 1rem; max-width: 580px; }
     .writing-item a { text-decoration: none; color: var(--ink); }
     .writing-item a:hover { color: var(--attack); }
     .writing-date { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.78rem; margin-left: 0.6rem; }
@@ -100,7 +101,12 @@
 
     <section id="writing">
       <h2 class="sec-label">Writing</h2>
-      <div id="post-list" class="writing-list"></div>
+      <div id="post-list" class="writing-list">
+        <p class="writing-item"><a href="/blog/ten-thousand-agents.html">Ten thousand agents, and none of them can tell a command from an attack</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-summary">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</p>
+        <p class="writing-item"><a href="/blog/autonomous-red-team.html">How I'd build an autonomous red team for AI agents</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-summary">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</p>
+      </div>
     </section>
 
   </div>
@@ -119,25 +125,5 @@
   </footer>
 
   <script src="js/main.js" defer></script>
-  <script>
-    (async function () {
-      var el = document.getElementById('post-list');
-      if (!el) return;
-      try {
-        var res = await fetch('/blog/posts.json', { cache: 'no-cache' });
-        var posts = res.ok ? await res.json() : [];
-        if (!Array.isArray(posts) || posts.length === 0) {
-          el.innerHTML = '<p class="writing-empty">Nothing published yet.</p>';
-          return;
-        }
-        posts.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
-        var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]); }); };
-        el.innerHTML = posts.map(function (p) {
-          var href = p.url ? p.url : '/blog/post.html?slug=' + encodeURIComponent(p.slug);
-          return '<p class="writing-item"><a href="' + esc(href) + '">' + esc(p.title) + '</a><span class="writing-date">' + esc(p.date || '') + '</span></p>';
-        }).join('');
-      } catch (e) { el.innerHTML = ''; }
-    })();
-  </script>
 </body>
 </html>
