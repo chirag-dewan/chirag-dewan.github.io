@@ -18,9 +18,7 @@ Static personal site. Editorial paper aesthetic: Fraunces (display) + Source Ser
 │   ├── mcp-poison-bench-demo.html   # Interactive demo (self-contained styles)
 │   └── ai-security.html    # CTF Records detail
 ├── blog/
-│   ├── index.html          # Writing index, cards rendered from posts.json
-│   ├── post.html           # Slug renderer for posts with `bodyHtml` (uses ?slug=)
-│   ├── posts.json          # Post registry; entries may set `url` to link a standalone page
+│   ├── index.html          # Writing index, static cards linking the standalone essays
 │   ├── ten-thousand-agents.html      # Standalone essay (Part 1), bespoke paper/serif layout
 │   └── autonomous-red-team.html      # Standalone essay (Part 2), bespoke paper/serif layout
 ├── timeline/index.html     # Redirect
@@ -35,8 +33,8 @@ Static personal site. Editorial paper aesthetic: Fraunces (display) + Source Ser
 `meta line (date · status, mono)` → `name/title (Fraunces)` → `one-line summary (serif)` → `tags (mono, middot-separated)` → `→ link(s) (mono, attack-red)`. Keep projects and writing visually consistent.
 
 ## Blog
-- Posts live in `posts.json`. A post with a `url` field links to its own standalone HTML page (the two essays). A post without `url` is rendered by `post.html?slug=` from its `bodyHtml`.
-- The standalone essays carry their own inline `<style>` (they predate / drive the site palette) and a paper-styled `footer.colophon`. They do NOT use main.css.
+- Each post is a standalone static HTML page in `blog/` (e.g. `ten-thousand-agents.html`), reachable in raw source with no JS. New posts are added by creating the page and hand-adding a static card to both `blog/index.html` and the homepage Writing section.
+- The standalone essays carry their own inline `<style>` (they predate / drive the site palette), a paper-styled masthead nav, and a `footer.colophon`. They do NOT use main.css.
 
 ## Conventions
 - Nav shared across all pages (links: projects, writing), change it everywhere if you change it anywhere.
