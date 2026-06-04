@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chirag Dewan — AI Security Researcher</title>
+  <title>Chirag Dewan · AI Security Researcher</title>
   <meta name="description" content="AI security researcher red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <link rel="canonical" href="https://www.cdewan.me/">
-  <meta property="og:title" content="Chirag Dewan — AI Security Researcher">
+  <meta property="og:title" content="Chirag Dewan · AI Security Researcher">
   <meta property="og:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/">
@@ -14,35 +14,37 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Chirag Dewan — AI Security Researcher">
+  <meta name="twitter:title" content="Chirag Dewan · AI Security Researcher">
   <meta name="twitter:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" href="css/main.css">
   <style>
-    .lead { margin-top: 2rem; }
-    .identity { font-size: 1.05rem; color: var(--text); max-width: var(--measure); margin-top: 0.35rem; }
-    .identity.sub { color: var(--text-muted); }
+    .lead { margin-top: 2.4rem; }
+    .lead .kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--attack); margin-bottom: 0.7rem; }
+    .lead h1 { font-size: clamp(2.6rem, 8vw, 4rem); line-height: 1.0; letter-spacing: -0.025em; }
+    .identity { font-family: var(--font-body); font-size: 1.18rem; color: var(--ink-soft); max-width: var(--measure); margin-top: 0.7rem; font-style: italic; }
+    .identity.sub { font-size: 1rem; margin-top: 0.25rem; }
 
-    .work-item { margin-top: 1.7rem; }
-    .work-item:first-of-type { margin-top: 0.6rem; }
-    .work-item__title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.25rem; }
-    .work-item__title a { text-decoration: none; color: var(--text); }
-    .work-item__title a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
-    .work-item__what { color: var(--text); margin-bottom: 0.1rem; }
-    .work-item__result { color: var(--text-muted); }
-    .work-item__result .held { color: var(--held); }
-    .work-item__result .broke { color: var(--broke); }
-    .work-item__read { margin-top: 0.4rem; font-size: 0.9rem; }
-    .work-item__read a { color: var(--text-muted); text-decoration: none; }
-    .work-item__read a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
+    .work-item { margin-top: 2rem; }
+    .work-item:first-of-type { margin-top: 0.8rem; }
+    .work-item__title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 0.3rem; }
+    .work-item__title a { text-decoration: none; color: var(--ink); transition: color 0.15s; }
+    .work-item__title a:hover { color: var(--attack); }
+    .work-item__what { color: var(--ink); margin-bottom: 0.15rem; }
+    .work-item__result { color: var(--ink-soft); }
+    .work-item__result .held { color: var(--held); font-weight: 600; }
+    .work-item__result .broke { color: var(--broke); font-weight: 600; }
+    .work-item__read { margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; }
+    .work-item__read a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .work-item__read a:hover { border-color: var(--attack); }
 
-    .writing-empty { color: var(--text-dim); }
-    .writing-item { margin: 0.5rem 0; }
-    .writing-item a { text-decoration: none; color: var(--text); }
-    .writing-item a:hover { text-decoration: underline; text-decoration-color: var(--text-muted); }
-    .writing-date { color: var(--text-dim); font-size: 0.85rem; margin-left: 0.5rem; }
+    .writing-empty { color: var(--text-dim); font-style: italic; }
+    .writing-item { margin: 0.6rem 0; }
+    .writing-item a { text-decoration: none; color: var(--ink); }
+    .writing-item a:hover { color: var(--attack); }
+    .writing-date { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.78rem; margin-left: 0.6rem; }
   </style>
 </head>
 <body>
@@ -61,8 +63,9 @@
   <div class="container">
 
     <header class="lead">
+      <p class="kicker">AI Security · Red Team</p>
       <h1>Chirag Dewan</h1>
-      <p class="identity">AI security researcher — red teaming LLMs &amp; agents.</p>
+      <p class="identity">AI security researcher, red teaming LLMs &amp; agents.</p>
       <p class="identity sub">Offensive security background.</p>
     </header>
 
@@ -78,7 +81,7 @@
 
       <div class="work-item">
         <h3 class="work-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
-        <p class="work-item__what">Behavioral threat detection for AI platforms — metadata-only, no payload inspection.</p>
+        <p class="work-item__what">Behavioral threat detection for AI platforms: metadata-only, no payload inspection.</p>
         <p class="work-item__result">0.68 AUC on 17M real authentication events.</p>
         <p class="work-item__read"><a href="/projects/parallax.html">read →</a></p>
       </div>
@@ -107,6 +110,7 @@
       <a href="/Chirag_Dewan_Resume.pdf">resume</a>
     </div>
     <p>© 2026 Chirag Dewan</p>
+    <p class="footer__tagline">see the pattern, not the content.</p>
     <p class="footer__push"></p>
   </footer>
 
@@ -125,7 +129,8 @@
         posts.sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
         var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]); }); };
         el.innerHTML = posts.map(function (p) {
-          return '<p class="writing-item"><a href="/blog/post.html?slug=' + encodeURIComponent(p.slug) + '">' + esc(p.title) + '</a><span class="writing-date">' + esc(p.date || '') + '</span></p>';
+          var href = p.url ? p.url : '/blog/post.html?slug=' + encodeURIComponent(p.slug);
+          return '<p class="writing-item"><a href="' + esc(href) + '">' + esc(p.title) + '</a><span class="writing-date">' + esc(p.date || '') + '</span></p>';
         }).join('');
       } catch (e) { el.innerHTML = ''; }
     })();
