@@ -19,115 +19,111 @@
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="css/main.css">
   <style>
-    body {
-      background-color: #FFFFFF;
-      color: #000000;
-      font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
-      font-weight: 150;
-      line-height: 1.5;
-      padding: 4% 5% 8%;
-      max-width: 820px;
-    }
-    a:link    { color: #1C71C7; }
-    a:active  { color: #1C71C7; }
-    a:visited { color: #11467A; }
-    a:hover   { color: #238EFA; }
+    .lead { margin-top: 2.4rem; }
+    .lead .kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--attack); margin-bottom: 0.7rem; }
+    .lead h1 { font-size: clamp(2.6rem, 8vw, 4rem); line-height: 1.0; letter-spacing: -0.025em; }
+    .identity { font-family: var(--font-body); font-size: 1.18rem; color: var(--ink-soft); max-width: var(--measure); margin-top: 0.7rem; font-style: italic; }
+    .identity.sub { font-size: 1rem; margin-top: 0.25rem; }
 
-    h1 {
-      font-size: 2.4em;
-      font-weight: 400;
-      margin: 0 0 0.1em;
-    }
-    h1 + hr {
-      border: none;
-      border-top: 1px solid #000000;
-      margin: 0 0 1.4em;
-    }
-    h2 {
-      font-size: 1.15em;
-      font-weight: 600;
-      margin: 1.8em 0 0.6em;
-    }
+    .work-item { margin-top: 2rem; }
+    .work-item:first-of-type { margin-top: 0.8rem; }
+    .work-item__meta { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .work-item__title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 0.3rem; }
+    .work-item__title a { text-decoration: none; color: var(--ink); transition: color 0.15s; }
+    .work-item__title a:hover { color: var(--attack); }
+    .work-item__what { color: var(--ink); margin-bottom: 0.15rem; }
+    .work-item__result { color: var(--ink-soft); }
+    .work-item__result .held { color: var(--held); font-weight: 600; }
+    .work-item__result .broke { color: var(--broke); font-weight: 600; }
+    .work-item__read { margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; }
+    .work-item__read a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .work-item__read a:hover { border-color: var(--attack); }
 
-    #bio { text-align: justify; }
-
-    .contact { margin: 1.2em 0 0; }
-
-    .item { margin: 0 0 1.1em; }
-    .item .name { font-weight: 600; }
-    .item .summary { margin: 0.1em 0 0.2em; }
-    .item .links { font-size: 0.92em; }
-    .date { color: #555555; }
-
-    footer {
-      margin-top: 3em;
-      font-size: 0.85em;
-      color: #555555;
-    }
+    .writing-empty { color: var(--text-dim); font-style: italic; }
+    .writing-item { margin: 0.6rem 0; }
+    .writing-summary { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.5; margin: 0.15rem 0 1rem; max-width: 580px; }
+    .writing-item a { text-decoration: none; color: var(--ink); }
+    .writing-item a:hover { color: var(--attack); }
+    .writing-date { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.78rem; margin-left: 0.6rem; }
   </style>
 </head>
 <body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/blog/">writing</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <main>
-    <h1>Chirag Dewan</h1>
-    <hr>
+  <div class="container">
 
-    <p id="bio">
-      Chirag Dewan is an AI security researcher focused on red teaming LLMs and
-      agents. He builds reproducible benchmarks and behavioral detection systems
-      for AI platforms: MCP-Poison-Bench, a tool-poisoning benchmark across six
-      models and three vendors; PARALLAX, metadata-only threat detection; and
-      KESTREL, cloud-workload anomaly detection with Sigma-exportable rules. His
-      background is in offensive security.
-    </p>
+    <header class="lead">
+      <p class="kicker">AI Security · Red Team</p>
+      <h1>Chirag Dewan</h1>
+      <p class="identity">AI security researcher, red teaming LLMs &amp; agents.</p>
+      <p class="identity sub">Offensive security background.</p>
+    </header>
 
-    <p class="contact">
-      <a href="mailto:chirag0728@gmail.com">chirag0728@gmail.com</a> ·
-      <a href="https://github.com/chirag-dewan">GitHub</a> ·
-      <a href="https://linkedin.com/in/cdewan">LinkedIn</a> ·
-      <a href="/Chirag_Dewan_Resume.pdf">Resume</a>
-    </p>
+    <section id="work">
+      <h2 class="sec-label">Selected work</h2>
 
-    <h2>Selected work</h2>
+      <div class="work-item">
+        <p class="work-item__meta">2026-06-01 → 2026-06-03</p>
+        <h3 class="work-item__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h3>
+        <p class="work-item__what">A reproducible MCP tool-poisoning benchmark across six models and three vendors.</p>
+        <p class="work-item__result">De-circularized the defense: the headline win was an artifact of shared vocabulary, and <code>rug_pull</code> bypasses it by design (<span class="broke">1.00 → 1.00</span>). Susceptibility tracks capability, not vendor.</p>
+        <p class="work-item__read"><a href="/projects/mcp-poison-bench.html">read →</a></p>
+      </div>
 
-    <div class="item">
-      <span class="name"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></span>
-      <span class="date">2026</span>
-      <p class="summary">A reproducible MCP tool-poisoning benchmark across six models and three vendors. Susceptibility tracks capability, not vendor.</p>
-      <p class="links"><a href="/projects/mcp-poison-bench.html">read</a> · <a href="/projects/mcp-poison-bench-demo.html">demo</a></p>
-    </div>
+      <div class="work-item">
+        <p class="work-item__meta">2026-02-25 → 2026-04-09</p>
+        <h3 class="work-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
+        <p class="work-item__what">Behavioral threat detection for AI platforms: metadata-only, no payload inspection.</p>
+        <p class="work-item__result">0.68 AUC on 17M real authentication events.</p>
+        <p class="work-item__read"><a href="/projects/parallax.html">read →</a></p>
+      </div>
 
-    <div class="item">
-      <span class="name"><a href="/projects/parallax.html">PARALLAX</a></span>
-      <span class="date">2026</span>
-      <p class="summary">Behavioral threat detection for AI platforms: metadata-only, no payload inspection. 0.68 AUC on 17M real authentication events.</p>
-      <p class="links"><a href="/projects/parallax.html">read</a> · <a href="/projects/parallax-demo.html">demo</a></p>
-    </div>
+      <div class="work-item">
+        <p class="work-item__meta">2026-04-08</p>
+        <h3 class="work-item__title"><a href="/projects/kestrel.html">KESTREL</a></h3>
+        <p class="work-item__what">Cloud-workload anomaly detection with Sigma-exportable detections.</p>
+        <p class="work-item__result">0.766 recall on 34K real CloudTrail events.</p>
+        <p class="work-item__read"><a href="/projects/kestrel.html">read →</a></p>
+      </div>
+    </section>
 
-    <div class="item">
-      <span class="name"><a href="/projects/kestrel.html">KESTREL</a></span>
-      <span class="date">2026</span>
-      <p class="summary">Cloud-workload anomaly detection with Sigma-exportable detections. 0.766 recall on 34K real CloudTrail events.</p>
-      <p class="links"><a href="/projects/kestrel.html">read</a> · <a href="/projects/kestrel-demo.html">demo</a></p>
-    </div>
+    <section id="writing">
+      <h2 class="sec-label">Writing</h2>
+      <div id="post-list" class="writing-list">
+        <p class="writing-item"><a href="/blog/ten-thousand-agents.html">Ten thousand agents, and none of them can tell a command from an attack</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-summary">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</p>
+        <p class="writing-item"><a href="/blog/autonomous-red-team.html">How I'd build an autonomous red team for AI agents</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-summary">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</p>
+      </div>
+    </section>
 
-    <h2>Writing</h2>
-
-    <div class="item">
-      <span class="name"><a href="/blog/ten-thousand-agents.html">Ten thousand agents, and none of them can tell a command from an attack</a></span>
-      <span class="date">2026-06-04</span>
-      <p class="summary">Prompt injection isn't a bug you patch. It's baked into how these models work, so the fix can't be a one-time audit. You need an attacker that never stops.</p>
-    </div>
-
-    <div class="item">
-      <span class="name"><a href="/blog/autonomous-red-team.html">How I'd build an autonomous red team for AI agents</a></span>
-      <span class="date">2026-06-04</span>
-      <p class="summary">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</p>
-    </div>
-
-    <footer>
-      © 2026 Chirag Dewan
-    </footer>
+  </div>
   </main>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag0728@gmail.com">email</a>
+      <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+    <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__push"></p>
+  </footer>
+
+  <script src="js/main.js" defer></script>
 </body>
 </html>
