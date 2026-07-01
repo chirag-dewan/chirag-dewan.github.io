@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chirag Dewan · Threat Console</title>
+<meta name="description" content="AI security researcher red teaming LLMs and agents. An operator's console view of the work: MCP-Poison-Bench, PARALLAX, KESTREL.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0A0B0E;          /* base, near-black with a blue undertone */
+    --panel:#111318;         /* raised surface */
+    --panel-2:#15171D;
+    --line:#23262E;          /* hairline */
+    --line-bright:#31353F;
+    --ink:#ECE7D9;           /* warm off-white, echoes the paper theme */
+    --ink-soft:#A7A79C;
+    --dim:#6C7079;
+    --faint:#4A4E57;
+
+    --atk:#F0555B;           /* adversary / red, the through-color */
+    --atk-glow:rgba(240,85,91,.45);
+    --held:#5FD3A3;          /* signal held / green phosphor */
+    --held-glow:rgba(95,211,163,.4);
+    --amber:#E9B44C;         /* memory / amber */
+    --cyan:#6FC1D6;          /* system / defensive */
+
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --disp:'Fraunces',Georgia,serif;
+    --body:'Source Serif 4',Georgia,serif;
+    --maxw:1080px;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;overflow-x:hidden}
+  body{
+    background:var(--void); color:var(--ink);
+    font-family:var(--body); font-size:17px; line-height:1.6;
+    min-height:100vh; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ---- layered background: drifting grid + breathing glow + scanlines ---- */
+  .bg{position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(1100px 620px at 78% -8%, rgba(240,85,91,.10), transparent 60%),
+      radial-gradient(900px 560px at 10% 108%, rgba(111,193,214,.07), transparent 60%),
+      var(--void);
+  }
+  .bg::before{content:""; position:absolute; inset:-2px;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:44px 44px; opacity:.35;
+    -webkit-mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 82%);
+            mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 82%);
+    animation:drift 90s linear infinite;
+  }
+  @keyframes drift{from{background-position:0 0,0 0}to{background-position:44px 88px,44px 88px}}
+  .scan{position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 3px);}
+
+  /* one-time signal sweep on load */
+  .sweep{position:fixed; left:0; right:0; top:0; height:180px; z-index:60; pointer-events:none;
+    background:linear-gradient(180deg, rgba(95,211,163,.10), rgba(95,211,163,0));
+    border-bottom:1px solid rgba(95,211,163,.35);
+    transform:translateY(-200px); animation:sweep 1.5s ease-in 1 forwards;}
+  @keyframes sweep{0%{transform:translateY(-200px)}100%{transform:translateY(120vh)}}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 clamp(18px,4vw,40px);}
+
+  /* ---- status bar ---- */
+  .status{position:sticky; top:0; z-index:50; backdrop-filter:blur(8px);
+    background:linear-gradient(180deg, rgba(10,11,14,.92), rgba(10,11,14,.68));
+    border-bottom:1px solid var(--line);}
+  .status__in{max-width:var(--maxw); margin:0 auto; padding:0 clamp(18px,4vw,40px);
+    height:46px; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim);}
+  .status__brand{color:var(--ink); font-weight:600; letter-spacing:.02em; text-transform:none; text-decoration:none; font-size:13px;}
+  .status__brand:hover{color:var(--atk)}
+  .status__mid{display:flex; align-items:center; gap:10px}
+  .led{width:7px; height:7px; border-radius:50%; background:var(--held);
+    box-shadow:0 0 8px var(--held-glow); animation:blink 2.4s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .status__nav{display:flex; gap:20px}
+  .status__nav a{color:var(--dim); text-decoration:none}
+  .status__nav a:hover{color:var(--atk)}
+  .clock{color:var(--ink-soft); font-variant-numeric:tabular-nums}
+  @media(max-width:640px){.status__mid{display:none}}
+
+  /* ---- reveal ---- */
+  .rise{opacity:0; transform:translateY(16px); animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes rise{to{opacity:1; transform:none}}
+
+  /* ---- hero ---- */
+  .hero{padding:clamp(48px,9vw,104px) 0 34px; display:grid; grid-template-columns:1.35fr .9fr; gap:clamp(24px,5vw,60px); align-items:end}
+  @media(max-width:820px){.hero{grid-template-columns:1fr; gap:34px}}
+  .kicker{font-family:var(--mono); font-size:12.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--atk); display:flex; align-items:center; gap:10px; margin-bottom:22px}
+  .kicker::before{content:"//"; color:var(--faint)}
+  .name{font-family:var(--disp); font-weight:600; font-size:clamp(3.4rem,11vw,6.6rem); line-height:.9; letter-spacing:-.03em; color:var(--ink)}
+  .cursor{display:inline-block; width:.36em; height:.86em; margin-left:.06em; background:var(--atk); box-shadow:0 0 12px var(--atk-glow); transform:translateY(.04em); animation:cur 1.05s steps(1) infinite}
+  @keyframes cur{0%,49%{opacity:1}50%,100%{opacity:0}}
+  .dek{font-family:var(--body); font-size:1.16rem; line-height:1.62; color:var(--ink-soft); max-width:40ch; margin-top:26px}
+  .dek b{color:var(--ink); font-weight:600}
+  .hero__links{display:flex; flex-wrap:wrap; gap:10px 12px; margin-top:30px}
+  .lk{font-family:var(--mono); font-size:12.5px; letter-spacing:.03em; color:var(--ink); text-decoration:none;
+    border:1px solid var(--line-bright); border-radius:5px; padding:9px 15px; background:var(--panel);
+    transition:border-color .16s, color .16s, box-shadow .16s, transform .16s}
+  .lk::before{content:"→ "; color:var(--atk)}
+  .lk:hover{border-color:var(--atk); color:#fff; box-shadow:0 0 0 1px var(--atk), 0 8px 30px -12px var(--atk-glow); transform:translateY(-1px)}
+  .lk.ghost{background:none}
+
+  /* telemetry panel */
+  .tele{border:1px solid var(--line); border-radius:10px; background:linear-gradient(180deg,var(--panel),var(--panel-2)); overflow:hidden}
+  .tele__hd{display:flex; align-items:center; justify-content:space-between; padding:11px 16px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+  .tele__hd .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 7px rgba(233,180,76,.5);display:inline-block;margin-right:7px}
+  .tele__grid{display:grid; grid-template-columns:1fr 1fr}
+  .tstat{padding:15px 16px; border-top:1px solid var(--line)}
+  .tstat:nth-child(-n+2){border-top:none}
+  .tstat:nth-child(odd){border-right:1px solid var(--line)}
+  .tstat__v{font-family:var(--mono); font-size:1.5rem; font-weight:500; color:var(--ink); line-height:1}
+  .tstat__k{font-family:var(--mono); font-size:10px; letter-spacing:.04em; color:var(--dim); margin-top:7px; line-height:1.4; text-transform:uppercase}
+  .tstat--wide{grid-column:1 / -1; display:flex; align-items:baseline; justify-content:space-between; border-right:none}
+  .tstat--wide .tstat__v{color:var(--held)}
+
+  /* ---- section head ---- */
+  .sec{margin-top:clamp(56px,10vw,104px)}
+  .sec__label{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan);
+    display:flex; align-items:center; gap:14px; padding-bottom:18px; border-bottom:1px solid var(--line); margin-bottom:6px}
+  .sec__label .idx{color:var(--faint)}
+  .sec__label .fill{flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent)}
+
+  /* ---- case files ---- */
+  .case{display:grid; grid-template-columns:64px 1fr auto; gap:0 22px; align-items:start;
+    padding:26px 4px 24px; border-bottom:1px solid var(--line); text-decoration:none; color:inherit; position:relative;
+    transition:background .18s}
+  .case::before{content:""; position:absolute; left:-20px; right:-20px; top:0; bottom:0; z-index:-1;
+    background:linear-gradient(90deg, rgba(240,85,91,.08), transparent 70%); opacity:0; transition:opacity .2s}
+  .case:hover::before{opacity:1}
+  .case:hover .case__name{color:#fff}
+  .case:hover .case__no{color:var(--atk); border-color:var(--atk)}
+  .case__no{font-family:var(--mono); font-size:13px; color:var(--dim); border:1px solid var(--line-bright); border-radius:5px;
+    width:46px; height:30px; display:flex; align-items:center; justify-content:center; transition:color .18s,border-color .18s}
+  .case__body{min-width:0}
+  .case__top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:9px}
+  .case__name{font-family:var(--disp); font-size:1.7rem; font-weight:600; letter-spacing:-.02em; color:var(--ink); line-height:1; transition:color .18s}
+  .case__what{color:var(--ink-soft); font-size:1.02rem; line-height:1.5; max-width:62ch}
+  .case__what .mono{font-family:var(--mono); font-size:.86em; color:var(--ink)}
+  .case__tags{margin-top:12px; font-family:var(--mono); font-size:11px; letter-spacing:.02em; color:var(--dim)}
+  .case__tags span:not(:last-child)::after{content:"·"; color:var(--faint); margin:0 7px}
+  .case__side{text-align:right; white-space:nowrap; font-family:var(--mono)}
+  @media(max-width:720px){
+    .case{grid-template-columns:44px 1fr; gap:0 16px}
+    .case__side{grid-column:2; text-align:left; margin-top:14px; white-space:normal}
+    .case__no{width:36px;height:26px;font-size:12px}
+  }
+
+  .verdict{display:inline-flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 10px; border-radius:5px; border:1px solid}
+  .verdict .vled{width:7px;height:7px;border-radius:50%}
+  .verdict--broke{color:var(--atk); border-color:rgba(240,85,91,.4); background:rgba(240,85,91,.07)}
+  .verdict--broke .vled{background:var(--atk); box-shadow:0 0 8px var(--atk-glow); animation:blink 1.6s ease-in-out infinite}
+  .verdict--held{color:var(--held); border-color:rgba(95,211,163,.4); background:rgba(95,211,163,.07)}
+  .verdict--held .vled{background:var(--held); box-shadow:0 0 8px var(--held-glow)}
+  .verdict--live{color:var(--amber); border-color:rgba(233,180,76,.4); background:rgba(233,180,76,.07)}
+  .verdict--live .vled{background:var(--amber); box-shadow:0 0 8px rgba(233,180,76,.5)}
+  .metric{display:block; margin-top:12px; font-size:15px; color:var(--ink-soft)}
+  .metric b{color:var(--ink); font-weight:500}
+  .metric .up{color:var(--held)} .metric .down{color:var(--atk)}
+
+  /* ---- writing ---- */
+  .post{display:block; text-decoration:none; color:inherit; padding:22px 4px; border-bottom:1px solid var(--line); transition:padding-left .18s}
+  .post:hover{padding-left:14px}
+  .post:hover .post__t{color:#fff}
+  .post__m{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--dim); margin-bottom:8px}
+  .post__m .part{color:var(--amber)}
+  .post__t{font-family:var(--disp); font-size:1.32rem; font-weight:600; letter-spacing:-.015em; color:var(--ink); line-height:1.2; transition:color .18s}
+  .post__d{color:var(--ink-soft); font-size:1rem; line-height:1.5; margin-top:8px; max-width:66ch}
+
+  /* ---- terminal footer ---- */
+  .term{margin-top:clamp(56px,10vw,100px); border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel)}
+  .term__bar{display:flex; align-items:center; gap:8px; padding:11px 15px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:11px; color:var(--dim); letter-spacing:.1em; text-transform:uppercase}
+  .term__bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .term__bar .r{background:#39303199}.term__bar .y{background:#3a352499}.term__bar .g{background:#25352b99}
+  .term__body{padding:20px 18px 22px; font-family:var(--mono); font-size:13.5px; line-height:1.9; color:var(--ink-soft)}
+  .term__body .pr{color:var(--held)} .term__body .cm{color:var(--dim)}
+  .term__body .out{color:var(--ink)}
+  .type::after{content:"▊"; color:var(--atk); animation:cur 1.05s steps(1) infinite; margin-left:2px}
+
+  footer.foot{padding:34px 0 60px; display:flex; flex-wrap:wrap; gap:14px 26px; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:12px; color:var(--dim); border-top:1px solid var(--line); margin-top:26px}
+  footer.foot a{color:var(--ink-soft); text-decoration:none} footer.foot a:hover{color:var(--atk)}
+  footer.foot .links{display:flex; gap:18px}
+
+  a:focus-visible,.lk:focus-visible,.case:focus-visible{outline:2px solid var(--atk); outline-offset:3px; border-radius:4px}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important}
+    .rise{opacity:1; transform:none}
+    .sweep,.cursor,.led,.vled{display:none}
+  }
+</style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="scan" aria-hidden="true"></div>
+  <div class="sweep" aria-hidden="true"></div>
+
+  <header class="status">
+    <div class="status__in">
+      <a href="/" class="status__brand">cdewan</a>
+      <div class="status__mid"><span class="led"></span> signal: active <span class="clock" id="clock">--:--:-- UTC</span></div>
+      <nav class="status__nav">
+        <a href="/projects/">projects</a>
+        <a href="/blog/">writing</a>
+        <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <section class="hero">
+      <div>
+        <p class="kicker rise" style="animation-delay:.05s">AI Security · Red Team</p>
+        <h1 class="name rise" style="animation-delay:.12s">Chirag Dewan<span class="cursor" aria-hidden="true"></span></h1>
+        <p class="dek rise" style="animation-delay:.22s">AI security researcher, red teaming LLMs and agents. I build detectors, benchmark them on real data, then publish exactly where they break. <b>Every case below ships with its failure mode.</b></p>
+        <div class="hero__links rise" style="animation-delay:.3s">
+          <a class="lk" href="/projects/">case files</a>
+          <a class="lk ghost" href="/blog/">writing</a>
+          <a class="lk ghost" href="https://github.com/chirag-dewan">github</a>
+        </div>
+      </div>
+
+      <aside class="tele rise" style="animation-delay:.36s" aria-label="Telemetry">
+        <div class="tele__hd"><span><span class="dot"></span>telemetry</span><span>real data only</span></div>
+        <div class="tele__grid">
+          <div class="tstat"><div class="tstat__v" data-decode>16.9M</div><div class="tstat__k">auth events scored</div></div>
+          <div class="tstat"><div class="tstat__v" data-decode>34,427</div><div class="tstat__k">cloudtrail events</div></div>
+          <div class="tstat"><div class="tstat__v" data-decode>6×3</div><div class="tstat__k">models × vendors</div></div>
+          <div class="tstat"><div class="tstat__v" data-decode>~2.5K</div><div class="tstat__k">injection trials</div></div>
+          <div class="tstat tstat--wide"><div class="tstat__v" data-decode>L2–L7</div><div class="tstat__k">gandalf ctf cleared</div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="sec" id="work">
+      <p class="sec__label rise"><span class="idx">01</span> Selected work <span class="fill"></span> case files</p>
+
+      <a class="case" href="/projects/mcp-poison-bench.html">
+        <span class="case__no">01</span>
+        <div class="case__body">
+          <div class="case__top">
+            <span class="case__name">MCP-Poison-Bench</span>
+            <span class="verdict verdict--broke"><span class="vled"></span>defense bypassed</span>
+          </div>
+          <p class="case__what">A de-circularized MCP tool-poisoning benchmark: 4 injection classes × 6 models × 3 vendors, scored with Wilson intervals. The headline defense win was an artifact of shared vocabulary.</p>
+          <p class="case__tags"><span>Python 3.14</span><span>MCP SDK</span><span>Prompt Injection</span><span>Wilson CIs</span></p>
+        </div>
+        <div class="case__side">
+          <span class="metric"><span class="mono" style="color:var(--dim)">rug_pull</span> <span class="down" data-decode>1.00 → 1.00</span></span>
+        </div>
+      </a>
+
+      <a class="case" href="/projects/parallax.html">
+        <span class="case__no">02</span>
+        <div class="case__body">
+          <div class="case__top">
+            <span class="case__name">PARALLAX</span>
+            <span class="verdict verdict--held"><span class="vled"></span>signal recovered</span>
+          </div>
+          <p class="case__what">Metadata-only behavioral detection of model-extraction abuse. A 14-feature bank scored worse than chance on 16.9M real auth events; subtracting the memorized features recovered it.</p>
+          <p class="case__tags"><span>Anomaly Detection</span><span>Metadata-Only</span><span>LANL Auth</span></p>
+        </div>
+        <div class="case__side">
+          <span class="metric">AUC <span class="down" data-decode>0.45</span> → <span class="up" data-decode>0.68</span></span>
+        </div>
+      </a>
+
+      <a class="case" href="/projects/kestrel.html">
+        <span class="case__no">03</span>
+        <div class="case__body">
+          <div class="case__top">
+            <span class="case__name">KESTREL</span>
+            <span class="verdict verdict--held"><span class="vled"></span>re-aimed</span>
+          </div>
+          <p class="case__what">Cloud-workload anomaly detection, per-account z-score baselines, MITRE ATLAS-tagged and Sigma-exportable. v1 hunted GPU telemetry in an API audit log; re-aiming lifted recall 1,532x.</p>
+          <p class="case__tags"><span>CloudTrail</span><span>MITRE ATLAS</span><span>Sigma Export</span></p>
+        </div>
+        <div class="case__side">
+          <span class="metric">recall <span class="down" data-decode>0.0005</span> → <span class="up" data-decode>0.766</span></span>
+        </div>
+      </a>
+
+      <a class="case" href="/projects/ai-security.html">
+        <span class="case__no">04</span>
+        <div class="case__body">
+          <div class="case__top">
+            <span class="case__name">CTF Records</span>
+            <span class="verdict verdict--live"><span class="vled"></span>ongoing</span>
+          </div>
+          <p class="case__what">A running prompt-injection CTF log, each solve mapped to the guardrail it defeats and its OWASP LLM / MITRE ATLAS category. As defenses layer, the working technique escalates.</p>
+          <p class="case__tags"><span>OWASP LLM01</span><span>ATLAS AML.T0051</span><span>Gandalf</span></p>
+        </div>
+        <div class="case__side">
+          <span class="metric"><span class="mono" data-decode>L2 → L7</span> cleared</span>
+        </div>
+      </a>
+
+      <a class="case" href="https://github.com/chirag-dewan">
+        <span class="case__no">05</span>
+        <div class="case__body">
+          <div class="case__top">
+            <span class="case__name">ReconAI</span>
+            <span class="verdict verdict--live"><span class="vled"></span>active</span>
+          </div>
+          <p class="case__what">LLM-prioritized attack-surface triage: BBOT enumerates breadth-first, then a model ranks the assets by exploitability so the operator works the highest-value target first.</p>
+          <p class="case__tags"><span>GPT-4</span><span>BBOT</span><span>OSINT</span></p>
+        </div>
+        <div class="case__side">
+          <span class="metric" style="color:var(--dim)">triage tooling</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="sec" id="writing">
+      <p class="sec__label rise"><span class="idx">02</span> Writing <span class="fill"></span> the continuous adversary</p>
+      <a class="post" href="/blog/ten-thousand-agents.html">
+        <p class="post__m"><span class="part">Part 1</span> · 2026-06-04 · 4 min</p>
+        <p class="post__t">Ten thousand agents, and none of them can tell a command from an attack</p>
+        <p class="post__d">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</p>
+      </a>
+      <a class="post" href="/blog/autonomous-red-team.html">
+        <p class="post__m"><span class="part">Part 2</span> · 2026-06-04 · 6 min</p>
+        <p class="post__t">How I'd build an autonomous red team for AI agents</p>
+        <p class="post__d">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</p>
+      </a>
+    </section>
+
+    <section class="term" aria-label="Console">
+      <div class="term__bar"><i class="r"></i><i class="y"></i><i class="g"></i> operator@cdewan · ~/threat-console</div>
+      <div class="term__body">
+        <div><span class="pr">$</span> whoami <span class="cm">--role</span></div>
+        <div class="out">ai_security_researcher · offensive background · builds the tripwire, then defeats it</div>
+        <div style="margin-top:10px"><span class="pr">$</span> cat ./principle.txt</div>
+        <div class="out type" id="typeline"></div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="links">
+        <a href="https://github.com/chirag-dewan">github</a>
+        <a href="https://linkedin.com/in/cdewan">linkedin</a>
+        <a href="mailto:chirag0728@gmail.com">email</a>
+        <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+      </div>
+      <div>© 2026 Chirag Dewan · <span style="color:var(--faint)">threat console theme</span></div>
+    </footer>
+
+  </div>
+
+<script>
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // live UTC clock
+    var clock = document.getElementById('clock');
+    function tick(){
+      var d = new Date();
+      var p = function(n){return String(n).padStart(2,'0')};
+      clock.textContent = p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC';
+    }
+    tick(); setInterval(tick, 1000);
+
+    // typed principle line
+    var line = "see the pattern, not the content.";
+    var el = document.getElementById('typeline');
+    if (reduce){ el.textContent = line; el.classList.remove('type'); }
+    else {
+      var i = 0;
+      (function typ(){
+        if (i <= line.length){ el.textContent = line.slice(0,i++); setTimeout(typ, 45); }
+        else { setTimeout(function(){ el.classList.remove('type'); }, 1200); }
+      })();
+    }
+
+    // scramble-decode on scroll-in
+    if (!reduce && 'IntersectionObserver' in window){
+      var CH = 'ABCDEF0123456789/#<>*';
+      var io = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          if(!e.isIntersecting) return;
+          io.unobserve(e.target);
+          var node = e.target, final = node.getAttribute('data-decode') || node.textContent, len = final.length, f = 0, steps = 12;
+          var iv = setInterval(function(){
+            var out = '';
+            for (var k=0;k<len;k++){
+              if (final[k] === ' ' || final[k] === '→'){ out += final[k]; continue; }
+              out += (k < (f/steps)*len) ? final[k] : CH[Math.floor(Math.random()*CH.length)];
+            }
+            node.textContent = out;
+            if (++f > steps){ clearInterval(iv); node.textContent = final; }
+          }, 34);
+        });
+      }, {threshold:.6});
+      document.querySelectorAll('[data-decode]').forEach(function(n){ n.setAttribute('data-decode', n.textContent.trim()); io.observe(n); });
+    }
+  })();
+</script>
+</body>
+</html>
