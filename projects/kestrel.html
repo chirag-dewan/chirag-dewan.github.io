@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KESTREL: Cloud AI Workload Anomaly Detection</title>
-  <meta name="description" content="Z-score baselining engine. 0.766 recall on 34K real CloudTrail events.">
+  <title>KESTREL · Cloud AI Workload Anomaly Detection</title>
+  <meta name="description" content="Per-account z-score baselining for cloud-workload attacks. Recall 0.0005 to 0.766 at precision 1.0 on 34,427 real CloudTrail events, by meeting the data where it lives.">
   <link rel="canonical" href="https://www.cdewan.me/projects/kestrel.html">
-  <meta property="og:title" content="KESTREL: Cloud AI Workload Anomaly Detection">
-  <meta property="og:description" content="Z-score baselining engine. 0.766 recall on 34K real CloudTrail events.">
+  <meta property="og:title" content="KESTREL · Cloud AI Workload Anomaly Detection">
+  <meta property="og:description" content="Z-score baselining engine. Recall 0.0005 to 0.766 at precision 1.0 on 34K real CloudTrail events.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/projects/kestrel.html">
   <meta property="og:image" content="https://www.cdewan.me/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="KESTREL: Cloud-Native AI Workload Anomaly Detection">
-  <meta name="twitter:description" content="3 detectors, 34K real CloudTrail events, 220 findings. Diagnosed the impedance mismatch, then fixed it.">
+  <meta name="twitter:title" content="KESTREL · Cloud-Native AI Workload Anomaly Detection">
+  <meta name="twitter:description" content="34K real CloudTrail events. Diagnosed the instrument-to-data mismatch, then fixed it: recall up 1,532x at precision 1.0.">
   <meta name="twitter:image" content="https://www.cdewan.me/og-image.png">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -36,57 +36,69 @@
 
   <main>
   <article class="container">
-    <!-- Hero Section -->
+
+    <p class="crumb"><span class="crumb__no">case file 03</span><span class="sep">·</span><a href="/projects/">projects</a><span class="sep">·</span>infrastructure defense</p>
+
     <section class="kestrel-hero">
       <div class="kestrel-hero__content">
         <h1 class="kestrel-title">KESTREL</h1>
         <p class="kestrel-subtitle">Unsupervised anomaly detection for cloud-workload attacks: per-account z-score baselining with no labels and no fixed thresholds, MITRE ATLAS-tagged and Sigma-exportable. v1 hunted GPU telemetry the logs did not contain and scored 0.0005 recall on 34,427 real CloudTrail events; re-targeting to the API-audit signal that was actually present lifted recall to 0.766 at precision 1.0.</p>
-
-        <div class="kestrel-ascii">
-    ╭─────────────────────────────────────────╮
-    │  ◆ CLOUD WORKLOAD ANOMALY DETECTION ◆  │
-    │ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ │
-    │ █████████████████████████████████████ │
-    │ ⚡ z_score.baseline = <span style="color: var(--text);">ROLLING</span>       │
-    │ 🔍 gpu_telemetry = <span style="color: var(--text-muted);">MONITORED</span>        │
-    ╰─────────────────────────────────────────╯
-        </div>
       </div>
     </section>
 
-    <!-- Development Arc Timeline -->
-    <div class="arc-timeline">
-      <div class="arc-flow">
-        <span class="arc-step complete">origin</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step complete">thesis</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step complete">build</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step fail">v1 failure</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step complete">diagnosis</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step complete">v2 fix</span>
-        <span class="arc-arrow">→</span>
-        <span class="arc-step current">results</span>
+    <div class="meta-row">
+      <span class="date">2026-04-08</span><span class="sep">·</span>
+      <span class="status">v2, real-data validated</span><span class="sep">·</span>
+      <span>Python · Flask · SQLite</span><span class="sep">·</span>
+      <a href="kestrel-demo.html">live demo</a><span class="sep">·</span>
+      <a href="https://github.com/chirag-dewan/kestrel">source</a>
+    </div>
+
+    <aside class="verdict" data-reveal>
+      <span class="verdict__tab">verdict</span>
+      <p>Perfect precision, wrong target: v1 hunted GPU telemetry in a stream that was 99.98% API calls. Meeting the data where it lives lifted recall <b>1,532x at precision 1.0.</b></p>
+    </aside>
+
+    <div class="story-section" data-reveal>
+      <h2><span class="hnum">00</span>At a glance</h2>
+      <div class="arc3">
+        <div class="arc3__phase">
+          <div class="arc3__k">build</div>
+          <div class="arc3__t">3 workload detectors, self-referential baselines</div>
+          <div class="arc3__d">GPU hijacking, rogue training, cloud-API abuse. No labels, no fixed thresholds, per-account z-scores.</div>
+          <div class="arc3__r"><span class="held">synthetic: clean</span></div>
+        </div>
+        <div class="arc3__arrow">→</div>
+        <div class="arc3__phase">
+          <div class="arc3__k">measure</div>
+          <div class="arc3__t">34,427 real CloudTrail events</div>
+          <div class="arc3__d">2,167 genuine attack events in the stream. v1 caught exactly one of them.</div>
+          <div class="arc3__r"><span class="broke">recall 0.0005</span></div>
+        </div>
+        <div class="arc3__arrow">→</div>
+        <div class="arc3__phase">
+          <div class="arc3__k">fix</div>
+          <div class="arc3__t">re-aim at the signal present</div>
+          <div class="arc3__d">Same engine, new features: API burst rate, cross-region fan-out, off-hours spikes, access-denied walls.</div>
+          <div class="arc3__r"><span class="held">recall 0.766 · precision 1.0</span></div>
+        </div>
       </div>
     </div>
 
     <div class="post-content">
 
-      <div class="story-section">
-        <h2>The problem: attacks at the infrastructure layer</h2>
-        <p>PARALLAX watches what users do to an AI platform; KESTREL watches the machines underneath it. GPU clusters hijacked for mining, a rogue training job burning compute on a stolen account for days, a recon tool enumerating permissions across every region at 2 a.m. None of that surfaces in application behavior. It surfaces in the cloud control plane's own audit logs, which is where KESTREL looks.</p>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">01</span>The problem: attacks at the infrastructure layer</h2>
+        <p class="dropcap">PARALLAX watches what users do to an AI platform; KESTREL watches the machines underneath it. GPU clusters hijacked for mining, a rogue training job burning compute on a stolen account for days, a recon tool enumerating permissions across every region at 2 a.m. None of that surfaces in application behavior. It surfaces in the cloud control plane's own audit logs, which is where KESTREL looks.</p>
       </div>
 
-      <div class="story-section">
-        <h2>The approach: self-referential baselines</h2>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">02</span>The approach: self-referential baselines</h2>
         <p>The detector is unsupervised and self-referential. For each account it builds a rolling per-feature baseline and flags activity that deviates beyond a z-score threshold from that account's own history. No labeled training data and no global fixed thresholds, so a small account and a large one are each judged against themselves rather than against a one-size cutoff. Every finding is tagged with the relevant MITRE ATLAS technique and exports directly to Sigma rules a SIEM can ingest.</p>
       </div>
 
-      <div class="story-section">
-        <h2>v1: three workload detectors</h2>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">03</span>v1: three workload detectors</h2>
         <p>The first build shipped three detectors aimed at compute-layer abuse:</p>
         <div class="detector-grid">
           <div class="detector-item"><div class="detector-name">GPU hijacking</div><div class="detector-desc">utilization and power-draw anomalies signalling unauthorized compute use.</div></div>
@@ -96,23 +108,27 @@
         <p>On synthetic data it performed cleanly, which with anomaly detectors is a warning sign rather than a result.</p>
       </div>
 
-      <div class="story-section">
-        <h2>The reality check: precision 1.0, recall 0.0005</h2>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">04</span>The reality check: precision 1.0, recall 0.0005</h2>
         <div class="metric-grid">
           <div class="metric-card"><div class="metric-value">34,427</div><div class="metric-label">real CloudTrail events, 2,167 of them attacks</div></div>
           <div class="metric-card"><div class="metric-value">1.0</div><div class="metric-label">v1 precision: zero false positives</div></div>
           <div class="metric-card"><div class="metric-value">0.0005</div><div class="metric-label">v1 recall: 1 of 2,167 attack events caught</div></div>
         </div>
-        <p>Run against 34,427 real CloudTrail events containing genuine attacks (IAM enumeration, privilege escalation, recon scanning), v1 hit perfect precision and near-zero recall. Flawless aim, wrong target.</p>
+        <p>Run against 34,427 real CloudTrail events containing genuine attacks (IAM enumeration, privilege escalation, recon scanning), v1 hit perfect precision and near-zero recall.</p>
+        <aside class="pull">
+          <p>Flawless aim, wrong target.</p>
+          <cite>the v1 post-mortem, in four words</cite>
+        </aside>
       </div>
 
-      <div class="story-section">
-        <h2>The diagnosis: an instrument-to-data mismatch</h2>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">05</span>The diagnosis: an instrument-to-data mismatch</h2>
         <p>The detectors were built for GPU telemetry: utilization, power draw, training durations. CloudTrail is an API audit log. <strong>99.98% of the events were API calls and exactly zero were GPU metrics.</strong> The instrument was sound but pointed at data that was not in the stream. Tellingly, the baseline engine itself had already noticed the attacker scanning at off-hours; nothing in v1 was wired to listen to that signal.</p>
       </div>
 
-      <div class="story-section">
-        <h2>v2: detect the signal that is actually present</h2>
+      <div class="story-section" data-reveal>
+        <h2><span class="hnum">06</span>v2: detect the signal that is actually present</h2>
         <div class="metric-grid">
           <div class="metric-card"><div class="metric-value">0.766</div><div class="metric-label">v2 recall, up from 0.0005</div></div>
           <div class="metric-card"><div class="metric-value">1,532x</div><div class="metric-label">recall improvement, precision held at 1.0</div></div>
@@ -123,23 +139,20 @@
 
     </div>
 
-    <div class="cta-section">
-      <h3 style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0.8rem; font-weight: 600;">Explore the detection engine</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0;">Test the z-score baseline anomaly detection or dive into the CloudTrail processing pipeline.</p>
-
+    <div class="cta-section" data-reveal>
+      <h3>Go deeper</h3>
       <div class="cta-links">
-        <a href="kestrel-demo.html" class="cta-link">
-          <span>→</span> live demo
-        </a>
-        <a href="https://github.com/chirag-dewan/kestrel" class="cta-link">
-          <span>⚡</span> source
-        </a>
+        <a href="kestrel-demo.html" class="cta-link"><span>→</span> live demo: the baselining engine</a>
+        <a href="https://github.com/chirag-dewan/kestrel" class="cta-link"><span>→</span> source</a>
       </div>
     </div>
 
-    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-      <a href="/projects/" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">← back to projects</a>
-    </div>
+    <nav class="pn" aria-label="Project navigation">
+      <a href="parallax.html"><span class="pn__k">← previous case</span><span>PARALLAX</span></a>
+      <a class="pn__idx" href="/projects/">all projects</a>
+      <a class="pn__next" href="ai-security.html"><span class="pn__k">next case →</span><span>CTF Records</span></a>
+    </nav>
+
   </article>
   </main>
 
@@ -151,7 +164,8 @@
       <a href="/Chirag_Dewan_Resume.pdf">resume</a>
     </div>
     <p>© 2026 Chirag Dewan</p>
-    <p class="footer__tagline">> see the pattern, not the content.</p>
+    <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__colo">set in Fraunces, Source Serif 4 &amp; JetBrains Mono · hand-built, no frameworks</p>
     <p class="footer__push"></p>
   </footer>
 

@@ -96,9 +96,9 @@ pre code { background: none; padding: 0; }
 ::selection { background: rgba(155, 44, 44, 0.14); }
 hr { border: none; border-top: 1px solid var(--rule); margin: var(--s-6) 0; }
 
-/* ---- Navigation ---- */
+/* ---- Navigation (masthead: nameplate over a double press rule) ---- */
 .nav { padding: var(--s-5) 0 0; margin-bottom: var(--s-6); }
-.nav__inner { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--s-5); display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); }
+.nav__inner { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--s-5) var(--s-3); display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); border-bottom: 3px double var(--border-bright); }
 .nav__home { color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; }
 .nav__home:hover { color: var(--attack); }
 .nav__links { display: flex; gap: var(--s-5); list-style: none; }
@@ -265,4 +265,136 @@ body::after, body::before {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ============================================
+   Dossier layer, editorial components shared across pages.
+   Case-file numbering, ledger strips, verdicts, pull-quotes,
+   the work rail, and the colophon footer.
+   ============================================ */
+
+/* Accessible focus for keyboard readers */
+:focus-visible { outline: 2px solid var(--attack); outline-offset: 3px; border-radius: 1px; }
+
+/* ---- Breadcrumb over a page title: case number + register ---- */
+.crumb { font-family: var(--font-mono); font-size: var(--t-mono-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); margin: var(--s-2) 0 var(--s-4); }
+.crumb a { color: var(--text-dim); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.crumb a:hover { color: var(--attack); border-color: var(--attack); }
+.crumb .crumb__no { color: var(--attack); font-weight: 600; }
+.crumb .sep { color: var(--border-bright); margin: 0 0.5em; }
+
+/* ---- Meta row under a title: dates · status · stack, one mono line ---- */
+.meta-row { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.02em; color: var(--ink-soft); margin: var(--s-4) 0 0; padding-bottom: var(--s-4); border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: 0.35rem 0; max-width: var(--measure); }
+.meta-row .date { color: var(--slate); }
+.meta-row .status { color: var(--mem); }
+.meta-row .sep { color: var(--border-bright); margin: 0 0.55rem; }
+.meta-row a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.meta-row a:hover { border-color: var(--attack); }
+
+/* ---- Ledger: a strip of the numbers behind the work ---- */
+.ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: var(--s-4) var(--s-5); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: var(--s-4) 0; margin: var(--s-6) 0; }
+.ledger__item { border-left: 2px solid var(--rule); padding-left: var(--s-3); }
+.ledger__v { font-family: var(--font-mono); font-size: 1.18rem; font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.ledger__k { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.03em; line-height: 1.45; margin-top: 2px; }
+
+/* ---- Verdict: the one-line finding, set like a stamped note ---- */
+.verdict { position: relative; border: 1px solid var(--rule); border-left: 3px solid var(--attack); background: var(--paper-2); border-radius: 0 4px 4px 0; padding: var(--s-4) var(--s-5) var(--s-4) var(--s-5); margin: var(--s-6) 0; max-width: var(--measure); }
+.verdict__tab { position: absolute; top: -0.62rem; left: var(--s-4); background: var(--paper-2); border: 1px solid var(--rule); border-radius: 2px; padding: 0.05rem 0.5rem; font-family: var(--font-mono); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--attack); }
+.verdict p { font-family: var(--font-body); font-size: 1.02rem; font-style: italic; color: var(--ink); line-height: 1.55; margin: 0; }
+.verdict p b, .verdict p strong { font-style: normal; }
+.verdict--slate { border-left-color: var(--slate); }
+.verdict--slate .verdict__tab { color: var(--slate); }
+
+/* ---- Pull-quote: the sentence the piece hangs on ---- */
+.pull { border: none; margin: var(--s-6) 0; padding: 0 0 0 var(--s-5); border-left: 3px solid var(--attack); max-width: var(--measure); }
+.pull p { font-family: var(--font-display); font-size: 1.45rem; font-weight: 500; font-style: italic; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); margin: 0; }
+.pull cite { display: block; margin-top: var(--s-2); font-family: var(--font-mono); font-size: 0.72rem; font-style: normal; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+
+/* ---- Numbered section heads: 01 / 02 / 03 in the margin of the title ---- */
+.story-section h2 .hnum, .sec-label .hnum { font-family: var(--font-mono); font-size: 0.72em; font-weight: 500; color: var(--attack); letter-spacing: 0.06em; margin-right: 0.65rem; font-variant-numeric: tabular-nums; }
+.sec-label .hnum { font-size: 1em; }
+
+/* ---- Drop cap for narrative openings ---- */
+.dropcap::first-letter { font-family: var(--font-display); font-weight: 600; font-size: 3.05em; line-height: 0.82; float: left; padding: 0.08em 0.12em 0 0; color: var(--ink); }
+
+/* ---- Work rail: dated entries hung on a timeline ---- */
+.work-rail { position: relative; margin-top: var(--s-5); padding-left: var(--s-5); border-left: 1px solid var(--border-bright); }
+.rail-item { position: relative; padding: 0 0 var(--s-6); }
+.rail-item:last-child { padding-bottom: var(--s-2); }
+.rail-item::before { content: ''; position: absolute; left: calc(-1 * var(--s-5) - 4.5px); top: 0.42rem; width: 8px; height: 8px; border-radius: 50%; background: var(--paper); border: 2px solid var(--attack); }
+.rail-item--held::before { border-color: var(--held); }
+.rail-item__meta { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.03em; color: var(--text-dim); margin-bottom: 0.35rem; }
+.rail-item__meta .status { color: var(--mem); }
+.rail-item__title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.15; margin-bottom: 0.35rem; }
+.rail-item__title a { color: var(--ink); text-decoration: none; transition: color 0.15s; }
+.rail-item__title a:hover { color: var(--attack); }
+.rail-item__what { color: var(--ink); margin-bottom: 0.3rem; }
+.rail-item__result { color: var(--ink-soft); font-size: 0.97rem; }
+.rail-item__result .held { color: var(--held); font-weight: 600; }
+.rail-item__result .broke { color: var(--broke); font-weight: 600; }
+.rail-item__tags { margin-top: var(--s-3); }
+
+/* ---- Card meta + link rows (canonical; formerly duplicated inline) ---- */
+.card-meta { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--ink-soft); margin-bottom: 0.5rem; }
+.card-meta .no { color: var(--attack); font-weight: 600; margin-right: 0.55rem; }
+.card-meta .date { color: var(--slate); }
+.card-meta .sep { color: var(--text-dim); margin: 0 0.45rem; }
+.card-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin-top: var(--s-3); }
+.card-links .project-card__link { margin: 0; }
+.card-evidence { font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; margin-bottom: var(--s-3); }
+.card-evidence .broke { color: var(--broke); font-weight: 600; }
+.card-evidence .held { color: var(--held); font-weight: 600; }
+
+/* ---- Intro dek shared by index pages ---- */
+.dek { font-family: var(--font-body); font-size: 1.12rem; color: var(--ink-soft); line-height: 1.6; max-width: 600px; margin-bottom: var(--s-5); font-style: italic; }
+
+/* ---- Chips: OWASP / ATLAS mappings and small facts ---- */
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); margin: var(--s-4) 0; }
+.chip { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; color: var(--slate); border: 1px solid var(--rule); border-radius: 3px; padding: 0.18rem 0.55rem; background: var(--paper-2); white-space: nowrap; }
+.chip--red { color: var(--attack); }
+.chip--amber { color: var(--mem); }
+
+/* ---- Prev / next: turn the page ---- */
+.pn { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-4); border-top: 1px solid var(--rule); margin-top: var(--s-7); padding-top: var(--s-5); font-family: var(--font-mono); font-size: 0.8rem; }
+.pn a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.pn a:hover { border-color: var(--attack); }
+.pn .pn__idx { color: var(--ink-soft); }
+.pn .pn__k { display: block; font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+.pn > * { border: none; }
+.pn a span { border-bottom: 1px solid var(--rule); }
+.pn a:hover span { border-color: var(--attack); }
+.pn .pn__next { text-align: right; }
+
+/* ---- Table niceties ---- */
+.table-scroll { overflow-x: auto; max-width: 100%; }
+.results tbody tr { transition: background 0.12s; }
+.results tbody tr:hover { background: rgba(155, 44, 44, 0.035); }
+
+/* ---- CTF raw solve log: a terminal transcript on paper ---- */
+.ctf-log { background: var(--paper-2); border: 1px solid var(--rule); border-left: 3px solid var(--slate); border-radius: 0 4px 4px 0; padding: var(--s-4) var(--s-5); margin: var(--s-5) 0; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.85; color: var(--ink); overflow-x: auto; }
+.ctf-log .lvl { color: var(--slate); font-weight: 600; }
+.ctf-log .arrow { color: var(--text-dim); }
+.ctf-log .win { color: var(--held); font-weight: 600; }
+
+/* ---- Escalation ladder: level → defense added → working bypass ---- */
+.ladder .results th, .ladder .results td { white-space: normal; vertical-align: top; padding-right: var(--s-5); }
+.ladder .results tbody th { color: var(--attack); font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+.ladder .lvl-def { color: var(--ink-soft); }
+
+/* ---- Footer colophon line ---- */
+.footer__colo { color: var(--text-dim); font-size: 0.7rem; margin-top: var(--s-2); }
+.footer__colo a { border-bottom: none; }
+
+/* ---- Scroll reveal (state applied by JS only, so no-JS renders fully) ---- */
+.reveal-pending { opacity: 0; transform: translateY(14px); }
+.reveal-in { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
+
+/* ---- Dossier responsive ---- */
+@media (max-width: 640px) {
+  .work-rail { padding-left: var(--s-4); }
+  .rail-item::before { left: calc(-1 * var(--s-4) - 4.5px); }
+  .pull p { font-size: 1.22rem; }
+  .ledger { grid-template-columns: repeat(2, 1fr); }
+  .pn { flex-direction: column; }
+  .pn .pn__next { text-align: left; }
 }

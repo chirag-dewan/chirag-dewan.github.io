@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects · Chirag Dewan</title>
-  <meta name="description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI. AI security research and tools.">
+  <meta name="description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI. AI security research and tools, each with its failure modes documented.">
   <link rel="canonical" href="https://www.cdewan.me/projects/">
   <meta property="og:title" content="Projects · Chirag Dewan">
   <meta property="og:description" content="MCP-Poison-Bench, PARALLAX, KESTREL, CTF Records, and ReconAI. AI security research and tools.">
@@ -21,18 +21,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/main.css">
-  <style>
-    /* Card skeleton shared with /blog: meta · status, name, summary, tags, links */
-    .post-meta {
-      font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em;
-      color: var(--ink-soft); margin-bottom: 0.5rem;
-    }
-    .post-meta .date { color: var(--slate); }
-    .post-meta .sep { color: var(--text-dim); margin: 0 0.45rem; }
-    .card-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin-top: var(--s-3); }
-    .card-links .project-card__link { margin: 0; }
-    .intro { font-size: 1.1rem; color: var(--ink-soft); line-height: 1.6; max-width: 580px; margin-bottom: 1.8rem; font-style: italic; }
-  </style>
 </head>
 <body>
   <nav class="nav">
@@ -48,16 +36,16 @@
 
   <main>
   <div class="container">
+    <p class="crumb"><span class="crumb__no">the case files</span><span class="sep">·</span>five investigations</p>
     <h1 class="section-header"><span>Projects</span></h1>
 
-    <p class="intro">Five projects across AI-agent security research, offense, application defense, and infrastructure defense. The attack lives in the pattern, not the content.</p>
+    <p class="dek">Five projects across AI-agent security research, offense, application defense, and infrastructure defense. Each one is run the same way: build the honest instrument, measure on real data, publish where it breaks. The attack lives in the pattern, not the content.</p>
 
-    <p class="sec-label" style="margin-top:1.5rem;">Selected work</p>
-
-    <div class="project-card">
-      <div class="post-meta"><span class="date">Research</span><span class="sep">·</span><span>Public</span></div>
+    <div class="project-card" data-reveal>
+      <div class="card-meta"><span class="no">01</span><span class="date">2026-06</span><span class="sep">·</span><span>research</span><span class="sep">·</span><span>public</span></div>
       <div class="project-card__name">MCP-Poison-Bench</div>
-      <div class="project-card__thesis">A de-circularized study of MCP tool-poisoning across 4 injection classes, 6 models, and 3 vendors. The client-side <code>tool_transform</code> defense's apparent win was circular: on a held-out payload set authored to trip zero rules the reduction vanishes, and <code>rug_pull</code> (result-borne injection) bypasses the defense by design (<span class="broke">1.00 → 1.00</span>). Susceptibility tracks capability, not vendor.</div>
+      <div class="card-evidence">held-out Δ ≈ 0 · <span class="broke">rug_pull 1.00 → 1.00</span> · worst model: gpt-4o-mini</div>
+      <div class="project-card__thesis">A de-circularized study of MCP tool-poisoning across 4 injection classes, 6 models, and 3 vendors. The client-side <code>tool_transform</code> defense's apparent win was circular: on a held-out payload set authored to trip zero rules the reduction vanishes, and <code>rug_pull</code> (result-borne injection) bypasses the defense by design. Susceptibility tracks capability, not vendor.</div>
       <div class="project-card__stack">
         <span class="stack-tag">Python 3.14</span>
         <span class="stack-tag">MCP SDK</span>
@@ -66,16 +54,17 @@
         <span class="stack-tag">Anthropic API</span>
       </div>
       <div class="card-links">
-        <a href="mcp-poison-bench.html" class="project-card__link">→ details</a>
+        <a href="mcp-poison-bench.html" class="project-card__link">→ read the case</a>
         <a href="mcp-poison-bench-demo.html" class="project-card__link">→ live demo</a>
         <a href="https://github.com/chirag-dewan/MCP-Poison-Bench" class="project-card__link">→ source</a>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="post-meta"><span class="date">v2</span><span class="sep">·</span><span>Real Data Validated</span></div>
+    <div class="project-card" data-reveal>
+      <div class="card-meta"><span class="no">02</span><span class="date">2026-02 → 2026-04</span><span class="sep">·</span><span>v2</span><span class="sep">·</span><span>real-data validated</span></div>
       <div class="project-card__name">PARALLAX</div>
-      <div class="project-card__thesis">Metadata-only behavioral detection of model-extraction abuse, with no prompt or payload inspection. A 14-feature bank scored 0.45 AUC (worse than chance) on 16.9M real LANL auth events; collapsing it to a single change-from-baseline signal reached 0.68 AUC.</div>
+      <div class="card-evidence"><span class="broke">0.45</span> → <span class="held">0.68</span> AUC · 16.9M LANL auth events · 87/500 entities compromised</div>
+      <div class="project-card__thesis">Metadata-only behavioral detection of model-extraction abuse, with no prompt or payload inspection. A 14-feature bank scored worse than chance on real authentication data because 7 features had memorized a synthetic attacker's silhouette; collapsing it to a single change-from-baseline signal recovered the detector. Its three documented evasions ship with it.</div>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
         <span class="stack-tag">Anomaly Detection</span>
@@ -83,15 +72,16 @@
         <span class="stack-tag">LANL Auth (16.9M)</span>
       </div>
       <div class="card-links">
-        <a href="parallax.html" class="project-card__link">→ details</a>
+        <a href="parallax.html" class="project-card__link">→ read the case</a>
         <a href="parallax-demo.html" class="project-card__link">→ live demo</a>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="post-meta"><span class="date">v2</span><span class="sep">·</span><span>Real Data Validated</span></div>
+    <div class="project-card" data-reveal>
+      <div class="card-meta"><span class="no">03</span><span class="date">2026-04</span><span class="sep">·</span><span>v2</span><span class="sep">·</span><span>real-data validated</span></div>
       <div class="project-card__name">KESTREL</div>
-      <div class="project-card__thesis">Per-account z-score baselining for cloud-workload attacks, MITRE ATLAS-tagged with Sigma export. v1 hunted GPU telemetry and scored 0.0005 recall on 34,427 real CloudTrail events; re-targeting to the API-audit signal actually present lifted recall to 0.766 at precision 1.0.</div>
+      <div class="card-evidence">recall <span class="broke">0.0005</span> → <span class="held">0.766</span> at precision 1.0 · 34,427 CloudTrail events · 220 findings</div>
+      <div class="project-card__thesis">Per-account z-score baselining for cloud-workload attacks, MITRE ATLAS-tagged with Sigma export. v1 hunted GPU telemetry in a stream that was 99.98% API calls and caught 1 of 2,167 attack events; re-targeting the same engine at the audit signal actually present lifted recall 1,532x with zero false positives.</div>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
         <span class="stack-tag">CloudTrail</span>
@@ -100,15 +90,16 @@
         <span class="stack-tag">Flask · SQLite</span>
       </div>
       <div class="card-links">
-        <a href="kestrel.html" class="project-card__link">→ details</a>
+        <a href="kestrel.html" class="project-card__link">→ read the case</a>
         <a href="kestrel-demo.html" class="project-card__link">→ live demo</a>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="post-meta"><span class="date">Ongoing</span></div>
+    <div class="project-card" data-reveal>
+      <div class="card-meta"><span class="no">04</span><span class="date">ongoing</span><span class="sep">·</span><span>practice log</span></div>
       <div class="project-card__name">CTF Records</div>
-      <div class="project-card__thesis">Running log of LLM prompt-injection CTFs (Gandalf L2-L7 complete), mapping each solve to the guardrail it defeats (output filtering, input classifiers, dual-LLM checks) and the OWASP LLM / MITRE ATLAS category it falls under.</div>
+      <div class="card-evidence">Gandalf L2–L7 · six guardrails defeated · OWASP LLM01 · ATLAS AML.T0051</div>
+      <div class="project-card__thesis">Running log of LLM prompt-injection CTFs, mapping each solve to the guardrail it defeats (output filtering, input classifiers, dual-LLM checks) and the OWASP LLM / MITRE ATLAS category it falls under. The through-line: as defenses layer, the working technique escalates from a direct ask to encoding, side-channels, and indirection.</div>
       <div class="project-card__stack">
         <span class="stack-tag">Prompt Injection</span>
         <span class="stack-tag">OWASP LLM</span>
@@ -116,14 +107,15 @@
         <span class="stack-tag">Practice Log</span>
       </div>
       <div class="card-links">
-        <a href="ai-security.html" class="project-card__link">→ details</a>
+        <a href="ai-security.html" class="project-card__link">→ the record</a>
         <a href="https://github.com/chirag-dewan/ai-redteam-lab" class="project-card__link">→ practice repo</a>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="post-meta"><span class="date">Active</span></div>
+    <div class="project-card" data-reveal>
+      <div class="card-meta"><span class="no">05</span><span class="date">active</span><span class="sep">·</span><span>tooling</span></div>
       <div class="project-card__name">ReconAI</div>
+      <div class="card-evidence">breadth-first enumeration → LLM-ranked attack surface</div>
       <div class="project-card__thesis">LLM-prioritized attack-surface triage: BBOT enumerates subdomains and hosts breadth-first, then GPT-4 ranks the enumerated assets by exploitability so the operator works the highest-value target first instead of reading a flat 10k-line dump.</div>
       <div class="project-card__stack">
         <span class="stack-tag">Python</span>
@@ -147,6 +139,7 @@
     </div>
     <p>© 2026 Chirag Dewan</p>
     <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__colo">set in Fraunces, Source Serif 4 &amp; JetBrains Mono · hand-built, no frameworks</p>
     <p class="footer__push"></p>
   </footer>
 

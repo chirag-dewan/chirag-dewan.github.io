@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chirag Dewan · AI Security Researcher</title>
-  <meta name="description" content="AI security researcher red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
+  <meta name="description" content="AI security researcher red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL. Every project ships with its failure modes documented.">
   <link rel="canonical" href="https://www.cdewan.me/">
   <meta property="og:title" content="Chirag Dewan · AI Security Researcher">
-  <meta property="og:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL.">
+  <meta property="og:description" content="Red teaming LLMs and agents. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL. Every project ships with its failure modes documented.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.cdewan.me/">
   <meta property="og:image" content="https://www.cdewan.me/og-image.png">
@@ -24,32 +24,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <style>
-    .lead { margin-top: 2.4rem; }
-    .lead .kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--attack); margin-bottom: 0.7rem; }
-    .lead h1 { font-size: clamp(2.6rem, 8vw, 4rem); line-height: 1.0; letter-spacing: -0.025em; }
-    .identity { font-family: var(--font-body); font-size: 1.18rem; color: var(--ink-soft); max-width: var(--measure); margin-top: 0.7rem; font-style: italic; }
-    .identity.sub { font-size: 1rem; margin-top: 0.25rem; }
+    .lead { margin-top: 2.2rem; }
+    .lead .kicker { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--attack); margin-bottom: 0.8rem; }
+    .lead h1 { font-size: clamp(2.7rem, 8.5vw, 4.2rem); line-height: 0.98; letter-spacing: -0.028em; }
+    .lead .dek { margin-top: 1rem; margin-bottom: 0; max-width: 620px; }
+    .lead__links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin-top: 1.3rem; font-family: var(--font-mono); font-size: 0.8rem; }
+    .lead__links a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
+    .lead__links a:hover { border-color: var(--attack); }
 
-    .work-item { margin-top: 2rem; }
-    .work-item:first-of-type { margin-top: 0.8rem; }
-    .work-item__meta { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em; color: var(--text-dim); margin-bottom: 0.4rem; }
-    .work-item__title { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 0.3rem; }
-    .work-item__title a { text-decoration: none; color: var(--ink); transition: color 0.15s; }
-    .work-item__title a:hover { color: var(--attack); }
-    .work-item__what { color: var(--ink); margin-bottom: 0.15rem; }
-    .work-item__result { color: var(--ink-soft); }
-    .work-item__result .held { color: var(--held); font-weight: 600; }
-    .work-item__result .broke { color: var(--broke); font-weight: 600; }
-    .work-item__read { margin-top: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; }
-    .work-item__read a { color: var(--attack); text-decoration: none; border-bottom: 1px solid var(--rule); }
-    .work-item__read a:hover { border-color: var(--attack); }
+    .method { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--s-5) var(--s-6); margin-top: var(--s-4); max-width: var(--measure); }
+    .method__step { border-left: 2px solid var(--slate); padding-left: var(--s-4); }
+    .method__k { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--slate); margin-bottom: 0.35rem; }
+    .method__t { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.25; margin-bottom: 0.3rem; }
+    .method__d { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; }
+    .method-credo { margin-top: var(--s-5); }
 
-    .writing-empty { color: var(--text-dim); font-style: italic; }
-    .writing-item { margin: 0.6rem 0; }
-    .writing-summary { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.5; margin: 0.15rem 0 1rem; max-width: 580px; }
+    .series-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; color: var(--mem); margin: 0 0 var(--s-4); }
+    .writing-item { margin: 0.6rem 0 0.1rem; font-size: 1.08rem; }
     .writing-item a { text-decoration: none; color: var(--ink); }
     .writing-item a:hover { color: var(--attack); }
-    .writing-date { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.78rem; margin-left: 0.6rem; }
+    .writing-meta { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.72rem; margin: 0.2rem 0 0.3rem; }
+    .writing-meta .part { color: var(--mem); }
+    .writing-summary { color: var(--ink-soft); font-size: 0.94rem; line-height: 1.55; margin: 0 0 1.2rem; max-width: 580px; }
+
+    .practice { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.2rem; max-width: var(--measure); }
+    .practice p { margin: 0; color: var(--ink-soft); font-size: 0.97rem; }
+    .practice .project-card__link { margin: 0; }
   </style>
   <script type="application/ld+json">
   {
@@ -86,45 +86,109 @@
     <header class="lead">
       <p class="kicker">AI Security · Red Team</p>
       <h1>Chirag Dewan</h1>
-      <p class="identity">AI security researcher, red teaming LLMs &amp; agents.</p>
-      <p class="identity sub">Offensive security background.</p>
+      <p class="dek">AI security researcher, red teaming LLMs and agents. Offensive security background. I build detectors, benchmark them on real data, then publish exactly where they break: every project below ships with its failure modes documented.</p>
+      <div class="lead__links">
+        <a href="/projects/">→ projects</a>
+        <a href="/blog/">→ writing</a>
+        <a href="/Chirag_Dewan_Resume.pdf">→ resume</a>
+        <a href="https://github.com/chirag-dewan">→ github</a>
+      </div>
     </header>
 
+    <div class="ledger" data-reveal>
+      <div class="ledger__item"><div class="ledger__v">16.9M</div><div class="ledger__k">real auth events scored</div></div>
+      <div class="ledger__item"><div class="ledger__v">34,427</div><div class="ledger__k">CloudTrail events hunted</div></div>
+      <div class="ledger__item"><div class="ledger__v">6 × 3</div><div class="ledger__k">models × vendors benchmarked</div></div>
+      <div class="ledger__item"><div class="ledger__v">~2.5K</div><div class="ledger__k">injection trials recorded</div></div>
+      <div class="ledger__item"><div class="ledger__v">L2–L7</div><div class="ledger__k">Gandalf levels cleared</div></div>
+    </div>
+
+    <section id="method" data-reveal>
+      <h2 class="sec-label"><span class="hnum">00</span>Method</h2>
+      <div class="method">
+        <div class="method__step">
+          <p class="method__k">build</p>
+          <p class="method__t">The honest instrument</p>
+          <p class="method__d">Detectors and benchmarks with one variable per comparison, scored from recorded traces, reproducible with one command.</p>
+        </div>
+        <div class="method__step">
+          <p class="method__k">measure</p>
+          <p class="method__t">On real data</p>
+          <p class="method__d">Synthetic evaluation is where a detector flatters itself. Every headline number here comes from real events or held-out payloads.</p>
+        </div>
+        <div class="method__step">
+          <p class="method__k">break</p>
+          <p class="method__t">Publish the failure</p>
+          <p class="method__d">Documented evasions, structural blind spots, and negative results, stated as plainly as the wins.</p>
+        </div>
+      </div>
+      <aside class="pull method-credo">
+        <p>Synthetic data flatters. Real data corrects. Subtraction beats addition.</p>
+        <cite>the through-line, three projects running</cite>
+      </aside>
+    </section>
+
     <section id="work">
-      <h2 class="sec-label">Selected work</h2>
+      <h2 class="sec-label"><span class="hnum">01</span>Selected work</h2>
 
-      <div class="work-item">
-        <p class="work-item__meta">2026-06-01 → 2026-06-03</p>
-        <h3 class="work-item__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h3>
-        <p class="work-item__what">A reproducible MCP tool-poisoning benchmark across six models and three vendors.</p>
-        <p class="work-item__result">De-circularized the defense: the headline win was an artifact of shared vocabulary, and <code>rug_pull</code> bypasses it by design (<span class="broke">1.00 → 1.00</span>). Susceptibility tracks capability, not vendor.</p>
-        <p class="work-item__read"><a href="/projects/mcp-poison-bench.html">read →</a></p>
-      </div>
+      <div class="work-rail">
+        <div class="rail-item" data-reveal>
+          <p class="rail-item__meta">2026-06-01 → 2026-06-03 <span class="sep">·</span> <span class="status">research, public</span></p>
+          <h3 class="rail-item__title"><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a></h3>
+          <p class="rail-item__what">A reproducible MCP tool-poisoning benchmark: 4 injection classes × 6 models × 3 vendors, scored with Wilson intervals.</p>
+          <p class="rail-item__result">De-circularized the defense: the headline win was an artifact of shared vocabulary, and <code>rug_pull</code> bypasses it by design (<span class="broke">1.00 → 1.00</span>). Susceptibility tracks capability, not vendor.</p>
+          <p class="rail-item__tags"><span class="stack-tag">Python 3.14</span><span class="stack-tag">MCP SDK</span><span class="stack-tag">Prompt Injection</span><span class="stack-tag">Wilson CIs</span></p>
+          <div class="card-links">
+            <a href="/projects/mcp-poison-bench.html" class="project-card__link">→ read the case</a>
+            <a href="/projects/mcp-poison-bench-demo.html" class="project-card__link">→ live demo</a>
+            <a href="https://github.com/chirag-dewan/MCP-Poison-Bench" class="project-card__link">→ source</a>
+          </div>
+        </div>
 
-      <div class="work-item">
-        <p class="work-item__meta">2026-02-25 → 2026-04-09</p>
-        <h3 class="work-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
-        <p class="work-item__what">Behavioral threat detection for AI platforms: metadata-only, no payload inspection.</p>
-        <p class="work-item__result">0.68 AUC on 17M real authentication events.</p>
-        <p class="work-item__read"><a href="/projects/parallax.html">read →</a></p>
-      </div>
+        <div class="rail-item rail-item--held" data-reveal>
+          <p class="rail-item__meta">2026-02-25 → 2026-04-09 <span class="sep">·</span> <span class="status">v2, real-data validated</span></p>
+          <h3 class="rail-item__title"><a href="/projects/parallax.html">PARALLAX</a></h3>
+          <p class="rail-item__what">Behavioral detection of model-extraction abuse: metadata only, no prompt or payload inspection.</p>
+          <p class="rail-item__result">A 14-feature bank scored <span class="broke">0.45 AUC</span> on 16.9M real auth events, worse than chance. Subtracting the memorized features recovered it to <span class="held">0.68 AUC</span>.</p>
+          <p class="rail-item__tags"><span class="stack-tag">Python</span><span class="stack-tag">Anomaly Detection</span><span class="stack-tag">Metadata-Only</span><span class="stack-tag">LANL Auth</span></p>
+          <div class="card-links">
+            <a href="/projects/parallax.html" class="project-card__link">→ read the case</a>
+            <a href="/projects/parallax-demo.html" class="project-card__link">→ live demo</a>
+          </div>
+        </div>
 
-      <div class="work-item">
-        <p class="work-item__meta">2026-04-08</p>
-        <h3 class="work-item__title"><a href="/projects/kestrel.html">KESTREL</a></h3>
-        <p class="work-item__what">Cloud-workload anomaly detection with Sigma-exportable detections.</p>
-        <p class="work-item__result">0.766 recall on 34K real CloudTrail events.</p>
-        <p class="work-item__read"><a href="/projects/kestrel.html">read →</a></p>
+        <div class="rail-item rail-item--held" data-reveal>
+          <p class="rail-item__meta">2026-04-08 <span class="sep">·</span> <span class="status">v2, real-data validated</span></p>
+          <h3 class="rail-item__title"><a href="/projects/kestrel.html">KESTREL</a></h3>
+          <p class="rail-item__what">Cloud-workload anomaly detection: per-account z-score baselines, MITRE ATLAS-tagged, Sigma-exportable.</p>
+          <p class="rail-item__result">v1 hunted GPU telemetry in an API audit log: recall <span class="broke">0.0005</span>. Re-aimed at the signal actually present: recall <span class="held">0.766</span> at precision 1.0, a 1,532x lift.</p>
+          <p class="rail-item__tags"><span class="stack-tag">Python</span><span class="stack-tag">CloudTrail</span><span class="stack-tag">MITRE ATLAS</span><span class="stack-tag">Sigma Export</span></p>
+          <div class="card-links">
+            <a href="/projects/kestrel.html" class="project-card__link">→ read the case</a>
+            <a href="/projects/kestrel-demo.html" class="project-card__link">→ live demo</a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="writing">
-      <h2 class="sec-label">Writing</h2>
+    <section id="writing" data-reveal>
+      <h2 class="sec-label"><span class="hnum">02</span>Writing</h2>
+      <p class="series-label">The continuous adversary · a two-part argument</p>
       <div id="post-list" class="writing-list">
-        <p class="writing-item"><a href="/blog/ten-thousand-agents.html">Ten thousand agents, and none of them can tell a command from an attack</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-item"><a href="/blog/ten-thousand-agents.html">Ten thousand agents, and none of them can tell a command from an attack</a></p>
+        <p class="writing-meta"><span class="part">Part 1</span> · 2026-06-04 · 4 min</p>
         <p class="writing-summary">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</p>
-        <p class="writing-item"><a href="/blog/autonomous-red-team.html">How I'd build an autonomous red team for AI agents</a><span class="writing-date">2026-06-04</span></p>
+        <p class="writing-item"><a href="/blog/autonomous-red-team.html">How I'd build an autonomous red team for AI agents</a></p>
+        <p class="writing-meta"><span class="part">Part 2</span> · 2026-06-04 · 6 min</p>
         <p class="writing-summary">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</p>
+      </div>
+    </section>
+
+    <section id="practice" data-reveal>
+      <h2 class="sec-label"><span class="hnum">03</span>Practice</h2>
+      <div class="practice">
+        <p>A running CTF log, technique per guardrail defeated: Gandalf L2–L7, mapped to OWASP LLM01 and MITRE ATLAS.</p>
+        <a href="/projects/ai-security.html" class="project-card__link">→ the record</a>
       </div>
     </section>
 
@@ -140,6 +204,7 @@
     </div>
     <p>© 2026 Chirag Dewan</p>
     <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__colo">set in Fraunces, Source Serif 4 &amp; JetBrains Mono · hand-built, no frameworks</p>
     <p class="footer__push"></p>
   </footer>
 

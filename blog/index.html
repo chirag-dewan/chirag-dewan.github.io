@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing · Chirag Dewan</title>
-  <meta name="description" content="Notes on AI security, agent red teaming, and behavioral detection.">
+  <meta name="description" content="Notes on AI security, agent red teaming, and behavioral detection. The continuous adversary: a two-part argument, failed attempts included.">
   <link rel="canonical" href="https://www.cdewan.me/blog/">
   <meta property="og:title" content="Writing · Chirag Dewan">
   <meta property="og:description" content="Notes on AI security, agent red teaming, and behavioral detection.">
@@ -25,13 +25,7 @@
     .post-row { display: block; text-decoration: none; color: inherit; }
     .post-row .project-card { cursor: pointer; }
     .post-row:hover .project-card__name { color: var(--attack); }
-    .post-meta {
-      font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.02em;
-      color: var(--ink-soft); margin-bottom: 0.5rem;
-    }
-    .post-meta .date { color: var(--slate); }
-    .post-meta .sep { color: var(--text-dim); margin: 0 0.45rem; }
-    .blog-empty { font-size: 0.95rem; color: var(--text-muted); font-style: italic; padding: 1rem 0; }
+    .series-note { font-family: var(--font-body); font-size: 0.97rem; color: var(--ink-soft); font-style: italic; max-width: 580px; margin: 0 0 var(--s-2); }
   </style>
 </head>
 <body>
@@ -48,35 +42,39 @@
 
   <main>
   <div class="container">
+    <p class="crumb"><span class="crumb__no">the notebook</span><span class="sep">·</span>working out loud</p>
     <h1 class="section-header"><span>Writing</span></h1>
 
-    <p style="font-size: 1.1rem; color: var(--ink-soft); line-height: 1.6; max-width: 580px; margin-bottom: 1.5rem; font-style: italic;">Notes on AI security, agent red teaming, and behavioral detection. Working out loud, failed attempts included.</p>
+    <p class="dek">Notes on AI security, agent red teaming, and behavioral detection. Working out loud, failed attempts included.</p>
 
-    <p class="sec-label" style="margin-top:1.5rem;">Posts</p>
+    <p class="sec-label"><span class="hnum">01</span>The continuous adversary</p>
+    <p class="series-note">A two-part argument: first why static defense loses to prompt injection, then the architecture of an attacker that never stops.</p>
 
     <div id="post-list">
-      <a class="post-row" href="/blog/ten-thousand-agents.html">
-        <div class="project-card line-in animate-in">
-          <div class="post-meta">
+      <a class="post-row" href="/blog/ten-thousand-agents.html" data-reveal>
+        <div class="project-card">
+          <div class="card-meta">
             <span class="date">2026-06-04</span>
             <span class="sep">·</span><span>Part 1 of 2</span>
+            <span class="sep">·</span><span>4 min</span>
           </div>
           <div class="project-card__name">Ten thousand agents, and none of them can tell a command from an attack</div>
           <div class="project-card__thesis">Prompt injection isn't a bug you patch. It's baked into how these models work. So the fix can't be a one-time audit. You need an attacker that never stops.</div>
           <div class="project-card__stack"><span class="stack-tag">Agentic Security</span><span class="stack-tag">Prompt Injection</span><span class="stack-tag">Red Teaming</span></div>
-          <span class="project-card__link">→ read</span>
+          <span class="project-card__link">→ read part 1</span>
         </div>
       </a>
-      <a class="post-row" href="/blog/autonomous-red-team.html">
-        <div class="project-card line-in animate-in">
-          <div class="post-meta">
+      <a class="post-row" href="/blog/autonomous-red-team.html" data-reveal>
+        <div class="project-card">
+          <div class="card-meta">
             <span class="date">2026-06-04</span>
             <span class="sep">·</span><span>Part 2 of 2</span>
+            <span class="sep">·</span><span>6 min</span>
           </div>
           <div class="project-card__name">How I'd build an autonomous red team for AI agents</div>
           <div class="project-card__thesis">Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.</div>
           <div class="project-card__stack"><span class="stack-tag">Agentic Security</span><span class="stack-tag">Red Teaming</span><span class="stack-tag">Architecture</span></div>
-          <span class="project-card__link">→ read</span>
+          <span class="project-card__link">→ read part 2</span>
         </div>
       </a>
     </div>
@@ -92,6 +90,7 @@
     </div>
     <p>© 2026 Chirag Dewan</p>
     <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__colo">set in Fraunces, Source Serif 4 &amp; JetBrains Mono · hand-built, no frameworks</p>
     <p class="footer__push"></p>
   </footer>
 
