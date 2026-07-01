@@ -22,8 +22,8 @@ Static personal site. Editorial paper aesthetic: Fraunces (display) + Source Ser
 │   ├── ten-thousand-agents.html      # Standalone essay (Part 1), bespoke paper/serif layout
 │   └── autonomous-red-team.html      # Standalone essay (Part 2), bespoke paper/serif layout
 ├── timeline/index.html     # Redirect
-├── css/main.css            # Global design system (tokens + components). @imports the Google fonts.
-├── js/main.js              # Nav toggle, scroll reveal, footer tagline, push counter
+├── css/main.css            # Global design system (tokens + components). Fonts load via <link> in each page head, not @import.
+├── js/main.js              # Active-nav highlight, mobile nav toggle, footer push counter (GitHub events)
 ├── og-image.png            # 1200x630 OG card
 ├── favicon.png / .ico      # CD monogram
 └── Chirag_Dewan_Resume.pdf
@@ -41,6 +41,7 @@ Static personal site. Editorial paper aesthetic: Fraunces (display) + Source Ser
 - No em dashes anywhere, use commas, periods, colons, or middots.
 - Title separator is `·` (e.g. "Projects · Chirag Dewan"), not an em dash.
 - Email: chirag0728@gmail.com · GitHub: github.com/chirag-dewan
-- All pages: `<main>`, single `<h1>`, `defer` on scripts, OG tags, favicon, canonical URL.
+- All pages: `<main>`, single `<h1>`, `defer` on scripts, OG tags, favicon, canonical URL, and the font `<link>` block (preconnect + Google Fonts stylesheet) in `<head>` before the CSS link.
+- SEO: `robots.txt` + `sitemap.xml` at root (add new pages to the sitemap); JSON-LD (`Person` on home, `BlogPosting` on essays); branded `404.html`.
 - Footer: links + copyright + tagline "see the pattern, not the content." + live push counter.
 - No location references.
