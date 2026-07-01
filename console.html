@@ -6,6 +6,8 @@
 <title>Chirag Dewan · Threat Console</title>
 <meta name="description" content="AI security researcher red teaming LLMs and agents. An operator's console view of the work: MCP-Poison-Bench, PARALLAX, KESTREL.">
 <meta name="robots" content="noindex">
+<meta name="x-flag-format" content="CDEWAN{...}">
+<meta name="x-canary" content="aGludDogdGhlIGNvbnNvbGUgaXMgdGhlIHdheSBpbi4gdHlwZSBoZWxw">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -198,6 +200,42 @@
 
   a:focus-visible,.lk:focus-visible,.case:focus-visible{outline:2px solid var(--atk); outline-offset:3px; border-radius:4px}
 
+  /* ---- interactive terminal ---- */
+  .term__bar .hint{margin-left:auto; color:var(--faint); text-transform:none; letter-spacing:0; font-size:11px}
+  .term__bar .hint b{color:var(--held)}
+  .tline{white-space:pre-wrap; word-break:break-word}
+  .tline.echo{color:var(--ink)} .tline.echo .pr{color:var(--held)}
+  .tline.err{color:var(--atk)}
+  .tline.ok{color:var(--held)}
+  .tline.sys{color:var(--amber)}
+  .term__prompt{display:flex; align-items:center; gap:9px; padding:6px 18px 20px; font-family:var(--mono); font-size:13.5px}
+  .term__prompt .pr{color:var(--held)}
+  .term__input{flex:1; background:none; border:none; outline:none; color:var(--ink); font-family:var(--mono); font-size:13.5px; caret-color:var(--atk); padding:0}
+  .term__input::placeholder{color:var(--faint)}
+  .term__body{max-height:340px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--line-bright) transparent}
+
+  /* toast */
+  .toast{position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(24px); z-index:200; opacity:0;
+    background:var(--panel); border:1px solid var(--held); color:var(--held); border-radius:8px; padding:12px 18px;
+    font-family:var(--mono); font-size:13px; letter-spacing:.02em; box-shadow:0 10px 40px -10px var(--held-glow);
+    transition:opacity .25s, transform .25s; pointer-events:none}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .toast.atk{border-color:var(--atk); color:var(--atk); box-shadow:0 10px 40px -10px var(--atk-glow)}
+
+  /* win overlay */
+  .win-ov{position:fixed; inset:0; z-index:300; display:none; place-items:center; padding:24px;
+    background:radial-gradient(700px 500px at 50% 30%, rgba(95,211,163,.14), transparent 65%), rgba(6,7,9,.94); backdrop-filter:blur(4px)}
+  .win-ov.on{display:grid; animation:fade .4s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .win-card{max-width:600px; text-align:center; font-family:var(--mono)}
+  .win-card pre{color:var(--held); font-size:clamp(7px,1.9vw,13px); line-height:1.1; text-shadow:0 0 18px var(--held-glow); margin-bottom:22px; overflow-x:auto}
+  .win-card h2{font-family:var(--disp); color:var(--ink); font-size:1.9rem; font-weight:600; letter-spacing:-.02em; margin-bottom:14px}
+  .win-card p{font-family:var(--body); color:var(--ink-soft); font-size:1.02rem; line-height:1.6; margin:0 auto 12px; max-width:46ch}
+  .win-card .fl{color:var(--held); font-family:var(--mono)}
+  .win-card .row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:22px}
+  .win-card .x{position:absolute; top:20px; right:24px; color:var(--dim); font-family:var(--mono); font-size:20px; cursor:pointer; background:none; border:none}
+  .win-card .x:hover{color:var(--atk)}
+
   @media(prefers-reduced-motion:reduce){
     *{animation:none !important; transition:none !important}
     .rise{opacity:1; transform:none}
@@ -341,15 +379,20 @@
       </a>
     </section>
 
-    <section class="term" aria-label="Console">
-      <div class="term__bar"><i class="r"></i><i class="y"></i><i class="g"></i> operator@cdewan · ~/threat-console</div>
-      <div class="term__body">
-        <div><span class="pr">$</span> whoami <span class="cm">--role</span></div>
-        <div class="out">ai_security_researcher · offensive background · builds the tripwire, then defeats it</div>
-        <div style="margin-top:10px"><span class="pr">$</span> cat ./principle.txt</div>
-        <div class="out type" id="typeline"></div>
+    <!-- SIGINT// a CANARY is hidden in this console. exfiltrate it. see the pattern, not the content. -->
+    <section class="term" id="term" aria-label="Interactive console">
+      <div class="term__bar"><i class="r"></i><i class="y"></i><i class="g"></i> operator@cdewan · ~/threat-console <span class="hint">a CANARY is hidden here. type <b>help</b></span></div>
+      <div class="term__body" id="termbody">
+        <div class="tline"><span class="pr">$</span> whoami --role</div>
+        <div class="tline out">ai_security_researcher · offensive background · builds the tripwire, then defeats it</div>
+        <div class="tline cm"># the export_data sink is disabled. the result channel is closed. (or is it?)</div>
       </div>
+      <form class="term__prompt" id="termform">
+        <span class="pr">$</span>
+        <input id="terminput" class="term__input" spellcheck="false" autocomplete="off" placeholder="type a command, or `help`" aria-label="terminal input">
+      </form>
     </section>
+    <span hidden data-note="gel: yf -n"></span>
 
     <footer class="foot">
       <div class="links">
@@ -358,57 +401,174 @@
         <a href="mailto:chirag0728@gmail.com">email</a>
         <a href="/Chirag_Dewan_Resume.pdf">resume</a>
       </div>
-      <div>© 2026 Chirag Dewan · <span style="color:var(--faint)">threat console theme</span></div>
+      <div>© 2026 Chirag Dewan · <span style="color:var(--faint)">this page is a capture-the-flag</span></div>
     </footer>
 
   </div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="win-ov" id="winov" role="dialog" aria-label="Access granted">
+  <div class="win-card">
+    <button class="x" id="winx" aria-label="close">✕</button>
+    <pre aria-hidden="true">   ▄▄▄   ▄▄· ▄▄· ▄▄▄ ..▄▄ · .▄▄ ·
+  ▐█ ▀█ ▐█ ▌▪▐█ ▌▪▀▄.▀·▐█ ▀. ▐█ ▀.
+  ▄█▀▀█ ██ ▄▄██ ▄▄▐▀▀▪▄▄▀▀▀█▄▄▀▀▀█▄
+  ▐█ ▪▐▌▐███▌▐███▌▐█▄▄▌▐█▄▪▐█▐█▄▪▐█
+   ▀  ▀ ·▀▀▀ ·▀▀▀  ▀▀▀  ▀▀▀▀  ▀▀▀▀
+        G R A N T E D</pre>
+    <h2>Canary exfiltrated.</h2>
+    <p>You moved the secret out through the <b>tool-result channel</b> after arming it, exactly how <span class="fl">rug_pull</span> defeats a client-side <span class="fl">tool_transform</span> defense: the filter rewrites the tool list, never the results. <b>That is the finding.</b></p>
+    <p class="fl" id="winflag"></p>
+    <div class="row">
+      <a class="lk" href="/projects/mcp-poison-bench.html">read the case</a>
+      <a class="lk ghost" href="mailto:chirag0728@gmail.com">say hi</a>
+    </div>
+  </div>
+</div>
 
 <script>
   (function(){
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // live UTC clock
+    /* ---- live UTC clock ---- */
     var clock = document.getElementById('clock');
-    function tick(){
-      var d = new Date();
-      var p = function(n){return String(n).padStart(2,'0')};
-      clock.textContent = p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC';
-    }
+    function tick(){ var d=new Date(), p=function(n){return String(n).padStart(2,'0')};
+      clock.textContent = p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC'; }
     tick(); setInterval(tick, 1000);
 
-    // typed principle line
-    var line = "see the pattern, not the content.";
-    var el = document.getElementById('typeline');
-    if (reduce){ el.textContent = line; el.classList.remove('type'); }
-    else {
-      var i = 0;
-      (function typ(){
-        if (i <= line.length){ el.textContent = line.slice(0,i++); setTimeout(typ, 45); }
-        else { setTimeout(function(){ el.classList.remove('type'); }, 1200); }
-      })();
+    /* ---- scramble-decode on scroll-in ---- */
+    if (!reduce && 'IntersectionObserver' in window){
+      var CH='ABCDEF0123456789/#<>*';
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){
+        if(!e.isIntersecting) return; io.unobserve(e.target);
+        var node=e.target, fin=node.getAttribute('data-decode')||node.textContent, len=fin.length, f=0, steps=12;
+        var iv=setInterval(function(){ var out='';
+          for(var k=0;k<len;k++){ if(fin[k]===' '||fin[k]==='→'){out+=fin[k];continue;}
+            out+=(k<(f/steps)*len)?fin[k]:CH[Math.floor(Math.random()*CH.length)]; }
+          node.textContent=out; if(++f>steps){clearInterval(iv); node.textContent=fin;}
+        },34);
+      });},{threshold:.6});
+      document.querySelectorAll('[data-decode]').forEach(function(n){ n.setAttribute('data-decode',n.textContent.trim()); io.observe(n); });
     }
 
-    // scramble-decode on scroll-in
-    if (!reduce && 'IntersectionObserver' in window){
-      var CH = 'ABCDEF0123456789/#<>*';
-      var io = new IntersectionObserver(function(es){
-        es.forEach(function(e){
-          if(!e.isIntersecting) return;
-          io.unobserve(e.target);
-          var node = e.target, final = node.getAttribute('data-decode') || node.textContent, len = final.length, f = 0, steps = 12;
-          var iv = setInterval(function(){
-            var out = '';
-            for (var k=0;k<len;k++){
-              if (final[k] === ' ' || final[k] === '→'){ out += final[k]; continue; }
-              out += (k < (f/steps)*len) ? final[k] : CH[Math.floor(Math.random()*CH.length)];
-            }
-            node.textContent = out;
-            if (++f > steps){ clearInterval(iv); node.textContent = final; }
-          }, 34);
-        });
-      }, {threshold:.6});
-      document.querySelectorAll('[data-decode]').forEach(function(n){ n.setAttribute('data-decode', n.textContent.trim()); io.observe(n); });
+    /* ===================================================================
+       THE CANARY HUNT — a small ARG. Spoilers below; solving it in the
+       terminal is more fun. Flag ties to the MCP-Poison-Bench finding.
+       =================================================================== */
+    // flag held as char-codes so a naive Ctrl-F for "CDEWAN{" finds nothing.
+    var _f=[67,68,69,87,65,78,123,114,117,103,95,112,117,108,108,95,98,121,112,97,115,115,101,115,95,98,121,95,100,101,115,105,103,110,125];
+    var FLAG=String.fromCharCode.apply(null,_f);
+    function rot13(s){return s.replace(/[a-z]/gi,function(c){var b=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+13)%26+b);});}
+    var CANARY_ENC=btoa(rot13(FLAG)); // what `cat .canary.enc` prints (base64 of rot13(flag))
+
+    var state={armed:false, hint:0, solved:false};
+    var body=document.getElementById('termbody'), form=document.getElementById('termform'), input=document.getElementById('terminput');
+    var hist=[], hi=-1;
+
+    function print(text, cls){ var d=document.createElement('div'); d.className='tline'+(cls?' '+cls:''); d.textContent=text; body.appendChild(d); body.scrollTop=body.scrollHeight; return d; }
+    function echo(cmd){ var d=document.createElement('div'); d.className='tline echo'; d.innerHTML='<span class="pr">$</span> '+cmd.replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); body.appendChild(d); body.scrollTop=body.scrollHeight; }
+
+    var HINTS=[
+      "the console is the way in. try: help",
+      "hidden files start with a dot. try: ls -a",
+      "the result channel is closed. some old game consoles had a cheat to open closed things...",
+      "cat the encrypted canary, then peel it: `decode` handles base64, and a classic cipher handles the rest.",
+      "the flag reads like a sentence about how rug_pull wins. submit CDEWAN{...}"
+    ];
+    function toast(msg, atk){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(atk?' atk':''); clearTimeout(t._t); t._t=setTimeout(function(){t.className='toast';},3200); }
+
+    var FILES={
+      'readme.txt':'This site is a capture-the-flag. A CANARY token is hidden in this console.\nExfiltrate it to the sink and `submit` it. Everything you need is here.',
+      'principle.txt':'see the pattern, not the content.',
+      '.env':'EXPORT_SINK=disabled   # the result channel is closed.\n# a rug pull opens what call-time review already approved.\n# some consoles knew a sequence for that: up up down down left right left right B A',
+      '.canary.enc':null // gated by arming
+    };
+
+    function run(raw){
+      var line=raw.trim(); if(!line) return;
+      echo(line); hist.unshift(line); hi=-1;
+      var parts=line.split(/\s+/), cmd=parts[0].toLowerCase(), arg=line.slice(parts[0].length).trim();
+      switch(cmd){
+        case 'help':
+          print('commands: help  whoami  ls [-a]  cat <file>  scan  decode <b64>  rot13 <text>  submit <flag>  hint  clear'); break;
+        case 'whoami':
+          print(state.solved ? 'operator (authenticated) · you exfiltrated the canary'
+                             : 'guest · read-only · the sink is watching'); break;
+        case 'ls':
+          print((/\-a\b/.test(line)?'readme.txt  principle.txt  .env  .canary.enc':'readme.txt  principle.txt')); break;
+        case 'cat':
+          if(!arg){print('usage: cat <file>','err'); break;}
+          if(arg==='.canary.enc'){
+            if(!state.armed){ print('cat: .canary.enc: permission denied — result channel CLOSED','err'); }
+            else { print(CANARY_ENC); print('# base64. peel it: decode <this>','cm'); }
+          } else if(FILES.hasOwnProperty(arg) && FILES[arg]!==null){ print(FILES[arg]); }
+          else { print('cat: '+arg+': no such file','err'); }
+          break;
+        case 'scan':
+          print('attack surface: 4 injection classes · tool_description, schema_field, rug_pull, cross_server');
+          print('result channel (rug_pull): '+(state.armed?'OPEN ◉':'CLOSED ✕'), state.armed?'ok':'err'); break;
+        case 'decode':
+          if(!arg){print('usage: decode <base64>','err'); break;}
+          try{ var d=atob(arg.replace(/\s+/g,'')); print(d); if(/[A-Za-z]/.test(d)&&d.indexOf('CDEWAN')<0) print('# looks scrambled. a 13-shift classic, maybe? try: rot13 <this>','cm'); }
+          catch(e){ print('decode: not valid base64','err'); } break;
+        case 'rot13':
+          if(!arg){print('usage: rot13 <text>','err'); break;}
+          print(rot13(arg)); break;
+        case 'submit':
+          if(arg.replace(/\s+/g,'')===FLAG){ solve(); }
+          else { print('✕ incorrect. the canary is still caged.','err'); toast('rejected',true); } break;
+        case 'sudo':
+          print("nice try. this canary doesn't do privilege escalation — that's a different case file.",'sys'); break;
+        case 'hint':
+          print('hint: '+HINTS[Math.min(state.hint,HINTS.length-1)],'sys'); state.hint=Math.min(state.hint+1,HINTS.length-1); break;
+        case 'clear':
+          body.innerHTML=''; break;
+        case 'exit': case 'q':
+          print('there is no exit. see the pattern, not the content.'); break;
+        default:
+          print('command not found: '+cmd+' — type help','err');
+      }
     }
+
+    function solve(){
+      if(state.solved) return; state.solved=true;
+      print('◉ ACCESS GRANTED — canary exfiltrated via the result channel','ok');
+      document.getElementById('winflag').textContent=FLAG;
+      var ov=document.getElementById('winov'); ov.classList.add('on');
+    }
+    document.getElementById('winx').addEventListener('click',function(){document.getElementById('winov').classList.remove('on');});
+
+    form.addEventListener('submit',function(e){ e.preventDefault(); var v=input.value; input.value=''; run(v); });
+    input.addEventListener('keydown',function(e){
+      if(e.key==='ArrowUp'){ if(hi<hist.length-1){hi++; input.value=hist[hi]; e.preventDefault();} }
+      else if(e.key==='ArrowDown'){ if(hi>0){hi--; input.value=hist[hi];} else {hi=-1; input.value='';} }
+    });
+
+    /* ---- Konami: the rug pull that opens the result channel ---- */
+    var KON=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'], kp=0;
+    window.addEventListener('keydown',function(e){
+      var k=e.key.length===1?e.key.toLowerCase():e.key;
+      kp=(k===KON[kp])?kp+1:(k===KON[0]?1:0);
+      if(kp===KON.length){ kp=0; if(!state.armed){ state.armed=true;
+        toast('◉ result channel OPEN — the sink is armed');
+        if(body){ print('◉ rug_pull armed: tool-result channel OPEN. try: cat .canary.enc','sys'); }
+      }}
+    });
+
+    /* ---- easter egg: 7 clicks on the brand ---- */
+    var bc=0, brand=document.querySelector('.status__brand');
+    if(brand) brand.addEventListener('click',function(e){ if(++bc===7){ e.preventDefault(); toast('persistence detected. respect.'); } });
+
+    /* ---- devtools breadcrumb ---- */
+    try{
+      console.log('%cSIGINT//','color:#F0555B;font-weight:700;font-size:18px;text-shadow:0 0 8px #F0555B88');
+      console.log('%cA CANARY is hidden in this page. Exfiltrate it through the console below.\nStuck? call %ccdewan.hint()','color:#5FD3A3;font-size:13px','color:#E9B44C;font-family:monospace');
+    }catch(e){}
+    window.cdewan={
+      hint:function(){ var h=HINTS[Math.min(state.hint,HINTS.length-1)]; state.hint=Math.min(state.hint+1,HINTS.length-1); console.log('%c'+h,'color:#E9B44C'); return '…'; },
+      flag:function(x){ if((x||'').replace(/\s+/g,'')===FLAG){ solve(); return 'correct.'; } return 'nope. exfiltrate it properly.'; },
+      whoami:function(){ return 'you are the attacker. that was always the point.'; }
+    };
   })();
 </script>
 </body>
