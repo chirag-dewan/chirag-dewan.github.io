@@ -24,6 +24,7 @@ Static personal site. Editorial "dossier" aesthetic: the site reads like a case 
 ├── timeline/index.html     # Redirect
 ├── 404.html                # Branded not-found page (uses main.css)
 ├── console.html            # Standalone "threat console" theme + Canary Hunt ARG (noindex, self-contained). Flag: CDEWAN{rug_pull_bypasses_by_design}. Solve path: help → ls -a → cat .env → Konami (↑↑↓↓←→←→BA) arms the result channel → cat .canary.enc → decode <b64> → rot13 → submit.
+├── map.html                # Standalone "The Journey" transit-map view (uses main.css, noindex). Octolinear SVG: 3 lines (offense=attack, detection=slate, writing=mem) through 11 stations; click a station for a drawer, hover legend to isolate a line, rAF trains. Accessible station list mirrors the map for no-JS.
 ├── css/main.css            # Global design system (tokens + components + dossier layer). Fonts load via <link> in each page head, not @import.
 ├── js/main.js              # Active-nav highlight, mobile nav toggle, scroll reveal, footer push counter (GitHub events)
 ├── og-image.png            # 1200x630 OG card

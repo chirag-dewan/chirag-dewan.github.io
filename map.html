@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Journey · Chirag Dewan</title>
+<meta name="description" content="The whole body of work as a transit map: three lines (offense, detection, writing) through eleven stations, from an offensive-security origin to red-teaming LLMs today.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://www.cdewan.me/map.html">
+<meta property="og:title" content="The Journey · Chirag Dewan">
+<meta property="og:description" content="The whole body of work as a transit map. Offense, detection, and writing lines through eleven stations.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.cdewan.me/og-image.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<style>
+  .map-head{margin-top:1.6rem}
+  .map-head .kicker{font-family:var(--font-mono); font-size:0.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--attack); margin-bottom:.6rem}
+  .map-head h1{font-size:clamp(2.2rem,6vw,3.3rem); line-height:1; letter-spacing:-.025em}
+  .map-head .dek{font-family:var(--font-body); font-size:1.1rem; color:var(--ink-soft); font-style:italic; max-width:60ch; margin-top:.8rem; line-height:1.55}
+
+  /* legend */
+  .legend{display:flex; flex-wrap:wrap; gap:10px 8px; margin:1.4rem 0 .4rem}
+  .leg{display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:.74rem; letter-spacing:.02em;
+    color:var(--ink-soft); border:1px solid var(--rule); background:var(--paper-2); border-radius:20px; padding:6px 13px 6px 11px; cursor:pointer; transition:border-color .15s, color .15s}
+  .leg:hover,.leg.on{color:var(--ink)}
+  .leg .sw{width:22px; height:4px; border-radius:2px}
+  .leg--off .sw{background:var(--attack)} .leg--off:hover,.leg--off.on{border-color:var(--attack)}
+  .leg--det .sw{background:var(--slate)} .leg--det:hover,.leg--det.on{border-color:var(--slate)}
+  .leg--wri .sw{background:var(--mem)} .leg--wri:hover,.leg--wri.on{border-color:var(--mem)}
+  .leg-note{font-family:var(--font-mono); font-size:.68rem; color:var(--text-dim); margin-left:auto; align-self:center}
+
+  /* map frame */
+  .map-frame{border:1px solid var(--rule); border-radius:10px; background:
+      linear-gradient(0deg, rgba(216,208,191,.16) 1px, transparent 1px) 0 0/100% 32px,
+      var(--paper-2);
+    padding:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:.5rem}
+  .map-svg{display:block; width:100%; min-width:860px; height:auto}
+
+  /* lines + stations */
+  .line{fill:none; stroke-width:6.5; stroke-linecap:round; stroke-linejoin:round; transition:opacity .2s}
+  .line--off{stroke:var(--attack)} .line--det{stroke:var(--slate)} .line--wri{stroke:var(--mem)}
+  .line-glow{opacity:.16; stroke-width:13; filter:blur(2px)}
+
+  .stn{cursor:pointer}
+  .stn .ring{fill:var(--paper-2); stroke:var(--ink); stroke-width:2.6; transition:transform .16s, stroke-width .16s}
+  .stn--off .ring{stroke:var(--attack)} .stn--det .ring{stroke:var(--slate)} .stn--wri .ring{stroke:var(--mem)}
+  .stn.inter .ring{stroke:var(--ink); stroke-width:3.4}
+  .stn .core{fill:var(--ink); opacity:0; transition:opacity .16s}
+  .stn.inter .core{fill:var(--paper); opacity:1}
+  .stn .lbl{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.02em; fill:var(--ink); font-weight:500}
+  .stn .sub{font-family:var(--font-mono); font-size:10px; fill:var(--text-dim)}
+  .stn:hover .ring, .stn.sel .ring{transform:scale(1.28); transform-box:fill-box; transform-origin:center}
+  .stn:hover .core,.stn.sel .core{opacity:1}
+  .stn:focus{outline:none}
+  .stn:focus-visible .ring{stroke:var(--attack); stroke-width:3.6}
+  .stn .halo{fill:none; stroke:var(--attack); stroke-width:2; opacity:0}
+  .stn.sel .halo{opacity:.5; animation:ping 1.6s ease-out infinite}
+  @keyframes ping{0%{transform:scale(.7);opacity:.6}100%{transform:scale(1.9);opacity:0}}
+  .halo{transform-box:fill-box; transform-origin:center}
+
+  .train{fill:var(--paper); stroke-width:3}
+  .train--off{stroke:var(--attack)} .train--det{stroke:var(--slate)} .train--wri{stroke:var(--mem)}
+
+  /* focus dimming */
+  .map-svg[data-hl] .line:not(.hl){opacity:.14}
+  .map-svg[data-hl] .stn:not(.hl){opacity:.28}
+
+  /* terminus caps */
+  .cap{font-family:var(--font-mono); font-size:9.5px; letter-spacing:.14em; fill:var(--text-dim)}
+
+  /* drawer */
+  .drawer{position:fixed; top:0; right:0; height:100%; width:min(400px,92vw); background:var(--paper);
+    border-left:1px solid var(--rule); box-shadow:-24px 0 60px -30px rgba(28,26,23,.4); z-index:80;
+    transform:translateX(102%); transition:transform .28s cubic-bezier(.3,.7,.2,1); display:flex; flex-direction:column}
+  .drawer.open{transform:none}
+  .drawer__hd{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:22px 22px 14px; border-bottom:1px solid var(--rule)}
+  .drawer__x{background:none; border:none; font-family:var(--font-mono); font-size:20px; color:var(--text-dim); cursor:pointer; line-height:1}
+  .drawer__x:hover{color:var(--attack)}
+  .drawer__body{padding:18px 22px 30px; overflow-y:auto}
+  .d-lines{display:flex; gap:6px; margin-bottom:12px}
+  .d-lines .sw{width:26px; height:4px; border-radius:2px}
+  .d-kind{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.16em; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px}
+  .d-name{font-family:var(--font-display); font-size:1.7rem; font-weight:600; letter-spacing:-.02em; line-height:1.05; margin-bottom:6px}
+  .d-meta{font-family:var(--font-mono); font-size:.74rem; color:var(--ink-soft); margin-bottom:14px}
+  .d-blurb{font-size:1rem; line-height:1.6; color:var(--ink); margin-bottom:14px}
+  .d-metric{font-family:var(--font-mono); font-size:.82rem; color:var(--ink-soft); border-left:2px solid var(--rule); padding-left:12px; margin-bottom:16px}
+  .d-metric .broke{color:var(--broke); font-weight:600} .d-metric .held{color:var(--held); font-weight:600}
+  .d-links{display:flex; flex-wrap:wrap; gap:8px 16px}
+  .d-links a{font-family:var(--font-mono); font-size:.82rem; color:var(--attack); text-decoration:none; border-bottom:1px solid var(--rule)}
+  .d-links a:hover{border-color:var(--attack)}
+  .d-nav{display:flex; justify-content:space-between; gap:10px; margin-top:24px; padding-top:16px; border-top:1px solid var(--rule); font-family:var(--font-mono); font-size:.74rem}
+  .d-nav button{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-family:inherit;font-size:inherit}
+  .d-nav button:hover{color:var(--attack)}
+  .scrim{position:fixed; inset:0; background:rgba(28,26,23,.28); z-index:79; opacity:0; visibility:hidden; transition:opacity .25s}
+  .scrim.on{opacity:1; visibility:visible}
+
+  /* accessible journey list */
+  .journey{margin-top:var(--s-8)}
+  .jr-line{margin-top:var(--s-6)}
+  .jr-line h3{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:10px}
+  .jr-line h3 .sw{width:24px;height:4px;border-radius:2px}
+  .jr-line--off h3{color:var(--attack)} .jr-line--det h3{color:var(--slate)} .jr-line--wri h3{color:var(--mem)}
+  .jr-line--off .sw{background:var(--attack)} .jr-line--det .sw{background:var(--slate)} .jr-line--wri .sw{background:var(--mem)}
+  .jr-stops{list-style:none; padding-left:6px}
+  .jr-stops li{position:relative; padding:0 0 12px 20px; border-left:1px solid var(--rule); margin-left:4px}
+  .jr-stops li::before{content:""; position:absolute; left:-5px; top:6px; width:9px; height:9px; border-radius:50%; background:var(--paper); border:2px solid var(--ink)}
+  .jr-stops a{color:var(--ink); text-decoration:none; font-weight:600}
+  .jr-stops a:hover{color:var(--attack)}
+  .jr-stops .m{color:var(--ink-soft); font-size:.94rem; font-weight:400}
+
+  @media (max-width:640px){
+    .map-frame{border-radius:8px}
+    .leg-note{width:100%; margin:4px 0 0; text-align:left}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .stn.sel .halo{animation:none}
+  }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__home">cdewan</a>
+      <button class="nav__toggle" aria-label="Toggle navigation">≡</button>
+      <ul class="nav__links">
+        <li><a href="/projects/">projects</a></li>
+        <li><a href="/blog/">writing</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+  <div class="container" style="max-width:960px">
+
+    <header class="map-head">
+      <p class="kicker">The work · as a network</p>
+      <h1>The Journey</h1>
+      <p class="dek">Not a list of projects, a map of how they connect. Three lines run through the work: <span style="color:var(--attack)">offense</span>, <span style="color:var(--slate)">detection</span>, and <span style="color:var(--mem)">writing</span>. They meet at interchanges where the themes cross. Ride from an offensive-security origin to red-teaming frontier models today. Tap any station.</p>
+    </header>
+
+    <div class="legend" id="legend">
+      <button class="leg leg--off" data-line="off"><span class="sw"></span> Offense</button>
+      <button class="leg leg--det" data-line="det"><span class="sw"></span> Detection</button>
+      <button class="leg leg--wri" data-line="wri"><span class="sw"></span> Writing</button>
+      <span class="leg-note">hover a line to isolate it · tap a station to open it</span>
+    </div>
+
+    <div class="map-frame">
+      <svg class="map-svg" id="map" viewBox="40 150 1120 430" role="group" aria-label="Transit map of Chirag Dewan's work">
+        <!-- glow underlays -->
+        <path class="line line--off line-glow" d="M120,360 L280,200 L960,200 L1040,280"/>
+        <path class="line line--wri line-glow" d="M460,200 L620,360 L960,360 L1040,280"/>
+        <path class="line line--det line-glow" d="M120,360 L280,520 L760,520"/>
+        <!-- lines -->
+        <path id="pOff" class="line line--off" data-line="off" d="M120,360 L280,200 L960,200 L1040,280"/>
+        <path id="pWri" class="line line--wri" data-line="wri" d="M460,200 L620,360 L960,360 L1040,280"/>
+        <path id="pDet" class="line line--det" data-line="det" d="M120,360 L280,520 L760,520"/>
+
+        <!-- terminus caps -->
+        <text class="cap" x="760" y="503" text-anchor="middle">END OF LINE</text>
+
+        <!-- stations (built as <a> so no-JS navigates; JS opens the drawer) -->
+        <a class="stn inter stn--off stn--det" data-id="origin" data-line="off det" href="/Chirag_Dewan_Resume.pdf" role="button" tabindex="0" aria-label="Origin, offensive security background">
+          <circle class="halo" cx="120" cy="360" r="10"/><circle class="ring" cx="120" cy="360" r="11"/><circle class="core" cx="120" cy="360" r="3.2"/>
+          <text class="lbl" x="120" y="398" text-anchor="middle">ORIGIN</text>
+        </a>
+        <a class="stn stn--off" data-id="ctf" data-line="off" href="/projects/ai-security.html" role="button" tabindex="0" aria-label="CTF Records">
+          <circle class="halo" cx="280" cy="200" r="8"/><circle class="ring" cx="280" cy="200" r="8.5"/><circle class="core" cx="280" cy="200" r="2.6"/>
+          <text class="lbl" x="280" y="180" text-anchor="middle">CTF RECORDS</text>
+        </a>
+        <a class="stn inter stn--off stn--wri" data-id="pinj" data-line="off wri" href="/projects/mcp-poison-bench.html" role="button" tabindex="0" aria-label="Prompt Injection interchange">
+          <circle class="halo" cx="460" cy="200" r="10"/><circle class="ring" cx="460" cy="200" r="11"/><circle class="core" cx="460" cy="200" r="3.2"/>
+          <text class="lbl" x="460" y="180" text-anchor="middle">PROMPT INJECTION</text>
+        </a>
+        <a class="stn stn--off" data-id="mpb" data-line="off" href="/projects/mcp-poison-bench.html" role="button" tabindex="0" aria-label="MCP-Poison-Bench">
+          <circle class="halo" cx="660" cy="200" r="8"/><circle class="ring" cx="660" cy="200" r="8.5"/><circle class="core" cx="660" cy="200" r="2.6"/>
+          <text class="lbl" x="660" y="180" text-anchor="middle">MCP-POISON-BENCH</text>
+        </a>
+        <a class="stn stn--off" data-id="recon" data-line="off" href="https://github.com/chirag-dewan" role="button" tabindex="0" aria-label="ReconAI">
+          <circle class="halo" cx="860" cy="200" r="8"/><circle class="ring" cx="860" cy="200" r="8.5"/><circle class="core" cx="860" cy="200" r="2.6"/>
+          <text class="lbl" x="860" y="180" text-anchor="middle">RECONAI</text>
+        </a>
+        <a class="stn inter stn--off stn--wri" data-id="now" data-line="off wri" href="mailto:chirag0728@gmail.com" role="button" tabindex="0" aria-label="Now, open to work">
+          <circle class="halo" cx="1040" cy="280" r="10"/><circle class="ring" cx="1040" cy="280" r="11"/><circle class="core" cx="1040" cy="280" r="3.2"/>
+          <text class="lbl" x="1062" y="284" text-anchor="start">NOW</text>
+        </a>
+        <a class="stn stn--wri" data-id="ten" data-line="wri" href="/blog/ten-thousand-agents.html" role="button" tabindex="0" aria-label="Ten Thousand Agents essay">
+          <circle class="halo" cx="620" cy="360" r="8"/><circle class="ring" cx="620" cy="360" r="8.5"/><circle class="core" cx="620" cy="360" r="2.6"/>
+          <text class="lbl" x="620" y="390" text-anchor="middle">TEN THOUSAND AGENTS</text>
+        </a>
+        <a class="stn stn--wri" data-id="auton" data-line="wri" href="/blog/autonomous-red-team.html" role="button" tabindex="0" aria-label="Autonomous Red Team essay">
+          <circle class="halo" cx="820" cy="360" r="8"/><circle class="ring" cx="820" cy="360" r="8.5"/><circle class="core" cx="820" cy="360" r="2.6"/>
+          <text class="lbl" x="820" y="390" text-anchor="middle">AUTONOMOUS RED TEAM</text>
+        </a>
+        <a class="stn inter stn--det" data-id="realdata" data-line="det" href="/projects/parallax.html" role="button" tabindex="0" aria-label="Real-Data Reckoning interchange">
+          <circle class="halo" cx="360" cy="520" r="10"/><circle class="ring" cx="360" cy="520" r="11"/><circle class="core" cx="360" cy="520" r="3.2"/>
+          <text class="lbl" x="360" y="550" text-anchor="middle">REAL-DATA RECKONING</text>
+        </a>
+        <a class="stn stn--det" data-id="parallax" data-line="det" href="/projects/parallax.html" role="button" tabindex="0" aria-label="PARALLAX">
+          <circle class="halo" cx="560" cy="520" r="8"/><circle class="ring" cx="560" cy="520" r="8.5"/><circle class="core" cx="560" cy="520" r="2.6"/>
+          <text class="lbl" x="560" y="550" text-anchor="middle">PARALLAX</text>
+        </a>
+        <a class="stn stn--det" data-id="kestrel" data-line="det" href="/projects/kestrel.html" role="button" tabindex="0" aria-label="KESTREL">
+          <circle class="halo" cx="760" cy="520" r="8"/><circle class="ring" cx="760" cy="520" r="8.5"/><circle class="core" cx="760" cy="520" r="2.6"/>
+          <text class="lbl" x="760" y="550" text-anchor="middle">KESTREL</text>
+        </a>
+      </svg>
+    </div>
+
+    <!-- accessible / no-JS journey, also the real content -->
+    <section class="journey" aria-label="The journey in words">
+      <h2 class="sec-label"><span class="hnum">↦</span>The journey, in words</h2>
+
+      <div class="jr-line jr-line--off">
+        <h3><span class="sw"></span> Offense line</h3>
+        <ul class="jr-stops">
+          <li><a href="/Chirag_Dewan_Resume.pdf">Origin</a> <span class="m">— offensive security background: find the pattern, not the content.</span></li>
+          <li><a href="/projects/ai-security.html">CTF Records</a> <span class="m">— prompt-injection CTFs, Gandalf L2–L7.</span></li>
+          <li><a href="/projects/mcp-poison-bench.html">Prompt Injection</a> <span class="m">— interchange: where offense, the benchmark, and the writing cross.</span></li>
+          <li><a href="/projects/mcp-poison-bench.html">MCP-Poison-Bench</a> <span class="m">— de-circularized tool-poisoning benchmark; rug_pull bypasses the defense by design.</span></li>
+          <li><a href="https://github.com/chirag-dewan">ReconAI</a> <span class="m">— LLM-prioritized attack-surface triage.</span></li>
+          <li><a href="mailto:chirag0728@gmail.com">Now</a> <span class="m">— red teaming LLMs and agents; open to what's next.</span></li>
+        </ul>
+      </div>
+
+      <div class="jr-line jr-line--det">
+        <h3><span class="sw"></span> Detection line</h3>
+        <ul class="jr-stops">
+          <li><a href="/Chirag_Dewan_Resume.pdf">Origin</a> <span class="m">— the same instinct, pointed at defense.</span></li>
+          <li><a href="/projects/parallax.html">Real-Data Reckoning</a> <span class="m">— the shared lesson: synthetic flatters, real data corrects, subtraction beats addition.</span></li>
+          <li><a href="/projects/parallax.html">PARALLAX</a> <span class="m">— metadata-only model-extraction detection: 0.45 → 0.68 AUC.</span></li>
+          <li><a href="/projects/kestrel.html">KESTREL</a> <span class="m">— cloud-workload anomaly detection: recall 0.0005 → 0.766. End of line.</span></li>
+        </ul>
+      </div>
+
+      <div class="jr-line jr-line--wri">
+        <h3><span class="sw"></span> Writing line</h3>
+        <ul class="jr-stops">
+          <li><a href="/projects/mcp-poison-bench.html">Prompt Injection</a> <span class="m">— interchange from the offense line.</span></li>
+          <li><a href="/blog/ten-thousand-agents.html">Ten Thousand Agents</a> <span class="m">— why prompt injection can't be patched once (part 1).</span></li>
+          <li><a href="/blog/autonomous-red-team.html">Autonomous Red Team</a> <span class="m">— the architecture of a continuous adversary (part 2).</span></li>
+          <li><a href="mailto:chirag0728@gmail.com">Now</a> <span class="m">— converges with the offense line.</span></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+  </main>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-label="Station detail" aria-hidden="true">
+    <div class="drawer__hd">
+      <div>
+        <div class="d-lines" id="dLines"></div>
+        <div class="d-kind" id="dKind"></div>
+        <div class="d-name" id="dName"></div>
+      </div>
+      <button class="drawer__x" id="dClose" aria-label="Close">✕</button>
+    </div>
+    <div class="drawer__body">
+      <div class="d-meta" id="dMeta"></div>
+      <p class="d-blurb" id="dBlurb"></p>
+      <div class="d-metric" id="dMetric"></div>
+      <div class="d-links" id="dLinks"></div>
+      <div class="d-nav">
+        <button id="dPrev">← prev stop</button>
+        <button id="dNext">next stop →</button>
+      </div>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <div class="footer__links">
+      <a href="https://github.com/chirag-dewan">github</a>
+      <a href="https://linkedin.com/in/cdewan">linkedin</a>
+      <a href="mailto:chirag0728@gmail.com">email</a>
+      <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+    </div>
+    <p>© 2026 Chirag Dewan</p>
+    <p class="footer__tagline">see the pattern, not the content.</p>
+    <p class="footer__colo">the work, drawn as one line you can ride</p>
+    <p class="footer__push"></p>
+  </footer>
+
+<script src="js/main.js" defer></script>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SW = {off:getCss('--attack'), det:getCss('--slate'), wri:getCss('--mem')};
+  function getCss(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '#000'; }
+
+  // station data (ordered along the journey for prev/next)
+  var ORDER = ['origin','ctf','pinj','mpb','recon','ten','auton','parallax','kestrel','now'];
+  var D = {
+    origin:{lines:['off','det'], kind:'start of line', name:'Origin', meta:'where it starts · offensive security',
+      blurb:'An offensive-security background. The instinct that runs through everything downstream: read the pattern an attacker leaves in the noise, never the content they try to hide.',
+      links:[['resume','/Chirag_Dewan_Resume.pdf']]},
+    ctf:{lines:['off'], kind:'offense · practice', name:'CTF Records', meta:'ongoing · practice log',
+      blurb:'A running log of LLM prompt-injection CTFs. Gandalf L2–L7, each solve mapped to the guardrail it defeats and its OWASP LLM / MITRE ATLAS class. As defenses layer, the technique escalates.',
+      metric:'<span>L2 → L7 cleared</span>', links:[['the record','/projects/ai-security.html'],['practice repo','https://github.com/chirag-dewan/ai-redteam-lab']]},
+    pinj:{lines:['off','wri'], kind:'interchange · theme', name:'Prompt Injection', meta:'where three lines cross',
+      blurb:'The through-theme of the whole map. Offense, the benchmark, and the writing all pass through here. OWASP LLM01 · MITRE ATLAS AML.T0051.',
+      links:[['the benchmark','/projects/mcp-poison-bench.html'],['the essays','/blog/']]},
+    mpb:{lines:['off'], kind:'offense · research', name:'MCP-Poison-Bench', meta:'2026-06 · research · public',
+      blurb:'A de-circularized MCP tool-poisoning benchmark: 4 injection classes × 6 models × 3 vendors, scored with Wilson intervals. The headline defense win was an artifact of shared vocabulary.',
+      metric:'<span class="broke">rug_pull 1.00 → 1.00</span> · defense bypassed by design', links:[['read the case','/projects/mcp-poison-bench.html'],['live demo','/projects/mcp-poison-bench-demo.html'],['source','https://github.com/chirag-dewan/MCP-Poison-Bench']]},
+    recon:{lines:['off'], kind:'offense · tooling', name:'ReconAI', meta:'active · tooling',
+      blurb:'LLM-prioritized attack-surface triage: BBOT enumerates breadth-first, then a model ranks the assets by exploitability so the operator works the highest-value target first.',
+      links:[['github','https://github.com/chirag-dewan']]},
+    ten:{lines:['wri'], kind:'writing · part 1', name:'Ten Thousand Agents', meta:'2026-06-04 · part 1 · 4 min',
+      blurb:'Prompt injection isn’t a bug you patch. It’s baked into how these models work, so the fix can’t be a one-time audit. You need an attacker that never stops.',
+      links:[['read part 1','/blog/ten-thousand-agents.html']]},
+    auton:{lines:['wri'], kind:'writing · part 2', name:'Autonomous Red Team', meta:'2026-06-04 · part 2 · 6 min',
+      blurb:'Part one made the case for a continuous adversary. This is the architecture: eight components, traced with one planted injection.',
+      links:[['read part 2','/blog/autonomous-red-team.html']]},
+    realdata:{lines:['det'], kind:'interchange · theme', name:'Real-Data Reckoning', meta:'the lesson both detectors learned',
+      blurb:'Where both detectors met reality. Synthetic data flatters a detector; real data corrects it. Both times the fix was subtractive: remove the memorized features, meet the data where it lives.',
+      links:[['PARALLAX','/projects/parallax.html'],['KESTREL','/projects/kestrel.html']]},
+    parallax:{lines:['det'], kind:'detection · application', name:'PARALLAX', meta:'v2 · real-data validated',
+      blurb:'Metadata-only behavioral detection of model-extraction abuse, no prompt or payload inspection. A 14-feature bank scored worse than chance on 16.9M real auth events; subtraction recovered it.',
+      metric:'AUC <span class="broke">0.45</span> → <span class="held">0.68</span> · on real data', links:[['read the case','/projects/parallax.html'],['live demo','/projects/parallax-demo.html']]},
+    kestrel:{lines:['det'], kind:'detection · infrastructure · end of line', name:'KESTREL', meta:'v2 · real-data validated',
+      blurb:'Cloud-workload anomaly detection, per-account z-score baselines, MITRE ATLAS-tagged and Sigma-exportable. v1 hunted GPU telemetry in an API audit log; re-aiming lifted recall 1,532x.',
+      metric:'recall <span class="broke">0.0005</span> → <span class="held">0.766</span> · precision 1.0', links:[['read the case','/projects/kestrel.html'],['live demo','/projects/kestrel-demo.html']]},
+    now:{lines:['off','wri'], kind:'end of line · today', name:'Now · 2026', meta:'the current stop',
+      blurb:'Red teaming LLMs and agents, and writing about the adversary that never stops. The offense and writing lines converge here. Open to what’s next.',
+      links:[['resume','/Chirag_Dewan_Resume.pdf'],['say hi','mailto:chirag0728@gmail.com']]}
+  };
+
+  var svg = document.getElementById('map');
+  var drawer = document.getElementById('drawer'), scrim = document.getElementById('scrim');
+  var cur = null;
+
+  function openStation(id){
+    var d = D[id]; if(!d) return;
+    cur = id;
+    document.querySelectorAll('.stn.sel').forEach(function(n){n.classList.remove('sel');});
+    var node = svg.querySelector('.stn[data-id="'+id+'"]'); if(node) node.classList.add('sel');
+    document.getElementById('dLines').innerHTML = d.lines.map(function(l){return '<span class="sw" style="background:'+SW[l]+'"></span>';}).join('');
+    document.getElementById('dKind').textContent = d.kind;
+    document.getElementById('dName').textContent = d.name;
+    document.getElementById('dMeta').textContent = d.meta || '';
+    document.getElementById('dBlurb').textContent = d.blurb;
+    var m = document.getElementById('dMetric'); if(d.metric){ m.innerHTML = d.metric; m.style.display=''; } else { m.style.display='none'; }
+    document.getElementById('dLinks').innerHTML = (d.links||[]).map(function(l){return '<a href="'+l[1]+'">'+l[0]+' →</a>';}).join('');
+    drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); scrim.classList.add('on');
+  }
+  function close(){ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); scrim.classList.remove('on');
+    document.querySelectorAll('.stn.sel').forEach(function(n){n.classList.remove('sel');}); cur=null; }
+  function step(dir){ if(!cur) return; var i=ORDER.indexOf(cur); i=(i+dir+ORDER.length)%ORDER.length; openStation(ORDER[i]); }
+
+  svg.querySelectorAll('.stn').forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); openStation(a.getAttribute('data-id')); });
+    a.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openStation(a.getAttribute('data-id')); } });
+  });
+  document.getElementById('dClose').addEventListener('click', close);
+  scrim.addEventListener('click', close);
+  document.getElementById('dPrev').addEventListener('click', function(){step(-1);});
+  document.getElementById('dNext').addEventListener('click', function(){step(1);});
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') close();
+    else if(drawer.classList.contains('open')){ if(e.key==='ArrowLeft')step(-1); else if(e.key==='ArrowRight')step(1); }
+  });
+
+  // legend: isolate a line on hover/focus
+  document.querySelectorAll('.leg').forEach(function(b){
+    var ln = b.getAttribute('data-line');
+    function on(){ svg.setAttribute('data-hl', ln);
+      svg.querySelectorAll('.line,.stn').forEach(function(el){ el.classList.toggle('hl', (el.getAttribute('data-line')||'').split(' ').indexOf(ln)>=0); });
+      b.classList.add('on'); }
+    function off(){ svg.removeAttribute('data-hl'); svg.querySelectorAll('.hl').forEach(function(el){el.classList.remove('hl');}); b.classList.remove('on'); }
+    b.addEventListener('mouseenter', on); b.addEventListener('mouseleave', off);
+    b.addEventListener('focus', on); b.addEventListener('blur', off);
+    b.addEventListener('click', function(){ /* isolate sticky on tap for mobile */
+      if(svg.getAttribute('data-hl')===ln){ off(); } else { on(); } });
+  });
+
+  // trains: dots riding each line (reduced-motion off)
+  if(!reduce){
+    var NS='http://www.w3.org/2000/svg';
+    [['pOff','off',9000],['pWri','wri',8000],['pDet','det',7000]].forEach(function(cfg){
+      var path=document.getElementById(cfg[0]); if(!path||!path.getTotalLength) return;
+      var len=path.getTotalLength();
+      var c=document.createElementNS(NS,'circle'); c.setAttribute('r','4.5'); c.setAttribute('class','train train--'+cfg[1]); svg.appendChild(c);
+      var start=performance.now(), dur=cfg[2];
+      (function move(t){ var p=((t-start)%dur)/dur, pt=path.getPointAtLength(p*len);
+        c.setAttribute('cx',pt.x); c.setAttribute('cy',pt.y); requestAnimationFrame(move); })(start);
+    });
+  }
+
+  // deep-link: #station opens it
+  if(location.hash){ var id=location.hash.slice(1); if(D[id]) openStation(id); }
+})();
+</script>
+</body>
+</html>
