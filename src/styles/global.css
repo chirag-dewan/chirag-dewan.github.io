@@ -1,0 +1,295 @@
+/* ============================================================
+   cdewan.me, design system
+   Content-first, typography-driven, monochrome. Modeled on the
+   restraint of leerob.com: a well-typeset document, not a UI.
+   ============================================================ */
+
+/* ---- Self-hosted variable fonts (latin subset, ~30KB each) ---- */
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('/fonts/geist-sans.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/geist-mono.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+:root {
+  /* Light theme, the default */
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --border: #eaeaea;
+  --code-bg: #f6f6f6;
+
+  --sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Helvetica, Arial, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --measure: 640px;
+  --gap: 48px;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0a0a0a;
+  --fg: #ededed;
+  --muted: #888888;
+  --border: #222222;
+  --code-bg: #161616;
+  color-scheme: dark;
+}
+
+/* Follow the OS when no explicit choice has been stored. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0a0a0a;
+    --fg: #ededed;
+    --muted: #888888;
+    --border: #222222;
+    --code-bg: #161616;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern', 'liga', 'calt';
+  transition: background 150ms ease, color 150ms ease;
+}
+
+/* ---- The single centered column ---- */
+.column {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 80px 24px 64px;
+}
+@media (max-width: 640px) {
+  .column { padding: 48px 20px 56px; }
+}
+
+/* ---- Typography ---- */
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: -0.011em;
+  line-height: 1.3;
+}
+/* The anti-hero headline: barely larger than body. */
+h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+h2 { font-size: 1.125rem; margin: 2.5rem 0 0.75rem; }
+h3 { font-size: 1rem; margin: 2rem 0 0.5rem; }
+
+p { margin: 0 0 1.25rem; max-width: 65ch; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 150ms ease;
+}
+a:hover { text-decoration-color: var(--fg); }
+
+strong { font-weight: 600; }
+em { font-style: italic; }
+
+small, .small { font-size: 0.875rem; color: var(--muted); }
+
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+pre {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+hr { border: 0; border-top: 1px solid var(--border); margin: var(--gap) 0; }
+
+::selection { background: var(--fg); color: var(--bg); }
+
+/* ---- Link lists (writing index, research list) ---- */
+.link-list { list-style: none; }
+.link-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.link-list li:first-child { border-top: 1px solid var(--border); }
+.link-list a { text-decoration: none; }
+.link-list a:hover { text-decoration: underline; text-decoration-color: var(--fg); }
+.link-list .date {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inline research list on the homepage (tighter, no rules) */
+.plain-list { list-style: none; }
+.plain-list li { padding: 3px 0; }
+
+/* ---- Interior page top link (name, doubles as home) ---- */
+.masthead { margin-bottom: var(--gap); }
+.masthead a { text-decoration: none; font-weight: 600; }
+.masthead a:hover { text-decoration: underline; }
+.masthead .back { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); }
+
+/* ---- Footer (a single quiet line) ---- */
+.site-footer {
+  margin-top: var(--gap);
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: center;
+}
+.site-footer a { color: var(--muted); text-decoration: none; }
+.site-footer a:hover { color: var(--fg); }
+.site-footer .spacer { flex: 1 1 auto; }
+
+/* ---- Theme toggle: small, quiet, bottom of page ---- */
+.theme-toggle {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.theme-toggle:hover { color: var(--fg); }
+
+/* ---- Prose article ---- */
+.prose { }
+.prose .kicker {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.prose h1 { font-size: 1.6rem; line-height: 1.2; margin-bottom: 0.75rem; }
+.prose .standfirst {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-bottom: var(--gap);
+}
+.prose ul, .prose ol { margin: 0 0 1.25rem; padding-left: 1.25rem; max-width: 65ch; }
+.prose li { margin-bottom: 0.4rem; }
+.prose figure { margin: 1.75rem 0 1rem; }
+.prose figcaption {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 0.6rem;
+}
+
+/* ---- Data diagrams (ported writeup SVGs), two-tone monochrome ---- */
+.diagram {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  padding: 18px 16px 8px;
+  margin: 1.5rem 0 0.5rem;
+}
+.diagram svg { display: block; width: 100%; height: auto; }
+.diagram .legend {
+  display: flex; flex-wrap: wrap; gap: 10px 20px; justify-content: center;
+  font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 8px;
+}
+.diagram .legend span { display: inline-flex; align-items: center; gap: 6px; }
+.diagram .legend i { width: 12px; height: 12px; border-radius: 2px; border: 1.4px solid; }
+/* Monochrome diagram primitives, referenced by ported SVG markup */
+.diagram .box { fill: var(--bg); stroke: var(--muted); stroke-width: 1.4; }
+.diagram .box-em { fill: var(--code-bg); stroke: var(--fg); stroke-width: 1.6; }
+.diagram .box-ghost { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.diagram .t  { font-family: var(--mono); font-size: 12px; fill: var(--fg); font-weight: 500; }
+.diagram .ts { font-family: var(--mono); font-size: 10.5px; fill: var(--muted); }
+.diagram .flow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+.diagram .flow-em { stroke: var(--fg); stroke-width: 1.7; fill: none; marker-end: url(#ahE); }
+.diagram .flow-ghost { stroke: var(--muted); stroke-width: 1.3; fill: none; stroke-dasharray: 5 4; }
+.diagram .flow-dash { stroke: var(--muted); stroke-width: 1.3; fill: none; stroke-dasharray: 4 3; }
+.diagram .sw-em { background: var(--code-bg); border-color: var(--fg); }
+.diagram .sw-mut { background: var(--bg); border-color: var(--muted); }
+
+/* ---- Results tables (mono, alignment only) ---- */
+.results {
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  margin: 1.5rem 0 0.5rem;
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+.results caption {
+  caption-side: top; text-align: left;
+  font-size: 0.72rem; letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: 0.6rem;
+}
+.results th, .results td { text-align: left; padding: 5px 18px 5px 0; white-space: nowrap; font-weight: 400; }
+.results thead th { color: var(--muted); border-bottom: 1px solid var(--border); }
+.results tbody th { color: var(--fg); font-weight: 600; font-family: var(--sans); padding-right: 28px; }
+.results td { color: var(--fg); }
+.results .em { font-weight: 700; }
+
+/* stat figures */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px 28px; margin: 1.5rem 0; }
+.stat { border-left: 2px solid var(--border); padding-left: 14px; }
+.stat .v { font-family: var(--mono); font-size: 1.35rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.stat .l { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); line-height: 1.45; margin-top: 3px; }
+
+/* definition-style feature grid */
+.defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px 28px; margin: 1.25rem 0; }
+.defs .d { border-left: 2px solid var(--border); padding-left: 14px; }
+.defs .d .n { font-weight: 600; margin-bottom: 3px; }
+.defs .d .x { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

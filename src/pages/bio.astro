@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Background · Chirag Dewan"
+  description="Chirag Dewan: AI security researcher. Offensive security research background, now focused on the security of LLMs and agentic systems."
+  path="/bio/"
+>
+  <nav class="masthead">
+    <a href="/">Chirag Dewan</a>
+  </nav>
+
+  <main class="prose">
+    <h1>Background</h1>
+
+    <p>
+      I'm an AI security researcher. My work sits at the seam between offense and
+      detection: red teaming LLMs and agentic systems, and building the runtime
+      monitoring that catches abuse once those systems are live.
+    </p>
+
+    <p>
+      I came to it from offensive security. Earlier work included offensive
+      research on industrial control systems and lower-level targets, the kind of
+      work where you learn that a defense is only as good as the one channel its
+      author forgot to check. That instinct carries directly into AI security,
+      where the same lesson keeps reappearing: a filter guards the input it can
+      read and is blind to the one it cannot.
+    </p>
+
+    <p>
+      Today most of my time goes to three threads. Red teaming and benchmarking
+      the ways agents get subverted, documented in
+      <a href="/writing/mcp-poison-bench/">MCP-Poison-Bench</a> and the two-part
+      writeup on <a href="/writing/ten-thousand-agents/">continuous adversaries</a>.
+      Behavioral detection that works from metadata alone, in
+      <a href="/writing/parallax/">PARALLAX</a> and
+      <a href="/writing/kestrel/">KESTREL</a>. And a running log of
+      prompt-injection <a href="/writing/ctf-records/">CTFs</a>, mapping each solve
+      to the guardrail it defeats.
+    </p>
+
+    <p>
+      A through-line in all of it: I publish the negative results. A benchmark that
+      shows a defense fails, a detector that scored worse than chance before it was
+      fixed. The honest version is more useful than the impressive one.
+    </p>
+
+    <p>
+      You can find the code on <a href="https://github.com/chirag-dewan">GitHub</a>,
+      the résumé <a href="/Chirag_Dewan_Resume.pdf">here</a>, or reach me at
+      <a href="mailto:chirag0728@gmail.com">chirag0728@gmail.com</a>.
+    </p>
+  </main>
+</Base>

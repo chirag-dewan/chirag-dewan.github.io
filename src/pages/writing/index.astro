@@ -1,0 +1,35 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('writing')).sort(
+  (a, b) => (a.data.date < b.data.date ? 1 : -1),
+);
+---
+
+<Base
+  title="Writing · Chirag Dewan"
+  description="Writing on AI security, agent red teaming, and behavioral detection. Working out loud, failed attempts included."
+  path="/writing/"
+>
+  <nav class="masthead">
+    <a href="/">Chirag Dewan</a>
+  </nav>
+
+  <main>
+    <h1>Writing</h1>
+    <p>
+      Notes on AI security, agent red teaming, and behavioral detection. Working
+      out loud, failed attempts included.
+    </p>
+
+    <ul class="link-list" style="margin-top: 2rem;">
+      {posts.map((e) => (
+        <li>
+          <a href={`/writing/${e.id}/`}>{e.data.title}</a>
+          <span class="date">{e.data.date}</span>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Base>

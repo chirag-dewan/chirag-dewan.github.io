@@ -1,0 +1,62 @@
+---
+title: "PARALLAX: behavioral threat detection from metadata alone"
+description: "Metadata-only behavioral detection of model-extraction abuse: classify API misuse from the shape of traffic alone, never the prompt content. Validated on 16.9M real authentication events."
+kind: research
+date: "2026-04-09"
+kicker: "Behavioral detection · validated on real data"
+standfirst: "Metadata-only behavioral detection of model-extraction abuse: classify API misuse from the shape of traffic alone, never the prompt content. Validated on 16.9M real authentication events, where a 14-feature bank scored 0.45 AUC (worse than chance) and a single change-from-baseline signal recovered it to 0.68."
+weight: 20
+demo: "/projects/parallax-demo.html"
+source: "https://github.com/chirag-dewan/parallax"
+---
+
+## The problem: extraction is a pattern, not an event
+
+Model extraction steals a model by querying its API at scale and learning from the responses. Every individual request is well-formed and authorized, so no single-request rule fires. The signal lives in the distribution of requests over time: rate, regularity, breadth of targets, session structure. The detection problem is therefore a behavioral one, not a content one.
+
+## Design constraint: metadata only
+
+The system is restricted to request metadata and never inspects prompt or response content. Two reasons, one principle. Privacy: an abuse detector that has to read user prompts is itself a liability. Portability: behavioral shape generalizes across deployments in a way that content signatures do not. The operating thesis was **see the pattern, not the content**, and the constraint is what forced the design to earn that.
+
+## v1: a 14-feature behavioral bank
+
+The first build engineered fourteen behavioral features into a per-entity score. Grouped by what they measure:
+
+<div class="defs">
+  <div class="d"><div class="n">volume and rate</div><div class="x">request frequency and burstiness per entity over rolling windows.</div></div>
+  <div class="d"><div class="n">token ratios</div><div class="x">input-to-output size relationships that distinguish probing from normal use.</div></div>
+  <div class="d"><div class="n">timing regularity</div><div class="x">inter-arrival periodicity, which separates scripted extraction from human cadence.</div></div>
+  <div class="d"><div class="n">session structure</div><div class="x">session length, target breadth, and access patterns across endpoints.</div></div>
+</div>
+
+On synthetic data it separated attackers from normal users cleanly. Synthetic data is exactly where this kind of detector flatters itself, so the real test was real data.
+
+## The reality check: 0.45 AUC on real data
+
+<div class="stats">
+  <div class="stat"><div class="v">16.9M</div><div class="l">real LANL authentication events</div></div>
+  <div class="stat"><div class="v">87 / 500</div><div class="l">entities actually compromised (ground truth)</div></div>
+  <div class="stat"><div class="v">0.45</div><div class="l">v1 ROC AUC, below the 0.50 chance line</div></div>
+</div>
+
+Evaluated against the labeled Los Alamos authentication dataset, v1 scored **0.45 AUC**, worse than a coin flip. Diagnosis: 7 of the 14 features were *inverted* on real traffic. They had learned a synthetic attacker's silhouette, and on real data that silhouette belonged to legitimate power users, so the detector flagged heavy-but-benign accounts and cleared the actual intruders. Well-engineered, pointed backwards.
+
+## v2: subtract the memorized features
+
+The fix was subtractive, not additive. Rather than tune fourteen features, I removed the ones that had memorized a specific attack shape and kept the one signal that held up across the domain shift: **change from an entity's own baseline**. A feature that says "this account is behaving unlike its own history" carries no assumption about what an attack looks like, so it survives contact with a new environment. That raised real-data performance to **0.68 AUC**.
+
+The transferable lesson: detectors that memorize attack silhouettes do not survive a domain change; detecting deviation from a per-entity baseline does. Subtraction beat addition.
+
+## Documented evasions
+
+A change-from-baseline detector has known blind spots, and they are published rather than hidden:
+
+<div class="defs">
+  <div class="d"><div class="n">feature normalization</div><div class="x">shape one driving signal to look ordinary and the score drops below threshold.</div></div>
+  <div class="d"><div class="n">traffic dilution</div><div class="x">blend a small amount of attack traffic into a large volume of normal traffic to disappear into the entity's own baseline.</div></div>
+  <div class="d"><div class="n">low-and-slow</div><div class="x">extend the campaign so the per-window deviation never crosses the threshold.</div></div>
+</div>
+
+## Why it matters
+
+Weaponizing a frontier model requires access to it first, and access at extraction scale leaves a behavioral trail even when every request is individually clean. PARALLAX is the tripwire at that gate: 0.68 AUC on real data, metadata-only by construction, open source, and explicit about the three ways it can still be beaten.

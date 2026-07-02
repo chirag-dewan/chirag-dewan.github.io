@@ -1,0 +1,43 @@
+---
+import Base from './Base.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  kicker?: string;
+  standfirst?: string;
+  date?: string;
+  path?: string;
+  demo?: string;
+  source?: string;
+}
+
+const { title, description, kicker, standfirst, date, path, demo, source } = Astro.props;
+---
+
+<Base title={`${title} · Chirag Dewan`} description={description} path={path} ogType="article">
+  <nav class="masthead">
+    <a href="/">Chirag Dewan</a>
+  </nav>
+
+  <article class="prose">
+    {kicker && <p class="kicker">{kicker}</p>}
+    <h1>{title}</h1>
+    {standfirst && <p class="standfirst">{standfirst}</p>}
+
+    <slot />
+
+    {(demo || source) && (
+      <p style="margin-top: var(--gap); font-family: var(--mono); font-size: 0.85rem;">
+        {demo && <a href={demo}>live demo →</a>}
+        {demo && source && <span style="color: var(--muted); margin: 0 12px;">·</span>}
+        {source && <a href={source}>source →</a>}
+      </p>
+    )}
+  </article>
+
+  <p class="masthead back" style="margin: var(--gap) 0 0;">
+    <a href="/writing/" style="color: var(--muted);">← all writing</a>
+    {date && <span style="margin-left: 14px;">{date}</span>}
+  </p>
+</Base>

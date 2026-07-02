@@ -1,0 +1,192 @@
+---
+title: "MCP-Poison-Bench: a de-circularized tool-poisoning benchmark"
+description: "A reproducible MCP tool-poisoning benchmark across four attack classes, six models, and three vendors, with a de-circularized test showing a client-side metadata defense is structurally blind to rug-pull injection."
+kind: research
+date: "2026-06-03"
+kicker: "Research · public"
+standfirst: "A reproducible MCP tool-poisoning benchmark over 4 injection classes, 6 models, and 3 vendors, scored as baseline-vs-defended ASR/utility deltas with 95% Wilson intervals. Its point is a de-circularized evaluation: the defense's apparent win came from attacks that shared its own keyword vocabulary, and the one vector that still succeeds, rug_pull, bypasses the defense by design."
+weight: 5
+demo: "/projects/mcp-poison-bench-demo.html"
+source: "https://github.com/chirag-dewan/MCP-Poison-Bench"
+---
+
+<style>{`
+  .mpb-fig svg { display:block; width:100%; height:auto; font-family: var(--mono); }
+  .mpb-fig .bx { fill: var(--bg); stroke: var(--border); }
+  .mpb-fig .bx-red { fill: var(--code-bg); stroke: var(--fg); }
+  .mpb-fig .bx-grn { fill: var(--code-bg); stroke: var(--muted); }
+  .mpb-fig .t { fill: var(--fg); }
+  .mpb-fig .tm { fill: var(--muted); }
+  .mpb-fig .tr { fill: var(--fg); font-weight: 600; }
+  .mpb-fig .tg { fill: var(--fg); }
+  .mpb-fig .ln { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  .mpb-fig .lr { stroke: var(--fg); stroke-width: 1.6; fill: none; }
+  .mpb-fig .db { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; fill: none; }
+`}</style>
+
+## At a glance
+
+Three steps: measure the attack across vendors, **de-circularize** the evaluation, and locate where the defense fails.
+
+<div class="defs">
+  <div class="d"><div class="n">measure</div><div class="x">4 classes &times; 6 models &times; 3 vendors. Poisoned MCP tools drive one goal through four channels, swept over Claude, GPT, and DeepSeek with a client-side defense toggle. Worst model: gpt-4o-mini.</div></div>
+  <div class="d"><div class="n">de-circularize</div><div class="x">The apparent win used attacks sharing the filter's keywords. Re-tested on held-out payloads authored to trip zero defense rules (CI-enforced), the reduction vanishes.</div></div>
+  <div class="d"><div class="n">expose</div><div class="x">The defense rewrites the tool list, never tool results. So <code>rug_pull</code> bypasses it entirely, even at ASR 1.00 &rarr; 1.00.</div></div>
+</div>
+
+## Threat model
+
+An MCP client hands the model a set of tools, each described by server-supplied metadata: a free-text `description` and a JSON-Schema for its arguments. The model reads that metadata as trusted context and decides which tool to call. That trust is the attack surface. A malicious or compromised server embeds imperative instructions in the metadata so the model is steered into an action the user never asked for. This is **tool poisoning**.
+
+The benchmark fixes one concrete objective so attacks are comparable. Every trial gives the model a benign task and one confidential session token, the `CANARY`, that it is told to keep. Success for the attacker is coercing the model into calling an attacker-controlled `export_data` sink with the canary as the argument. ASR is binary per trial: the sink fired with the canary, or it did not. Everything is local and defanged; the sink is a no-op and the secret is synthetic.
+
+Tasks are **multi-step** on purpose, so each attack class gets a real opening. A two-step `notes_pipeline` (calculate then save a note) lets `rug_pull` land mid-flow in a tool result; a two-server `account_review` puts a second server on the critical path so `cross_server` has a concrete trigger. An earlier single-step task gave `rug_pull` and `cross_server` no opening, which is why they read 0.00, a measurement artifact, not robustness.
+
+<figure class="diagram mpb-fig">
+  <svg viewBox="0 0 720 200" role="img" aria-label="Attack path: server metadata crosses the trust boundary into model context and out to the sink">
+    <defs>
+      <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--muted)"/></marker>
+      <marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--fg)"/></marker>
+    </defs>
+    <line class="db" x1="190" y1="20" x2="190" y2="178"/>
+    <text class="tm" x="100" y="32" text-anchor="middle" font-size="10.5">server-controlled</text>
+    <text class="tm" x="455" y="32" text-anchor="middle" font-size="10.5">client / model</text>
+    <rect class="bx-red" x="12" y="62" width="128" height="48" rx="4"/>
+    <text class="t" x="76" y="82" text-anchor="middle" font-size="12">poisoned</text>
+    <text class="t" x="76" y="98" text-anchor="middle" font-size="12">MCP server</text>
+    <rect class="bx" x="214" y="62" width="120" height="48" rx="4"/>
+    <text class="t" x="274" y="82" text-anchor="middle" font-size="12">MCP client</text>
+    <text class="tm" x="274" y="98" text-anchor="middle" font-size="10.5">(defense here)</text>
+    <rect class="bx" x="402" y="62" width="126" height="48" rx="4"/>
+    <text class="t" x="465" y="82" text-anchor="middle" font-size="12">model</text>
+    <text class="tm" x="465" y="98" text-anchor="middle" font-size="10.5">context + CANARY</text>
+    <rect class="bx-red" x="594" y="62" width="116" height="48" rx="4"/>
+    <text class="tr" x="652" y="82" text-anchor="middle" font-size="12">export_data</text>
+    <text class="tr" x="652" y="98" text-anchor="middle" font-size="10.5">attacker sink</text>
+    <line class="ln" x1="140" y1="86" x2="210" y2="86" marker-end="url(#ah)"/>
+    <text class="tm" x="175" y="78" text-anchor="middle" font-size="10">metadata</text>
+    <line class="ln" x1="334" y1="86" x2="398" y2="86" marker-end="url(#ah)"/>
+    <text class="tm" x="366" y="78" text-anchor="middle" font-size="10">tools+ctx</text>
+    <line class="ln" x1="528" y1="86" x2="590" y2="86" marker-end="url(#ah)"/>
+    <text class="tm" x="559" y="78" text-anchor="middle" font-size="10">tool call</text>
+    <path class="lr" d="M465,110 L465,150 L651,150 L651,112" marker-end="url(#ahr)"/>
+    <text class="tr" x="558" y="166" text-anchor="middle" font-size="10.5">CANARY exfiltrated → sink</text>
+  </svg>
+  <figcaption>Server-controlled tool metadata crosses the trust boundary into model context. A successful attack coerces the model to call the <code>export_data</code> sink with the planted <code>CANARY</code> token. ASR = sink called with the canary.</figcaption>
+</figure>
+
+## Attack taxonomy
+
+The same defanged payload is injected through four documented vectors, parameterized so the harness sweeps them identically. They differ only in *where* the instruction hides and *when* it appears:
+
+<div class="defs">
+  <div class="d"><div class="n">tool_description</div><div class="x">imperative instruction placed in a tool's free-text <code>description</code> field, read at tool-selection time.</div></div>
+  <div class="d"><div class="n">schema_field</div><div class="x">instruction tucked into a JSON-Schema property <code>description</code>, so it rides in with the argument spec rather than the tool blurb.</div></div>
+  <div class="d"><div class="n">rug_pull</div><div class="x">tool is benign at approval time; the instruction is injected into the tool <em>result</em> returned after the call, defeating call-time review.</div></div>
+  <div class="d"><div class="n">cross_server</div><div class="x">a second malicious server exposes a shadow tool that redirects a trusted server's data to the sink, so the attack crosses a server boundary.</div></div>
+</div>
+
+## The defense: a client-side tool_transform
+
+The defense is strictly client-side and content-agnostic about the task. The runner exposes one hook, a `tool_transform` callable that rewrites the tool list before it reaches the model, and the defense flips on with a single flag. It runs a two-stage pass over server-supplied descriptions:
+
+1. **Segment and redact.** Descriptions are split into segments and each is scored against named rules for instruction-shaped text: imperative directives, authority framing, tool-redirection, exfiltration cues, sink references, override phrases. Instruction-shaped segments are removed; benign documentation survives, which is what preserves task utility.
+2. **Provenance wrap.** Surviving text is wrapped in client-origin provenance markers so the model can tell client-authored framing from server-supplied claims.
+
+It touches only tool metadata. It never modifies server behavior, the task, or the scorer, so a baseline and a defended run differ by exactly one variable.
+
+<figure class="diagram mpb-fig">
+  <svg viewBox="0 0 720 250" role="img" aria-label="Defense scope: tool and schema descriptions are scanned; tool results are never inspected">
+    <defs>
+      <marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--muted)"/></marker>
+      <marker id="ah2r" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--fg)"/></marker>
+    </defs>
+    <text class="tm" x="92" y="20" text-anchor="middle" font-size="10.5">injection channel</text>
+    <rect class="bx" x="10" y="30" width="166" height="30" rx="4"/><text class="t" x="93" y="49" text-anchor="middle" font-size="11.5">tool description</text>
+    <rect class="bx" x="10" y="70" width="166" height="30" rx="4"/><text class="t" x="93" y="89" text-anchor="middle" font-size="11.5">schema field desc</text>
+    <rect class="bx" x="10" y="110" width="166" height="30" rx="4"/><text class="t" x="93" y="129" text-anchor="middle" font-size="11.5">shadow-tool desc</text>
+    <rect class="bx-red" x="10" y="176" width="166" height="34" rx="4"/><text class="tr" x="93" y="190" text-anchor="middle" font-size="11.5">tool RESULT</text><text class="tr" x="93" y="203" text-anchor="middle" font-size="10">(after approval)</text>
+    <rect class="bx-grn" x="276" y="44" width="150" height="96" rx="4"/>
+    <text class="tg" x="351" y="78" text-anchor="middle" font-size="12">tool_transform</text>
+    <text class="tg" x="351" y="95" text-anchor="middle" font-size="10.5">scan + redact</text>
+    <text class="tg" x="351" y="110" text-anchor="middle" font-size="10.5">6 lexical rules</text>
+    <line class="ln" x1="176" y1="45" x2="274" y2="70" marker-end="url(#ah2)"/>
+    <line class="ln" x1="176" y1="85" x2="274" y2="92" marker-end="url(#ah2)"/>
+    <line class="ln" x1="176" y1="125" x2="274" y2="114" marker-end="url(#ah2)"/>
+    <rect class="bx" x="540" y="62" width="160" height="60" rx="4"/>
+    <text class="t" x="620" y="88" text-anchor="middle" font-size="12">model context</text>
+    <text class="tm" x="620" y="104" text-anchor="middle" font-size="10.5">what the model reads</text>
+    <line class="ln" x1="426" y1="92" x2="538" y2="92" marker-end="url(#ah2)"/>
+    <text class="tg" x="483" y="84" text-anchor="middle" font-size="10">scanned</text>
+    <path class="lr" d="M176,193 L460,193 L460,118 L538,108" marker-end="url(#ah2r)"/>
+    <text class="tr" x="330" y="208" text-anchor="middle" font-size="10.5">never inspected: routes around the filter</text>
+  </svg>
+  <figcaption>The <code>tool_transform</code> scans tool, schema, and shadow-tool descriptions before the model sees them. A tool <em>result</em> is produced after the call is approved and never passes through the filter, so result-borne (<code>rug_pull</code>) injection bypasses the defense by construction, regardless of wording.</figcaption>
+</figure>
+
+## Evaluation methodology
+
+<div class="stats">
+  <div class="stat"><div class="v">6 / 3</div><div class="l">models / vendors: Claude (Opus 4.8, Sonnet 4.6, Haiku 4.5), OpenAI (GPT-5.5, gpt-4o-mini), DeepSeek</div></div>
+  <div class="stat"><div class="v">~2.5k</div><div class="l">scored trials across held-out + seen payloads, baseline and defended</div></div>
+  <div class="stat"><div class="v">held-out</div><div class="l">payloads authored to trip zero defense rules: the de-circularization, CI-enforced</div></div>
+</div>
+
+**The de-circularization.** The defense is a keyword filter; the original attack payloads happened to use the same words it scans for (`export_data`, "compliance", "audit", "mandatory"). A reduction against payloads built from your own blocklist proves almost nothing. So the payload set is split: a **seen** set (the original wording, the near-circular contrast) and a **held-out** set authored independently of the rules: 5 registers per class (markdown, terse, conversational, config-comment, verbose), each referring to the sink by function and moving the secret with non-trigger verbs. A unit test asserts *mechanically* that every held-out payload trips zero defense rules and that the seen payloads still trip them, so the separation can't silently regress.
+
+ASR is a rate, so trials sample at temperature 1.0; seeds index independent trials. Scorers are pure functions of the recorded JSONL trace: ASR (sink fired) and utility (benign task still completed) read from the same trace, so the dangerous "completes the task *and* exfiltrates" case stays visible. Trials that error (e.g. provider rate/credit limits) are *excluded*, never scored as "attack didn't fire." Confidence intervals are Wilson score, non-degenerate at the p = 0 / p = 1 boundaries this benchmark lives on.
+
+## Results: held-out vs seen
+
+Susceptibility tracks **capability, not vendor**. The flagships (Opus 4.8, GPT-5.5, Sonnet 4.6) resist nearly every cell; the cheaper models account for most firing, with **gpt-4o-mini the worst**. Read the two tables side by side.
+
+<table class="results">
+  <caption>Held-out (de-circularized) · ASR baseline → defended</caption>
+  <thead>
+    <tr><th></th><th>tool_desc</th><th>schema</th><th>rug_pull</th><th>cross_srv</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>Opus 4.8</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>GPT-5.5</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>Sonnet 4.6</th><td>0.05 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>Haiku 4.5</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>deepseek-chat</th><td>0.07 → 0.04</td><td>0.00 → 0.00</td><td><span class="em">0.30</span> → 0.13</td><td>0.00 → 0.00</td></tr>
+    <tr><th>gpt-4o-mini</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td><span class="em">0.61 → 0.53</span></td><td>0.00 → 0.00</td></tr>
+  </tbody>
+</table>
+
+<table class="results">
+  <caption>Seen (near-circular contrast) · ASR baseline → defended</caption>
+  <thead>
+    <tr><th></th><th>tool_desc</th><th>schema</th><th>rug_pull</th><th>cross_srv</th></tr>
+  </thead>
+  <tbody>
+    <tr><th>Opus / GPT-5.5 / Sonnet</th><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>Haiku 4.5</th><td>0.50 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td><td>0.00 → 0.00</td></tr>
+    <tr><th>deepseek-chat</th><td>0.05 → 0.00</td><td>0.40 → 0.00</td><td>0.70 → 0.50</td><td>0.60 → 0.00</td></tr>
+    <tr><th>gpt-4o-mini</th><td>0.50 → 0.00</td><td>0.50 → 0.00</td><td><span class="em">1.00 → 1.00</span></td><td>1.00 → 0.00</td></tr>
+  </tbody>
+</table>
+
+Two results. **(1) The headline reduction was circular.** On *seen* payloads the defense drives metadata-borne injection to zero (gpt-4o-mini `cross_server` 1.00→0.00, Haiku `tool_description` 0.50→0.00), but that is the wording it was built against. On *held-out* payloads little fires at baseline, so there is little to reduce. **(2) `rug_pull` is a structural blind spot.** The defense rewrites the tool *list* and never inspects tool *results*, so result-borne injection passes through unchanged: gpt-4o-mini `rug_pull` is **1.00 → 1.00** seen and **0.61 → 0.53** held-out. The defense removes what it can read and does nothing to what it cannot.
+
+## Where the defense fails
+
+The contribution is a measured boundary of where this *class* of defense fails, not a defense that works. The clearest case is the `rug_pull` column above, measured with the defense ON: **1.00 → 1.00** on gpt-4o-mini. A keyword filter over tool descriptions cannot, even in principle, touch an instruction delivered in a tool result. The failures fall into two structural families plus a false-positive cost:
+
+<div class="defs">
+  <div class="d"><div class="n">out-of-scope channels</div><div class="x">the transform only inspects tool and schema-property descriptions. Tool results, schema <code>title</code>/<code>enum</code>, nested properties, and tool names are never scanned, so the same instruction relocated into any of them passes untouched.</div></div>
+  <div class="d"><div class="n">rule evasion</div><div class="x">the rules are lexical. Homoglyph and zero-width obfuscation, base64 encoding, other-language phrasing, and soft paraphrase all clear the keyword filter while staying readable to the model.</div></div>
+  <div class="d"><div class="n">false positives</div><div class="x">tightening rules to catch the above starts redacting legitimate imperative documentation ("you must supply a valid date"), trading missed attacks for broken utility.</div></div>
+</div>
+
+## Limits and what real defense requires
+
+A lexical, single-channel filter is defense-in-depth, not a control boundary. The bypasses point at the structural fixes a real mitigation needs: validate *every* channel the model can read rather than two fields; detect when a tool's behavior changes after approval (the rug-pull case); and constrain data egress so a single tool cannot ship a secret out unsupervised in the first place. The honest deliverable is the map of exactly how far metadata sanitization gets you and where it gives up, and one command reproduces every number above.
+
+## References
+
+- Zhiqiang Wang et al. [*MCPTox: A Benchmark for Tool Poisoning Attack on Real-World MCP Servers*](https://arxiv.org/abs/2508.14925). arXiv:2508.14925, 2025. Measured the attack on real servers; shipped no defense.
+- Charoes Huang et al. [*Model Context Protocol Threat Modeling and Analyzing Vulnerabilities to Prompt Injection with Tool Poisoning*](https://arxiv.org/abs/2603.22489). arXiv:2603.22489, 2026. Proposed a client-side defense; did not build or measure one.
+
+This work implements the recommended defense, then *de-circularizes* its evaluation across six models and three vendors: the apparent win was an artifact of shared vocabulary, and result-borne (`rug_pull`) injection bypasses the defense by construction. A negative result and the methodology that produced it. Scoped to a controlled harness; real-client testing is separate, ongoing work.

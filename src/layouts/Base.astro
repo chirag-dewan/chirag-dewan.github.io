@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  path?: string; // canonical path, e.g. "/writing/"
+  ogType?: string;
+}
+
+const {
+  title,
+  description = 'AI security researcher building runtime detection for agentic systems.',
+  path = '',
+  ogType = 'website',
+} = Astro.props;
+
+const site = 'https://www.cdewan.me';
+const canonical = site + (path || Astro.url.pathname);
+const ogImage = site + '/og-image.png';
+const year = 2026;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preload" href="/fonts/geist-sans.woff2" as="font" type="font/woff2" crossorigin />
+
+    {/* Set theme before first paint to avoid a flash. */}
+    <script is:inline>
+      (() => {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="column">
+      <slot />
+
+      <footer class="site-footer">
+        <a href="https://github.com/chirag-dewan">github</a>
+        <a href="https://linkedin.com/in/cdewan">linkedin</a>
+        <a href="mailto:chirag0728@gmail.com">email</a>
+        <a href="/Chirag_Dewan_Resume.pdf">resume</a>
+        <span class="spacer"></span>
+        <span>© {year}</span>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">theme</button>
+      </footer>
+    </div>
+
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const current = () => document.documentElement.dataset.theme || (prefersDark() ? 'dark' : 'light');
+        btn.addEventListener('click', () => {
+          const next = current() === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+      })();
+    </script>
+  </body>
+</html>

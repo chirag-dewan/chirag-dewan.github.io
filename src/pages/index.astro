@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const research = (await getCollection('writing'))
+  .filter((e) => e.data.kind === 'research' && !e.data.unlisted)
+  .sort((a, b) => a.data.weight - b.data.weight);
+---
+
+<Base
+  title="Chirag Dewan · AI Security Researcher"
+  description="AI security researcher red teaming LLMs and agents, and building runtime detection for them. Selected work: MCP-Poison-Bench, PARALLAX, KESTREL."
+  path="/"
+>
+  <main>
+    <h1>Chirag Dewan</h1>
+
+    <p>
+      I'm an AI security researcher. I work on the security of LLMs and agentic
+      systems: red teaming them, and building the runtime detection that catches
+      abuse when it happens.
+    </p>
+
+    <p>
+      Lately that has meant a few things. I built
+      <a href="/writing/mcp-poison-bench/">MCP-Poison-Bench</a>, a de-circularized
+      benchmark for tool-poisoning across six models and three vendors, and the
+      result was a negative one: the client-side defense everyone recommends is
+      structurally blind to the one attack that reliably lands. I write about why
+      <a href="/writing/ten-thousand-agents/">prompt injection isn't a bug you patch</a>
+      and <a href="/writing/autonomous-red-team/">how I'd build a red team that never stops</a>.
+      And I build behavioral detectors,
+      <a href="/writing/parallax/">PARALLAX</a> for model-extraction abuse and
+      <a href="/writing/kestrel/">KESTREL</a> for cloud-workload attacks, that
+      classify from the shape of traffic alone, never the content.
+    </p>
+
+    <p>
+      Before AI security I did offensive security research. There's more on the
+      <a href="/bio/">background</a>, or you can read the
+      <a href="/writing/">writing</a>, see the
+      <a href="https://github.com/chirag-dewan">code</a>, or
+      <a href="mailto:chirag0728@gmail.com">reach out</a>.
+    </p>
+
+    <h2>Selected research</h2>
+    <ul class="plain-list">
+      {research.map((e) => (
+        <li><a href={`/writing/${e.id}/`}>{e.data.title}</a></li>
+      ))}
+      <li><a href="/writing/">All writing →</a></li>
+    </ul>
+  </main>
+</Base>

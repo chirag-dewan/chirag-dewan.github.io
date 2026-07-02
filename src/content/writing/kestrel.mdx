@@ -1,0 +1,55 @@
+---
+title: "KESTREL: cloud-workload anomaly detection that met the data where it lived"
+description: "Unsupervised per-account z-score baselining for cloud-workload attacks, MITRE ATLAS-tagged and Sigma-exportable. 0.766 recall on 34K real CloudTrail events after re-targeting the signal actually present."
+kind: research
+date: "2026-04-08"
+kicker: "Behavioral detection · validated on real data"
+standfirst: "Unsupervised anomaly detection for cloud-workload attacks: per-account z-score baselining with no labels and no fixed thresholds, MITRE ATLAS-tagged and Sigma-exportable. v1 hunted GPU telemetry the logs did not contain and scored 0.0005 recall on 34,427 real CloudTrail events; re-targeting to the API-audit signal that was actually present lifted recall to 0.766 at precision 1.0."
+weight: 30
+demo: "/projects/kestrel-demo.html"
+source: "https://github.com/chirag-dewan/kestrel"
+---
+
+## The problem: attacks at the infrastructure layer
+
+PARALLAX watches what users do to an AI platform; KESTREL watches the machines underneath it. GPU clusters hijacked for mining, a rogue training job burning compute on a stolen account for days, a recon tool enumerating permissions across every region at 2 a.m. None of that surfaces in application behavior. It surfaces in the cloud control plane's own audit logs, which is where KESTREL looks.
+
+## The approach: self-referential baselines
+
+The detector is unsupervised and self-referential. For each account it builds a rolling per-feature baseline and flags activity that deviates beyond a z-score threshold from that account's own history. No labeled training data and no global fixed thresholds, so a small account and a large one are each judged against themselves rather than against a one-size cutoff. Every finding is tagged with the relevant MITRE ATLAS technique and exports directly to Sigma rules a SIEM can ingest.
+
+## v1: three workload detectors
+
+The first build shipped three detectors aimed at compute-layer abuse:
+
+<div class="defs">
+  <div class="d"><div class="n">GPU hijacking</div><div class="x">utilization and power-draw anomalies signalling unauthorized compute use.</div></div>
+  <div class="d"><div class="n">rogue training</div><div class="x">unexpected long-running training jobs on an account's baseline.</div></div>
+  <div class="d"><div class="n">cloud-API abuse</div><div class="x">anomalous control-plane API behavior against the account's history.</div></div>
+</div>
+
+On synthetic data it performed cleanly, which with anomaly detectors is a warning sign rather than a result.
+
+## The reality check: precision 1.0, recall 0.0005
+
+<div class="stats">
+  <div class="stat"><div class="v">34,427</div><div class="l">real CloudTrail events, 2,167 of them attacks</div></div>
+  <div class="stat"><div class="v">1.0</div><div class="l">v1 precision: zero false positives</div></div>
+  <div class="stat"><div class="v">0.0005</div><div class="l">v1 recall: 1 of 2,167 attack events caught</div></div>
+</div>
+
+Run against 34,427 real CloudTrail events containing genuine attacks (IAM enumeration, privilege escalation, recon scanning), v1 hit perfect precision and near-zero recall. Flawless aim, wrong target.
+
+## The diagnosis: an instrument-to-data mismatch
+
+The detectors were built for GPU telemetry: utilization, power draw, training durations. CloudTrail is an API audit log. **99.98% of the events were API calls and exactly zero were GPU metrics.** The instrument was sound but pointed at data that was not in the stream. Tellingly, the baseline engine itself had already noticed the attacker scanning at off-hours; nothing in v1 was wired to listen to that signal.
+
+## v2: detect the signal that is actually present
+
+<div class="stats">
+  <div class="stat"><div class="v">0.766</div><div class="l">v2 recall, up from 0.0005</div></div>
+  <div class="stat"><div class="v">1,532x</div><div class="l">recall improvement, precision held at 1.0</div></div>
+  <div class="stat"><div class="v">220</div><div class="l">findings; every account v1 missed was caught</div></div>
+</div>
+
+v2 retargets the same baselining engine at features the audit log actually carries: API-call burst rate, cross-region fan-out, off-hours spikes, and walls of access-denied responses. Recall went from 0.0005 to 0.766, a 1,532x improvement, with precision held at 1.0 and zero false positives. The fix was not heavier machine learning, it was meeting the data where it lives: diagnose the mismatch, then build the detector that fits the signal in front of you. Subtraction before addition, again. Stack: a Python CLI over Flask and SQLite.
