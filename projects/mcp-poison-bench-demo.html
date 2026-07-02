@@ -89,7 +89,7 @@
 </head>
 <body>
 <header><div class="wrap bar">
-  <span class="brand">mcp-poison-bench</span>
+  <a href="/" class="brand" style="text-decoration:none">mcp-poison-bench</a>
   <nav class="bar-links">
     <a href="/projects/mcp-poison-bench.html">← writeup</a>
     <a href="https://github.com/chirag-dewan/MCP-Poison-Bench/blob/master/docs/ARCHITECTURE.md">architecture</a>
@@ -103,6 +103,11 @@
   .seg button:last-child{border-right:none}
   .seg button.active{background:var(--text);color:var(--bg)}
   .seg button:hover:not(.active){color:var(--text)}
+  @media (max-width:600px){
+    .seg{flex-wrap:wrap}
+    #classSeg{width:100%}
+    #classSeg button{flex:1 1 46%}
+  }
   .ctl-group{display:flex;flex-direction:column;gap:5px}
   .ctl-group .glab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
   .cell-readout{margin:18px 0 0;font-family:var(--mono);font-size:12.5px;color:var(--muted);border-left:2px solid var(--border-bright);padding-left:14px}
